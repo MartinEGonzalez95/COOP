@@ -1,20 +1,20 @@
 !classDefinition: #COOP category: #'Cuis-University-COOP'!
 Object subclass: #COOP
-	instanceVariableNames: ''
+	instanceVariableNames: 'rules'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
 
 !COOP methodsFor: 'testing' stamp: 'GET 9/8/2019 15:03:11'!
-searchMessageToCollectionsOn: aStatement 
-	
+searchMessageToCollectionsOn: aStatement
+
 	| collectionSendedMessageRule |
 	collectionSendedMessageRule _ CollectionSendedMessageCheck new with:aStatement.
 	^ collectionSendedMessageRule analyze.! !
 
 !COOP methodsFor: 'testing' stamp: 'GET 9/8/2019 12:18:16'!
-wasSendedToCollection: aMethodNode 
-	
+wasSendedToCollection: aMethodNode
+
 	^  aMethodNode body statements anySatisfy: [:statement | self searchMessageToCollectionsOn: statement ] ! !
 
 
@@ -26,22 +26,22 @@ Object subclass: #COOPHelper
 	category: 'Cuis-University-COOP'!
 
 !COOPHelper methodsFor: 'error' stamp: 'GET 9/8/2019 12:50:43'!
-messageNotFound: aSelector in: aClass 
+messageNotFound: aSelector in: aClass
 
 	self error: 'the message with ', aSelector , 'was not found in ', aClass className .
 	! !
 
 
 !COOPHelper methodsFor: 'action' stamp: 'GET 9/8/2019 12:50:55'!
-search: aSelectorName in: aClass 
+search: aSelectorName in: aClass
 
-	^ aClass compiledMethodAt: aSelectorName ifPresent: [:compiledMethod | ^ compiledMethod ] ifAbsent: [ self messageNotFound: aSelectorName in: aClass ]. 
+	^ aClass compiledMethodAt: aSelectorName ifPresent: [:compiledMethod | ^ compiledMethod ] ifAbsent: [ self messageNotFound: aSelectorName in: aClass ].
  ! !
 
 
 !COOPHelper methodsFor: 'testing' stamp: 'GET 9/8/2019 18:59:15'!
-exist: selectors in: aClass 
-	
+exist: selectors in: aClass
+
 	^ selectors notEmpty and: [ aClass methodDict keys includesAnyOf:  selectors ].	! !
 
 
@@ -69,7 +69,7 @@ analyze
 	| parser |
 	parser _ ParseNodeEnumerator ofBlock: [:node | self addMessageNode: node].
 	statementNode accept: parser.
-		
+
 	self findCollectionSelectors.
 
 	 ^ COOPHelper new exist: selectors in: Collection .! !
@@ -77,9 +77,9 @@ analyze
 
 !CollectionSendedMessageCheck methodsFor: 'accessing' stamp: 'GET 9/8/2019 19:39:59'!
 findCollectionSelectors
-	
+
 	| messageParser |
-	messageParser _ ParseNodeEnumerator ofBlock: [:node | selectors add: node selector  key] select: [:node | node isMessageNode]. 
+	messageParser _ ParseNodeEnumerator ofBlock: [:node | selectors add: node selector  key] select: [:node | node isMessageNode].
 	allNodes do: [:node | node accept: messageParser ].
 	! !
 
@@ -88,3 +88,14 @@ findCollectionSelectors
 addMessageNode: aNode
 
 	allNodes add: aNode! !
+
+!COOP methodsFor: 'action' stamp: 'MEG 9/8/2019 14:20:26'!
+performInteractiveChecksFor: aMethodNode
+
+	rules do: [ :rule | rule check: aMethodNode ]! !
+
+
+!COOP methodsFor: 'initialization' stamp: 'MEG 9/8/2019 14:22:35'!
+initialize
+
+	rules _ Set new.! !
