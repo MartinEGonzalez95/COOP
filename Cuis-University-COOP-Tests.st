@@ -161,6 +161,55 @@ setUp
 	coop _ COOP new.! !
 
 
+!classDefinition: #RuleTest category: #'Cuis-University-COOP-Tests'!
+RefactoringTest subclass: #RuleTest
+	instanceVariableNames: 'coopMethodFactory'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+
+!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/8/2019 21:41:00'!
+setUp
+	super setUp.
+	coopMethodFactory _ COOPMethodFactory new.! !
+
+!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/10/2019 22:09:55'!
+testARuleCollectionSizeApplyInAMethodNode
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ CollectionSizeRule new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' col size == 0'.
+	
+	self assert: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/10/2019 23:26:40'!
+testARuleCollectionSizeApplyInAMethodNode2
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ CollectionSizeRule new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' 0 == 1 and col size == 1 '.
+	
+	self assert: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/8/2019 21:42:08'!
+testARuleCollectionSizeDoesNotApplyInAMethodNode
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ CollectionSizeRule new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' ^ 0 == 1'.
+	
+	self deny: (collectionSizeRule check: aMethodNode) .! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'RuleTest class' category: #'Cuis-University-COOP-Tests'!
+RuleTest class
+	instanceVariableNames: 'coopHelper'!
+
+
 !classDefinition: #COOPMethodFactory category: #'Cuis-University-COOP-Tests'!
 Object subclass: #COOPMethodFactory
 	instanceVariableNames: ''

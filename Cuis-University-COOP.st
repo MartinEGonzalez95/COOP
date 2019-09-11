@@ -17,6 +17,18 @@ wasSendedToCollection: aMethodNode
 
 	^  aMethodNode body statements anySatisfy: [:statement | self searchMessageToCollectionsOn: statement ] ! !
 
+
+!COOP methodsFor: 'action' stamp: 'MEG 9/8/2019 14:20:26'!
+performInteractiveChecksFor: aMethodNode
+
+	rules do: [ :rule | rule check: aMethodNode ]! !
+
+
+!COOP methodsFor: 'initialization' stamp: 'MEG 9/8/2019 14:22:35'!
+initialize
+
+	rules _ Set new.! !
+
 
 !classDefinition: #COOPHelper category: #'Cuis-University-COOP'!
 Object subclass: #COOPHelper
@@ -89,13 +101,41 @@ addMessageNode: aNode
 
 	allNodes add: aNode! !
 
-!COOP methodsFor: 'action' stamp: 'MEG 9/8/2019 14:20:26'!
-performInteractiveChecksFor: aMethodNode
+
+!classDefinition: #CollectionSizeRule category: #'Cuis-University-COOP'!
+Object subclass: #CollectionSizeRule
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
 
-	rules do: [ :rule | rule check: aMethodNode ]! !
+!CollectionSizeRule methodsFor: 'testing' stamp: 'GET 9/10/2019 22:29:38'!
+addRootNode: rootNode in: dictionaryOfNodes
 
+	| parseNode nodesFlatten|
+	nodesFlatten _ OrderedCollection new.
+	parseNode _ ParseNodeEnumerator ofBlock: [:node| node isLeafNode ifTrue:[nodesFlatten add: node]].
+	
+	rootNode accept: parseNode .
+	dictionaryOfNodes at:rootNode put:nodesFlatten .! !
 
-!COOP methodsFor: 'initialization' stamp: 'MEG 9/8/2019 14:22:35'!
-initialize
+!CollectionSizeRule methodsFor: 'testing' stamp: 'GET 9/10/2019 22:34:46'!
+check: aMethodNode 
+		
+	^ aMethodNode body statements anySatisfy: [:node | self checkIfNodeHasRule: node ]! !
 
-	rules _ Set new.! !
+!CollectionSizeRule methodsFor: 'testing' stamp: 'GET 9/10/2019 23:42:40'!
+checkIfNodeHasRule: statementNode 
+
+	| parseNode nodesFlatten literaleNode specialNode |
+	nodesFlatten _ OrderedCollection new.
+	parseNode _ ParseNodeEnumerator ofBlock: [:node| node isLeafNode ifTrue:[nodesFlatten add: node]].
+	
+	statementNode accept: parseNode .
+	specialNode _ nodesFlatten select: [:node | node isSelectorNode ].
+	literaleNode _ nodesFlatten select: [:node | node isLiteralNode ].
+	
+	^ (specialNode anySatisfy: [:node | node key == #size] ) 
+	and: (specialNode anySatisfy: [:node | node key == #== ] ) 
+	and:
+	 [  literaleNode anySatisfy: [:node  | node key == 0 ] ].! !
