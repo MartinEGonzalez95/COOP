@@ -161,52 +161,155 @@ setUp
 	coop _ COOP new.! !
 
 
-!classDefinition: #RuleTest category: #'Cuis-University-COOP-Tests'!
-RefactoringTest subclass: #RuleTest
+!classDefinition: #RuleCollectionSizeTest category: #'Cuis-University-COOP-Tests'!
+RefactoringTest subclass: #RuleCollectionSizeTest
 	instanceVariableNames: 'coopMethodFactory'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
 
-!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/8/2019 21:41:00'!
-setUp
-	super setUp.
-	coopMethodFactory _ COOPMethodFactory new.! !
-
-!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/10/2019 22:09:55'!
-testARuleCollectionSizeApplyInAMethodNode
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/11/2019 18:51:51'!
+testRuleCollectionSizeDoesNotApplyInAMethodNodeWithStandardCaseAsAComment
 
 	| aClass aMethodNode  collectionSizeRule |
-	collectionSizeRule _ CollectionSizeRule new.
+	collectionSizeRule _ RuleCollectionSize new.
 	aClass _ self createClassNamed: #TemporalClass.
-	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' col size == 0'.
 	
-	self assert: (collectionSizeRule check: aMethodNode) .! !
-
-!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/10/2019 23:26:40'!
-testARuleCollectionSizeApplyInAMethodNode2
-
-	| aClass aMethodNode  collectionSizeRule |
-	collectionSizeRule _ CollectionSizeRule new.
-	aClass _ self createClassNamed: #TemporalClass.
-	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' 0 == 1 and col size == 1 '.
-	
-	self assert: (collectionSizeRule check: aMethodNode) .! !
-
-!RuleTest methodsFor: 'as yet unclassified' stamp: 'GET 9/8/2019 21:42:08'!
-testARuleCollectionSizeDoesNotApplyInAMethodNode
-
-	| aClass aMethodNode  collectionSizeRule |
-	collectionSizeRule _ CollectionSizeRule new.
-	aClass _ self createClassNamed: #TemporalClass.
-	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' ^ 0 == 1'.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' "col size == 0" '.
 	
 	self deny: (collectionSizeRule check: aMethodNode) .! !
 
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/11/2019 18:51:48'!
+testRuleCollectionSizeDoesNotApplyInAMethodNodeWithStandardCaseUnordered
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' col size. ^ 0 == 1. '.
+	
+	self deny: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/11/2019 18:51:45'!
+testRuleCollectionSizeDoesNotApplyWhenCaseIsNotThere
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' ^ 0 == 1. '.
+	
+	self deny: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/11/2019 18:51:42'!
+testRuleCollectionSizeDoesNotApplyWhenSizeEqualsAndZeroAreNotInTheSameMessage
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' 0 == 1 and col size == 1 '.
+	
+	self deny: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/11/2019 18:41:40'!
+testRuleCollectionSizeDoesNotApplyWhenTheMessageEndsOnSizeMethod
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' ^ col size '.
+	
+	self deny: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/11/2019 18:51:08'!
+testRuleCollectionSizeDoesNotApplyWhenZeroIsOnInstanceVariableNode
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aClass addInstVarName: 'zero'.
+	
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' ^ col size == zero '.
+	
+	self deny: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/11/2019 18:49:33'!
+testRuleCollectionSizeDoesNotApplyWhenZeroIsOnTemporaryVariableNode
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' |zero| zero := 0. ^ col size == zero '.
+	
+	self deny: (collectionSizeRule check: aMethodNode) .! !
+
+
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/13/2019 18:11:49'!
+testRuleCollectionSizeApplyInAMethodNodeWithEqualMessageCase
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' col size = 0 '.
+	
+	self assert: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/11/2019 18:41:12'!
+testRuleCollectionSizeApplyInAMethodNodeWithInvertedCaseOfStandardRule
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' 0 == col size '.
+	
+	self assert: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/13/2019 18:19:24'!
+testRuleCollectionSizeApplyInAMethodNodeWithInvertedEqualMessageCase
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' 0 = col size '.
+	
+	self assert: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/11/2019 18:41:12'!
+testRuleCollectionSizeApplyInAMethodNodeWithStandardCase
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration withSourceCode: ' col size == 0 '.
+	
+	self assert: (collectionSizeRule check: aMethodNode) .! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/13/2019 18:27:00'!
+testRuleCollectionSizeApplyInAMethodNodeWithStandardCaseButAfterAReferenceNode
+
+	| aClass aMethodNode  collectionSizeRule |
+	collectionSizeRule _ RuleCollectionSize new.
+	aClass _ self createClassNamed: #TemporalClass.
+	aMethodNode _ coopMethodFactory compileAndReturnIn: aClass aSelector: #colaboration 
+		withSourceCode: ' |collectionSize| collectionSize := col size.  ^ col size == 0 '.
+	
+	self assert: (collectionSizeRule check: aMethodNode) .! !
+
+
+!RuleCollectionSizeTest methodsFor: 'setup/teardown' stamp: 'MEG 9/11/2019 18:37:03'!
+setUp
+
+	super setUp.
+
+	coopMethodFactory _ COOPMethodFactory new.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'RuleTest class' category: #'Cuis-University-COOP-Tests'!
-RuleTest class
+!classDefinition: 'RuleCollectionSizeTest class' category: #'Cuis-University-COOP-Tests'!
+RuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
 
 

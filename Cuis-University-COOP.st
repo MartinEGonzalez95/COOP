@@ -102,40 +102,44 @@ addMessageNode: aNode
 	allNodes add: aNode! !
 
 
-!classDefinition: #CollectionSizeRule category: #'Cuis-University-COOP'!
-Object subclass: #CollectionSizeRule
+!classDefinition: #RuleCollectionSize category: #'Cuis-University-COOP'!
+Object subclass: #RuleCollectionSize
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
 
-!CollectionSizeRule methodsFor: 'testing' stamp: 'GET 9/10/2019 22:29:38'!
-addRootNode: rootNode in: dictionaryOfNodes
-
-	| parseNode nodesFlatten|
-	nodesFlatten _ OrderedCollection new.
-	parseNode _ ParseNodeEnumerator ofBlock: [:node| node isLeafNode ifTrue:[nodesFlatten add: node]].
-	
-	rootNode accept: parseNode .
-	dictionaryOfNodes at:rootNode put:nodesFlatten .! !
-
-!CollectionSizeRule methodsFor: 'testing' stamp: 'GET 9/10/2019 22:34:46'!
+!RuleCollectionSize methodsFor: 'testing' stamp: 'GET 9/10/2019 22:34:46'!
 check: aMethodNode 
 		
 	^ aMethodNode body statements anySatisfy: [:node | self checkIfNodeHasRule: node ]! !
 
-!CollectionSizeRule methodsFor: 'testing' stamp: 'GET 9/10/2019 23:42:40'!
+!RuleCollectionSize methodsFor: 'testing' stamp: 'MEG 9/13/2019 18:16:55'!
 checkIfNodeHasRule: statementNode 
 
-	| parseNode nodesFlatten literaleNode specialNode |
+	| parseNode nodesFlatten  referenceNode referenceNodePosition involvedNodes |
 	nodesFlatten _ OrderedCollection new.
-	parseNode _ ParseNodeEnumerator ofBlock: [:node| node isLeafNode ifTrue:[nodesFlatten add: node]].
+	parseNode _ ParseNodeEnumerator ofBlock: [:node| node isLeafNode ifTrue: [nodesFlatten add: node]].
 	
-	statementNode accept: parseNode .
-	specialNode _ nodesFlatten select: [:node | node isSelectorNode ].
-	literaleNode _ nodesFlatten select: [:node | node isLiteralNode ].
+	"nodesFlatten is empty until next line"
+	statementNode accept: parseNode. 	
 	
-	^ (specialNode anySatisfy: [:node | node key == #size] ) 
-	and: (specialNode anySatisfy: [:node | node key == #== ] ) 
-	and:
-	 [  literaleNode anySatisfy: [:node  | node key == 0 ] ].! !
+	( ( nodesFlatten anySatisfy: [:node | node key == #size] ) 
+	and: [ nodesFlatten anySatisfy: [:node | (node key == #==) or: [ node key == #= ] ] ] 
+	and: [  nodesFlatten anySatisfy: [:node  | node key == 0 ] ] ) ifFalse: [ ^ false ] .
+	
+	referenceNode _ nodesFlatten detect: [ :node | (node isSelectorNode & node key == #size) or: [ node isLiteralNode & node key == 0] ] ifNone: [ ].
+
+	referenceNodePosition _ nodesFlatten indexOf: referenceNode.
+
+	involvedNodes _ OrderedCollection new.
+
+	involvedNodes add: ( nodesFlatten at: referenceNodePosition ).
+	involvedNodes add: ( nodesFlatten at: referenceNodePosition + 1 ).
+	involvedNodes add: ( nodesFlatten at: referenceNodePosition + 2 ).
+	
+	( referenceNode key == 0 ) ifTrue: [ involvedNodes add: ( nodesFlatten at: referenceNodePosition + 3)].
+
+	^ ( involvedNodes anySatisfy: [:node | node key == #size] ) 
+	and: [ involvedNodes anySatisfy: [:node | (node key == #==) or: [node key == #=] ] ] 
+	and: [  involvedNodes anySatisfy: [:node  | node key == 0 ] ].! !
