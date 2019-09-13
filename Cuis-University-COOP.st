@@ -18,16 +18,25 @@ wasSendedToCollection: aMethodNode
 	^  aMethodNode body statements anySatisfy: [:statement | self searchMessageToCollectionsOn: statement ] ! !
 
 
-!COOP methodsFor: 'action' stamp: 'MEG 9/8/2019 14:20:26'!
+!COOP methodsFor: 'action' stamp: 'MEG 9/13/2019 19:36:04'!
+opensPopUpFor: rule
+
+	PopUpMenu inform: 'Se podria utilizar el mensaje #isEmpty 
+	para cuando se chequea que el tamaño 
+	de una coleccion es igual a cero'! !
+
+!COOP methodsFor: 'action' stamp: 'MEG 9/13/2019 19:36:04'!
 performInteractiveChecksFor: aMethodNode
 
-	rules do: [ :rule | rule check: aMethodNode ]! !
+	^ rules do: [ :rule | (rule check: aMethodNode) ifTrue: [ self opensPopUpFor: rule ] ]! !
 
 
-!COOP methodsFor: 'initialization' stamp: 'MEG 9/8/2019 14:22:35'!
+!COOP methodsFor: 'initialization' stamp: 'MEG 9/13/2019 18:49:41'!
 initialize
 
-	rules _ Set new.! !
+	rules _ Set new.
+	
+	rules add: RuleCollectionSize new.! !
 
 
 !classDefinition: #COOPHelper category: #'Cuis-University-COOP'!
