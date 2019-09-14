@@ -313,6 +313,61 @@ RuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
 
 
+!classDefinition: #DemoTest category: #'Cuis-University-COOP-Tests'!
+TestCase subclass: #DemoTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+
+!DemoTest methodsFor: 'apply' stamp: 'MEG 9/13/2019 19:29:12'!
+testCollectionSizeIsEqualToZeroOpensAPopUpOnAccept
+
+	| collection |
+	collection _ OrderedCollection new.
+	
+	self assert: collection size = 0.
+	! !
+
+!DemoTest methodsFor: 'apply' stamp: 'MEG 9/13/2019 19:36:31'!
+testCollectionSizeIsIdenticalToZeroOpensAPopUpOnAccept
+
+	| collection |
+	collection _ OrderedCollection new.
+	
+	self assert: collection size == 0.
+	
+	! !
+
+!DemoTest methodsFor: 'apply' stamp: 'MEG 9/13/2019 19:23:10'!
+testZeroIsEqualToCollectionSizeOpensAPopUpOnAccept
+
+	| collection |
+	collection _ OrderedCollection new.
+	
+	self assert: 0 = collection size.
+	! !
+
+!DemoTest methodsFor: 'apply' stamp: 'MEG 9/13/2019 19:34:04'!
+testZeroIsIdenticalToCollectionSizeOpensAPopUpOnAccept
+
+	| collection |
+	collection _ OrderedCollection new.
+	
+	self assert: 0 == collection size.
+	
+	! !
+
+
+!DemoTest methodsFor: 'not-apply' stamp: 'MEG 9/13/2019 19:27:41'!
+testCollectionIsEmptyDoesNotOpenAPopUp
+
+	| collection |
+	collection _ OrderedCollection new.
+	
+	self assert: collection isEmpty.! !
+
+
 !classDefinition: #COOPMethodFactory category: #'Cuis-University-COOP-Tests'!
 Object subclass: #COOPMethodFactory
 	instanceVariableNames: ''
