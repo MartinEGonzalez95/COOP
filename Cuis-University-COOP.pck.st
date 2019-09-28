@@ -210,7 +210,7 @@ ignoreRule
 
 	PopUpMenu  inform: self ruleList ignoreRule.! !
 
-!COOPWindow class methodsFor: 'menu world' stamp: 'GET 9/22/2019 19:31:59'!
+!COOPWindow class methodsFor: 'menu world' stamp: 'MEG 9/28/2019 01:40:28'!
 worldMenuForOpenGroup
 	^ `{{
 			#itemGroup 		-> 		10.
@@ -219,7 +219,7 @@ worldMenuForOpenGroup
 			#object 			-> 		COOPWindow.
 			#selector 		-> 		#openBrowser.
 			#icon 			-> 		#editFindReplaceIcon.
-			#balloonText 	-> 		'A browser with COOP - gui - integrated'.
+			#balloonText 	-> 		'Browser with COOP'.
 		} asDictionary}`! !
 
 !COOPMethodFactoryTest methodsFor: 'compiled-method-test' stamp: 'MEG 9/22/2019 23:49:16'!
@@ -274,21 +274,30 @@ testCollectionIsEmptyDoesNotOpenAPopUp
 	
 	self assert: collection isEmpty.! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/22/2019 23:47:29'!
-testRuleCollectionSizeDoesNotApplyInAMethodNodeWithStandardCaseAsAComment
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:21:57'!
+testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseInAComment
+
+	| aMethodNode |
+
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #identityCaseInAComment).
+
+	self deny: (rule check: aMethodNode)! !
+
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:37:50'!
+testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseUnordered
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' "col size == 0" '.
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #unorderedIdentityCase).
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/22/2019 23:47:35'!
-testRuleCollectionSizeDoesNotApplyInAMethodNodeWithStandardCaseUnordered
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:25:19'!
+testRuleCollectionSizeDoesNotApplyWhenAnyCaseAreNotInTheSameMessage
 
 	| aMethodNode |
-	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' col size. ^ 0 == 1. '.
+
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #caseNotInTheSameMessage).
 	
 	self deny: (rule check: aMethodNode)! !
 
@@ -301,76 +310,49 @@ testRuleCollectionSizeDoesNotApplyWhenCaseIsNotThere
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/22/2019 23:47:48'!
-testRuleCollectionSizeDoesNotApplyWhenSizeEqualsAndZeroAreNotInTheSameMessage
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:35:22'!
+testRuleCollectionSizeDoesNotApplyWhenTheCaseHidesOnTemporaryVariableNode
 
 	| aMethodNode |
-
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' 0 == 1 and col size == 1 '.
+	
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration
+		withSourceCode: (self sourceCodeFrom: #caseHiddenOnTemporaryVariable).
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/22/2019 23:47:52'!
-testRuleCollectionSizeDoesNotApplyWhenTheMessageEndsOnSizeMethod
-
-	| aMethodNode |
-
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' ^ col size '.
-	
-	self deny: (rule check: aMethodNode)! !
-
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/22/2019 23:47:57'!
-testRuleCollectionSizeDoesNotApplyWhenZeroIsOnTemporaryVariableNode
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:50:58'!
+testRuleCollectionSizeApplyInAMethodNodeWithEqualCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' |zero| zero := 0. ^ col size == zero '.
-	
-	self deny: (rule check: aMethodNode)! !
-
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/22/2019 23:49:36'!
-testRuleCollectionSizeApplyInAMethodNodeWithEqualMessageCase
-
-	| aMethodNode |
-	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' col size = 0 '.
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #equalCase).
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/22/2019 23:45:04'!
-testRuleCollectionSizeApplyInAMethodNodeWithInvertedCaseOfStandardRule
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:52:00'!
+testRuleCollectionSizeApplyInAMethodNodeWithIdentityCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' 0 == col size '.
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #identityCase).
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/22/2019 23:45:26'!
-testRuleCollectionSizeApplyInAMethodNodeWithInvertedEqualMessageCase
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:51:23'!
+testRuleCollectionSizeApplyInAMethodNodeWithInvertedEqualCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' 0 = col size '.
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #invertedEqualCase).
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/22/2019 23:45:35'!
-testRuleCollectionSizeApplyInAMethodNodeWithStandardCase
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:51:12'!
+testRuleCollectionSizeApplyInAMethodNodeWithInvertedIdentityCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' col size == 0 '.
-	
-	self assert: (rule check: aMethodNode)! !
-
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/22/2019 23:45:46'!
-testRuleCollectionSizeApplyInAMethodNodeWithStandardCaseButAfterAReferenceNode
-
-	| aMethodNode  |
-	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration 
-		withSourceCode: ' |collectionSize| collectionSize := col size.  ^ col size == 0 '.
+	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #invertedIdentityCase).
 	
 	self assert: (rule check: aMethodNode)! !
 
@@ -381,10 +363,96 @@ setUp
 	
 	rule _ RuleCollectionSize new.! !
 
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:35:54'!
+caseHiddenOnTemporaryVariable
+
+	| col zero |
+
+	col _ OrderedCollection new.
+
+	zero _ 0.
+
+	^ col size = zero! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:33:38'!
+caseNotInTheSameMessage
+
+	| col colSize |
+
+	col _ OrderedCollection new.
+
+	colSize _ col size.
+
+	^ colSize ~= 0 and: [ (colSize + 1) > 2 ].! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:39:55'!
+equalCase
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	^ col size = 0! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:55:12'!
+identityCase
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	^ col size == 0! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:59:57'!
+identityCaseInAComment
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	" col size == 0 "
+
+	^ col isEmpty ! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:55:41'!
+invertedEqualCase
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	^ 0 = col size! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:48:59'!
+invertedIdentityCase
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	^ 0 == col size! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:37:50'!
+unorderedIdentityCase
+
+	| col colSize |
+
+	col _ OrderedCollection new.
+
+	colSize _ col size.
+
+	^ 0 == 1. ! !
+
+!RuleCollectionSizeTest methodsFor: 'source-code' stamp: 'MEG 9/28/2019 01:58:54'!
+sourceCodeFrom: methodName
+
+	^ (self class>>methodName) methodNode block asString! !
+
 !RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 11:16:33'!
 testANewRuleListIsEmptyAndIndexIsZero
 
-	self assert: ruleList isEmpty.	self assert: ruleList rules isEmpty .
+	self assert: ruleList isEmpty.
+	self assert: ruleList rules isEmpty .
 	self assert: ruleList indexRuleSelected  equals: 0 .! !
 
 !RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 11:16:39'!
@@ -404,47 +472,47 @@ setUp
 
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:16:56'!
 testARuleListCanAddARuleAndTheIndexIsTheFirst
-	
+
 	ruleList add: aRule .
-	
+
 	self deny: ruleList isEmpty.
 	self assert: ruleList rules includes: aRule.
 	self assert: 1 equals: ruleList indexRuleSelected  .! !
 
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:18:42'!
 testARuleListWithRulesCanIgnoreTheSelectedRuleAndDecreaseItsIndex
-	
+
 	ruleList add: aRule .
-	
+
 	self assert: 'Regla ignorada: ', aRule  equals: ruleList ignoreRule .
 	self deny: (ruleList rules includes: aRule) .
 	self assert: 0 equals: ruleList indexRuleSelected.! !
 
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:05'!
 testARuleListWithRulesShowTheSelectedRule
-	
+
 	ruleList add: aRule .
-	
+
 	self assert: aRule  equals: ruleList describeRule .
 ! !
 
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:11'!
 testWhenARuleIsIgnoreTheRulesHasChanged
-	
+
 	| notifier |
 	notifier  _ NotifierForTesting watch: ruleList.
 	ruleList add: aRule .
 	ruleList ignoreRule.
-	
+
 	self assert: notifier hasNotified.
 	! !
 
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:00'!
 testWhenARuleListAddMoreRulesTheIndexIsTheFirst
-	
+
 	ruleList add: aRule .
 	ruleList add: aRule .
-	
+
 	self assert: 1 equals:  ruleList indexRuleSelected  .! !
 
 !COOPMethodFactory methodsFor: 'action' stamp: 'MEG 9/22/2019 23:01:12'!
@@ -478,7 +546,7 @@ nameOfClassToBeRemoved
 opensPopUpFor: rule
 
 	PopUpMenu inform: 'Se podria utilizar el mensaje #isEmpty 
-	para cuando se chequea que el tamaño 
+	para cuando se chequea que el tamaï¿½o 
 	de una coleccion es igual a cero'! !
 
 !COOP methodsFor: 'action' stamp: 'MEG 9/13/2019 19:36:04'!
@@ -578,12 +646,13 @@ with: aRules
 	rules _ aRules asOrderedCollection .
 	selectedRuleIndex _ 0.! !
 
-!RuleList methodsFor: 'testing' stamp: 'GET 9/27/2019 19:22:14'!
-isEmpty 
- ^ rules isEmpty .! !
+!RuleList methodsFor: 'testing' stamp: 'MEG 9/28/2019 01:41:00'!
+isEmpty
+
+	^ rules isEmpty .! !
 
 !RuleList methodsFor: 'accessing' stamp: 'GET 9/28/2019 23:45:55'!
-describeRule 
+describeRule
  ^ rules at: selectedRuleIndex ifAbsent: [self emptyShowMessage ].! !
 
 !RuleList methodsFor: 'accessing' stamp: 'GET 9/29/2019 11:16:10'!
@@ -606,7 +675,7 @@ add: aRule
 
 !RuleList methodsFor: 'action' stamp: 'GET 9/29/2019 11:18:01'!
 ignoreRule
-	
+
 	| showRule |
 	showRule  _ rules at: selectedRuleIndex ifAbsent: [^self emptyShowMessage].
 	rules remove: showRule.
