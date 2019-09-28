@@ -1,9 +1,20 @@
-'From Cuis 5.0 [latest update: #3839] on 22 September 2019 at 11:56:23 pm'!
+'From Cuis 5.0 [latest update: #3839] on 28 September 2019 at 12:33:29 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 2!
+!provides: 'Cuis-University-COOP' 1 3!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
+SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
 
+
+!classDefinition: #COOPWindow category: #'Cuis-University-COOP-Morph'!
+BrowserWindow subclass: #COOPWindow
+	instanceVariableNames: 'ruleList'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPWindow class' category: #'Cuis-University-COOP-Morph'!
+COOPWindow class
+	instanceVariableNames: ''!
 
 !classDefinition: #COOPMethodFactoryTest category: #'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPMethodFactoryTest
@@ -65,6 +76,140 @@ Object subclass: #RuleCollectionSize
 RuleCollectionSize class
 	instanceVariableNames: ''!
 
+!classDefinition: #COOPPreferences category: #'Cuis-University-COOP-Morph'!
+Object subclass: #COOPPreferences
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPPreferences class' category: #'Cuis-University-COOP-Morph'!
+COOPPreferences class
+	instanceVariableNames: ''!
+
+!classDefinition: #RuleList category: #'Cuis-University-COOP-Morph'!
+Object subclass: #RuleList
+	instanceVariableNames: 'rules selectedRuleIndex'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Morph'!
+!classDefinition: 'RuleList class' category: #'Cuis-University-COOP-Morph'!
+RuleList class
+	instanceVariableNames: ''!
+
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
+buildButtonRulePane
+
+	| buttonIgnoreRule buttonMoreRuleInformation ruleViewPane |
+	ruleViewPane _ LayoutMorph newRow.
+
+	buttonMoreRuleInformation _ self createButtonMoreRuleInformation.
+	buttonIgnoreRule _ self createButtonIgnoreRule.
+	
+	ruleViewPane addMorph: buttonMoreRuleInformation proportionalWidth: 0.5.
+	ruleViewPane addMorph: buttonIgnoreRule proportionalWidth: 0.5.
+
+	^ ruleViewPane.! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:20:14'!
+buildCOOPRulePane
+	"Construct the pane that shows the code.
+	Respect the Preference for standardCodeFont."
+		
+	| codePaneLayout ruleListPane |
+	codePaneLayout _ LayoutMorph newRow.
+
+	ruleListPane _ self buildRuleListPane.
+	
+	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.8.
+	codePaneLayout addAdjusterAndMorph: ruleListPane proportionalWidth: 0.2.
+
+	^codePaneLayout .! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:52'!
+buildMorphicCodePane
+	"Construct the pane that shows the code.
+	Respect the Preference for standardCodeFont."
+	
+	codePane _ super buildMorphicCodePane.
+		 
+	^ Preferences coopIsWatching ifTrue:[ self buildCOOPRulePane ] ifFalse: [ codePane] .! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:20:00'!
+buildRuleListMorph
+
+	^ PluggableListMorph
+		model: self ruleList 
+		listGetter: #rules
+		indexGetter: #indexRuleSelected
+		indexSetter: #indexRuleSelected:! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:20:14'!
+buildRuleListPane
+	| buttonPane  ruleListView ruleListPane |
+	ruleList _ self ruleList.
+	ruleListPane _ LayoutMorph newColumn.
+	
+	ruleListView _ self buildRuleListMorph.
+		
+	buttonPane _ self buildButtonRulePane.
+		
+	ruleListPane addMorph: buttonPane fixedHeight: self defaultButtonPaneHeight.
+	ruleListPane addMorph: ruleListView proportionalHeight: 1.
+	
+	^ ruleListPane.! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:15:46'!
+createButtonIgnoreRule
+
+	^ PluggableButtonMorph 
+					model: self
+					action: #ignoreRule
+					label: 'Ignorar'! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:16:35'!
+createButtonMoreRuleInformation
+
+	^ (PluggableButtonMorph 
+					model: [ self describeSelectedRule]
+					action: #value
+					label: 'Ver') .! !
+
+!COOPWindow methodsFor: 'accessing' stamp: 'GET 9/27/2019 19:47:00'!
+ruleList
+
+	^ ruleList ifNil: [RuleList  new]  .! !
+
+!COOPWindow methodsFor: 'action' stamp: 'GET 9/27/2019 20:21:24'!
+describeSelectedRule
+	self ruleList  canNotShowRules 
+	ifTrue: [ PopUpMenu inform: 'No hay regla seleccionada' ] 
+	ifFalse:  [ PopUpMenu inform: self ruleList  selectedRule ] 
+	! !
+
+!COOPWindow methodsFor: 'action' stamp: 'GET 9/27/2019 23:48:47'!
+ignoreRule
+	
+	self ruleList  canNotShowRules 
+	ifTrue: [PopUpMenu  inform: 'no hay nada para ignorar' ] 
+	ifFalse: [ 
+		PopUpMenu inform: 'ignorando ', self ruleList  selectedRule .
+		self ruleList  ignoreRule: self ruleList  selectedRule .
+		self ruleList changed: #rules.
+		].
+! !
+
+!COOPWindow class methodsFor: 'menu world' stamp: 'GET 9/22/2019 19:31:59'!
+worldMenuForOpenGroup
+	^ `{{
+			#itemGroup 		-> 		10.
+			#itemOrder 		-> 		30.
+			#label 			->			'COOP Browser'.
+			#object 			-> 		COOPWindow.
+			#selector 		-> 		#openBrowser.
+			#icon 			-> 		#editFindReplaceIcon.
+			#balloonText 	-> 		'A browser with COOP - gui - integrated'.
+		} asDictionary}`! !
 
 !COOPMethodFactoryTest methodsFor: 'compiled-method-test' stamp: 'MEG 9/22/2019 23:49:16'!
 testCOOPMethodFactoryCompilesNewMethodNode
@@ -306,6 +451,65 @@ checkIfNodeHasRule: statementNode
 	and: [ involvedNodes anySatisfy: [:node | (node key == #==) or: [node key == #=] ] ] 
 	and: [  involvedNodes anySatisfy: [:node  | node key == 0 ] ].! !
 
+!COOPPreferences class methodsFor: 'class initialization' stamp: 'GET 9/26/2019 19:01:57'!
+initialize
+	"
+	COOPPreferences initialize
+	"
+	Preferences
+		addPreference: #coopIsWatching 
+		category: #coop
+		default: false
+		balloonHelp: 'Activates COOP!!'.! !
+
+!COOPPreferences class methodsFor: 'action' stamp: 'GET 9/28/2019 00:11:31'!
+toggleCOOPPreference
+
+	Preferences togglePreference: #coopIsWatching .! !
+
+!COOPPreferences class methodsFor: 'accesors' stamp: 'GET 9/28/2019 00:07:03'!
+preferenceLabel
+	^ Preferences coopIsWatching ifTrue: 'COOP ON' ifFalse: 'COOP OFF'.! !
+
+!RuleList methodsFor: 'initialize' stamp: 'GET 9/27/2019 19:28:05'!
+initialize
+	rules _ { 'Soy una regla 1 ' . 'Soy una regla 2 '} asOrderedCollection .
+	selectedRuleIndex _ 1.! !
+
+!RuleList methodsFor: 'testing' stamp: 'GET 9/27/2019 20:21:48'!
+canNotShowRules
+	^ self isEmpty or: [ self notSelectedRule ]! !
+
+!RuleList methodsFor: 'testing' stamp: 'GET 9/27/2019 19:22:14'!
+isEmpty 
+ ^ rules isEmpty .! !
+
+!RuleList methodsFor: 'testing' stamp: 'GET 9/27/2019 20:21:48'!
+notSelectedRule
+	^ (rules isInBounds: self indexRuleSelected ) not! !
+
+!RuleList methodsFor: 'accessing' stamp: 'GET 9/27/2019 18:30:07'!
+indexRuleSelected
+	^ selectedRuleIndex! !
+
+!RuleList methodsFor: 'accessing' stamp: 'GET 9/27/2019 18:29:49'!
+rules
+	^ rules! !
+
+!RuleList methodsFor: 'accessing' stamp: 'GET 9/27/2019 18:30:07'!
+selectedRule 
+ ^ rules at: selectedRuleIndex .! !
+
+!RuleList methodsFor: 'action' stamp: 'GET 9/27/2019 20:04:34'!
+ignoreRule: aRule
+
+	rules remove: aRule .
+	self indexRuleSelected: 1.! !
+
+!RuleList methodsFor: 'action' stamp: 'GET 9/27/2019 18:30:07'!
+indexRuleSelected: anInteger
+	selectedRuleIndex _ anInteger ! !
+
 !Parser methodsFor: '*Cuis-University-COOP' stamp: 'MEG 9/13/2019 18:53:03'!
 performCOOPChecksFor: aMethodNode
 
@@ -341,3 +545,112 @@ isLeafNode
 isSelectorNode
 
 	^ true! !
+
+!TheWorldMenu methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/28/2019 00:25:07'!
+preferencesMenu
+	"Build the preferences menu for the world."
+	"original package construction"
+	^ (self menu: 'Preferences...')
+		addItemsFromDictionaries: {
+			{
+				#label 			-> 		'Focus follows mouse'.
+				#object 			-> 		Preferences.
+				#selector 		-> 		#enableFocusFollowsMouse.
+				#icon 			-> 		#windowIcon.
+				#balloonText 	-> 		'At all times, make the active window and widget the one on which the mouse is located.'
+			} asDictionary.
+			{
+				#label 			-> 		'Click to focus'.
+				#object 			-> 		Preferences.
+				#selector 		-> 		#disableFocusFollowsMouse.
+				#icon 			-> 		#windowIcon.
+				#balloonText 	-> 		'At all times, make the active window and widget the one where the mouse was clicked.'
+			} asDictionary.
+			{
+				#label 			-> 		'Font Sizes...'.
+				#object 			-> 		Theme.
+				#selector 		-> 		#changeFontSizes.
+				#icon 			-> 		#preferencesDesktopFontIcon.
+				#balloonText 	-> 		'use larger or smaller text and widgets'
+			} asDictionary.
+			{
+				#label			->			'Set font...'.
+				#object 			-> 		FontChanger.
+				#selector 		-> 		#promptUserAndInstallIfNecessaryWithFamilies:.
+				#arguments 		-> 		{FontChanger familyNames}.
+				#icon 			-> 		#preferencesDesktopFontIcon.
+				#balloonText 	-> 		'change the current font family.'
+			} asDictionary.
+			{
+				#label			->			'Load extra fonts'.
+				#object 			-> 		FontFamily.
+				#selector 		-> 		#readAdditionalTrueTypeFonts.
+				#icon 			-> 		#preferencesDesktopFontIcon.
+				#balloonText 	-> 		'Load additional TrueType fonts included with Cuis.'
+			} asDictionary.
+			{
+				#label 			-> 		'Icons...'.
+				#object 			-> 		Theme.
+				#selector 		-> 		#changeIcons.
+				#icon 			-> 		#worldIcon.
+				#balloonText 	-> 		'show more or less icons.'
+			} asDictionary.
+			{
+				#label 			-> 		'Themes...'.
+				#object 			-> 		Theme.
+				#selector 		-> 		#changeTheme.
+				#icon 			-> 		#appearanceIcon.
+				#balloonText 	-> 		'switch to another theme.'
+			} asDictionary.
+			{
+				#label 			-> 		COOPPreferences preferenceLabel.
+				#object 			-> 		COOPPreferences .
+				#selector 		-> 		#toggleCOOPPreference.
+				#icon 			-> 		#helpIcon.
+				#balloonText 	-> 		'Activate/Deactivate COOP'
+			} asDictionary.
+			nil.
+			{
+				#label 			-> 		'Show taskbar'.
+				#object 			-> 		#myWorld.
+				#selector 		-> 		#showTaskbar.
+				#icon 			-> 		#expandIcon.
+				#balloonText 	-> 		'show the taskbar'
+			} asDictionary.
+			{
+				#label 			-> 		'Hide taskbar'.
+				#object 			-> 		#myWorld.
+				#selector 		-> 		#hideTaskbar.
+				#icon 			-> 		#collapseIcon.
+				#balloonText 	-> 		'hide the taskbar'
+			} asDictionary.
+			nil.
+			{
+				#label 			-> 		'Full screen on'.
+				#selector 		-> 		#fullScreenOn.
+				#icon 			-> 		#viewFullscreenIcon.
+				#balloonText 	-> 		'puts you in full-screen mode, if not already there.'
+			} asDictionary.
+			{
+				#label 			-> 		'Full screen off'.
+				#selector 		-> 		#fullScreenOff.
+				#icon 			-> 		#exitFullscreenIcon.
+				#balloonText 	-> 		'if in full-screen mode, takes you out of it.'
+			} asDictionary.
+			nil.
+			{
+				#label 			-> 		'Set Code Author...'.
+				#object 			-> 		Utilities.
+				#selector 		-> 		#setAuthor.
+				#icon 			-> 		#usersIcon.
+				#balloonText 	-> 		'supply initials to be used to identify the author of code and other content.'
+			} asDictionary.
+			{
+				#label 			-> 		'All preferences...'.
+				#object 			-> 		Preferences.
+				#selector 		-> 		#openPreferencesInspector.
+				#icon 			-> 		#preferencesIcon.
+				#balloonText 	-> 		'view and change various options.'
+			} asDictionary.
+		}! !
+COOPPreferences initialize!
