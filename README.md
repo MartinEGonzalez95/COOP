@@ -18,4 +18,6 @@ Utilizando el AST de Cuis, creamos un grupo de reglas que tienen como objetivo s
 
 *Documentacion*: https://docs.google.com/document/d/1Pm92avUA9weRbcWbBDD9_AGE61dwIU3bg0ZkyJ6YE8k/edit?usp=sharing
 
+*Listado de Reglas Implementadas o ha Implementarse*: https://docs.google.com/spreadsheets/d/1V2cVyd9_ZCzpSsjmLckqZV7el3XrbKX_mz8eNJ5rJtk/edit?usp=sharing
+
 
