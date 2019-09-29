@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 29 September 2019 at 11:19:30 am'!
+'From Cuis 5.0 [latest update: #3839] on 29 September 2019 at 6:53:02 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 5!
+!provides: 'Cuis-University-COOP' 1 6!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -274,85 +274,84 @@ testCollectionIsEmptyDoesNotOpenAPopUp
 	
 	self assert: collection isEmpty.! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:21:57'!
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:46:49'!
 testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseInAComment
 
 	| aMethodNode |
-
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #identityCaseInAComment).
-
+	
+	aMethodNode _ self searchMethodNode: #identityCaseInAComment.
+	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:37:50'!
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:03'!
 testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseUnordered
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #unorderedIdentityCase).
+	aMethodNode _ self searchMethodNode: #unorderedIdentityCase.
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:25:19'!
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:19'!
 testRuleCollectionSizeDoesNotApplyWhenAnyCaseAreNotInTheSameMessage
 
 	| aMethodNode |
 
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #caseNotInTheSameMessage).
+	aMethodNode _ self searchMethodNode: #caseNotInTheSameMessage.
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/22/2019 23:47:42'!
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:51:11'!
 testRuleCollectionSizeDoesNotApplyWhenCaseIsNotThere
 
 	| aMethodNode |
 
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: ' ^ 0 == 1. '.
+	aMethodNode _ self searchMethodNode: #noErrorCase.
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/28/2019 20:35:22'!
+!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:39'!
 testRuleCollectionSizeDoesNotApplyWhenTheCaseHidesOnTemporaryVariableNode
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration
-		withSourceCode: (self sourceCodeFrom: #caseHiddenOnTemporaryVariable).
+	aMethodNode _ self searchMethodNode: #caseHiddenOnTemporaryVariable.
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:50:58'!
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:44:08'!
 testRuleCollectionSizeApplyInAMethodNodeWithEqualCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #equalCase).
+	aMethodNode _ self searchMethodNode: #equalCase.
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:52:00'!
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:45:44'!
 testRuleCollectionSizeApplyInAMethodNodeWithIdentityCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #identityCase).
+	aMethodNode _ self searchMethodNode: #identityCase.
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:51:23'!
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:45:58'!
 testRuleCollectionSizeApplyInAMethodNodeWithInvertedEqualCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #invertedEqualCase).
+	aMethodNode _ self searchMethodNode: #invertedEqualCase.
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/28/2019 19:51:12'!
+!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:46:16'!
 testRuleCollectionSizeApplyInAMethodNodeWithInvertedIdentityCase
 
 	| aMethodNode |
 	
-	aMethodNode _ methodFactory compileAndReturnMethod: #colaboration withSourceCode: (self sourceCodeFrom: #invertedIdentityCase).
+	aMethodNode _ self searchMethodNode: #invertedIdentityCase.
 	
 	self assert: (rule check: aMethodNode)! !
 
@@ -432,6 +431,20 @@ invertedIdentityCase
 
 	^ 0 == col size! !
 
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/29/2019 18:50:48'!
+noErrorCase
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	^ col isEmpty! !
+
+!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/29/2019 18:44:45'!
+searchMethodNode: selectorName
+
+	^ (self class methodDictionary at: selectorName) methodNode! !
+
 !RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:37:50'!
 unorderedIdentityCase
 
@@ -442,11 +455,6 @@ unorderedIdentityCase
 	colSize _ col size.
 
 	^ 0 == 1. ! !
-
-!RuleCollectionSizeTest methodsFor: 'source-code' stamp: 'MEG 9/28/2019 01:58:54'!
-sourceCodeFrom: methodName
-
-	^ (self class>>methodName) methodNode block asString! !
 
 !RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 11:16:33'!
 testANewRuleListIsEmptyAndIndexIsZero
