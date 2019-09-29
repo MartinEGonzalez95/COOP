@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 28 September 2019 at 12:33:29 am'!
+'From Cuis 5.0 [latest update: #3839] on 29 September 2019 at 11:19:30 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 3!
+!provides: 'Cuis-University-COOP' 1 5!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -46,6 +46,16 @@ TestCase subclass: #RuleCollectionSizeTest
 RuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
 
+!classDefinition: #RuleListTest category: #'Cuis-University-COOP-Tests'!
+TestCase subclass: #RuleListTest
+	instanceVariableNames: 'ruleList aRule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'RuleListTest class' category: #'Cuis-University-COOP-Tests'!
+RuleListTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #COOPMethodFactory category: #'Cuis-University-COOP-Tests'!
 LiveTypingTestFactory subclass: #COOPMethodFactory
 	instanceVariableNames: ''
@@ -74,6 +84,16 @@ Object subclass: #RuleCollectionSize
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'RuleCollectionSize class' category: #'Cuis-University-COOP'!
 RuleCollectionSize class
+	instanceVariableNames: ''!
+
+!classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
+Object subclass: #NotifierForTesting
+	instanceVariableNames: 'object hasNotified selector'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'NotifierForTesting class' category: #'Cuis-University-COOP-Tests'!
+NotifierForTesting class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPPreferences category: #'Cuis-University-COOP-Morph'!
@@ -175,29 +195,20 @@ createButtonMoreRuleInformation
 					action: #value
 					label: 'Ver') .! !
 
-!COOPWindow methodsFor: 'accessing' stamp: 'GET 9/27/2019 19:47:00'!
+!COOPWindow methodsFor: 'accessing' stamp: 'GET 9/28/2019 13:46:06'!
 ruleList
 
-	^ ruleList ifNil: [RuleList  new]  .! !
+	^ ruleList ifNil: [RuleList  mockRules ]  .! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 9/27/2019 20:21:24'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 9/28/2019 13:15:00'!
 describeSelectedRule
-	self ruleList  canNotShowRules 
-	ifTrue: [ PopUpMenu inform: 'No hay regla seleccionada' ] 
-	ifFalse:  [ PopUpMenu inform: self ruleList  selectedRule ] 
+	PopUpMenu  inform: self ruleList describeRule.
 	! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 9/27/2019 23:48:47'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 9/28/2019 23:56:51'!
 ignoreRule
-	
-	self ruleList  canNotShowRules 
-	ifTrue: [PopUpMenu  inform: 'no hay nada para ignorar' ] 
-	ifFalse: [ 
-		PopUpMenu inform: 'ignorando ', self ruleList  selectedRule .
-		self ruleList  ignoreRule: self ruleList  selectedRule .
-		self ruleList changed: #rules.
-		].
-! !
+
+	PopUpMenu  inform: self ruleList ignoreRule.! !
 
 !COOPWindow class methodsFor: 'menu world' stamp: 'GET 9/22/2019 19:31:59'!
 worldMenuForOpenGroup
@@ -370,6 +381,72 @@ setUp
 	
 	rule _ RuleCollectionSize new.! !
 
+!RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 11:16:33'!
+testANewRuleListIsEmptyAndIndexIsZero
+
+	self assert: ruleList isEmpty.	self assert: ruleList rules isEmpty .
+	self assert: ruleList indexRuleSelected  equals: 0 .! !
+
+!RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 11:16:39'!
+testAnEmptyRuleListDescribeARuleShowEmptyMessage
+
+	self assert: ruleList describeRule equals: ruleList emptyShowMessage .! !
+
+!RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 11:16:50'!
+testAnEmptyRuleListIgnoreARuleShowEmptyMessage
+
+	self assert: ruleList ignoreRule equals: ruleList emptyShowMessage .! !
+
+!RuleListTest methodsFor: 'setUp/tearDown' stamp: 'GET 9/28/2019 14:18:27'!
+setUp
+	ruleList _ RuleList new .
+	aRule  _ 'A rule'.! !
+
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:16:56'!
+testARuleListCanAddARuleAndTheIndexIsTheFirst
+	
+	ruleList add: aRule .
+	
+	self deny: ruleList isEmpty.
+	self assert: ruleList rules includes: aRule.
+	self assert: 1 equals: ruleList indexRuleSelected  .! !
+
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:18:42'!
+testARuleListWithRulesCanIgnoreTheSelectedRuleAndDecreaseItsIndex
+	
+	ruleList add: aRule .
+	
+	self assert: 'Regla ignorada: ', aRule  equals: ruleList ignoreRule .
+	self deny: (ruleList rules includes: aRule) .
+	self assert: 0 equals: ruleList indexRuleSelected.! !
+
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:05'!
+testARuleListWithRulesShowTheSelectedRule
+	
+	ruleList add: aRule .
+	
+	self assert: aRule  equals: ruleList describeRule .
+! !
+
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:11'!
+testWhenARuleIsIgnoreTheRulesHasChanged
+	
+	| notifier |
+	notifier  _ NotifierForTesting watch: ruleList.
+	ruleList add: aRule .
+	ruleList ignoreRule.
+	
+	self assert: notifier hasNotified.
+	! !
+
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:00'!
+testWhenARuleListAddMoreRulesTheIndexIsTheFirst
+	
+	ruleList add: aRule .
+	ruleList add: aRule .
+	
+	self assert: 1 equals:  ruleList indexRuleSelected  .! !
+
 !COOPMethodFactory methodsFor: 'action' stamp: 'MEG 9/22/2019 23:01:12'!
 compileAndReturnMethod: selector withSourceCode: sourceCode 
 	
@@ -451,6 +528,26 @@ checkIfNodeHasRule: statementNode
 	and: [ involvedNodes anySatisfy: [:node | (node key == #==) or: [node key == #=] ] ] 
 	and: [  involvedNodes anySatisfy: [:node  | node key == 0 ] ].! !
 
+!NotifierForTesting methodsFor: 'testing' stamp: 'GET 9/28/2019 14:34:31'!
+hasNotified
+
+	^ hasNotified.! !
+
+!NotifierForTesting methodsFor: 'initialize' stamp: 'GET 9/29/2019 00:01:18'!
+watch: anObject
+	anObject addDependent:self .
+
+	hasNotified _ false .! !
+
+!NotifierForTesting methodsFor: 'events-old protocol' stamp: 'GET 9/29/2019 00:01:52'!
+update: aParameter
+	hasNotified _ true.
+	^ super update: aParameter .! !
+
+!NotifierForTesting class methodsFor: 'class initialization' stamp: 'GET 9/29/2019 00:01:06'!
+watch: anObject
+	^ self new watch: anObject.! !
+
 !COOPPreferences class methodsFor: 'class initialization' stamp: 'GET 9/26/2019 19:01:57'!
 initialize
 	"
@@ -471,22 +568,27 @@ toggleCOOPPreference
 preferenceLabel
 	^ Preferences coopIsWatching ifTrue: 'COOP ON' ifFalse: 'COOP OFF'.! !
 
-!RuleList methodsFor: 'initialize' stamp: 'GET 9/27/2019 19:28:05'!
+!RuleList methodsFor: 'initialize' stamp: 'GET 9/28/2019 13:43:38'!
 initialize
-	rules _ { 'Soy una regla 1 ' . 'Soy una regla 2 '} asOrderedCollection .
-	selectedRuleIndex _ 1.! !
+	rules _ OrderedCollection new.
+	selectedRuleIndex _ 0.! !
 
-!RuleList methodsFor: 'testing' stamp: 'GET 9/27/2019 20:21:48'!
-canNotShowRules
-	^ self isEmpty or: [ self notSelectedRule ]! !
+!RuleList methodsFor: 'initialize' stamp: 'GET 9/28/2019 13:45:31'!
+with: aRules
+	rules _ aRules asOrderedCollection .
+	selectedRuleIndex _ 0.! !
 
 !RuleList methodsFor: 'testing' stamp: 'GET 9/27/2019 19:22:14'!
 isEmpty 
  ^ rules isEmpty .! !
 
-!RuleList methodsFor: 'testing' stamp: 'GET 9/27/2019 20:21:48'!
-notSelectedRule
-	^ (rules isInBounds: self indexRuleSelected ) not! !
+!RuleList methodsFor: 'accessing' stamp: 'GET 9/28/2019 23:45:55'!
+describeRule 
+ ^ rules at: selectedRuleIndex ifAbsent: [self emptyShowMessage ].! !
+
+!RuleList methodsFor: 'accessing' stamp: 'GET 9/29/2019 11:16:10'!
+emptyShowMessage
+	^ 'No hay regla seleccionada'.! !
 
 !RuleList methodsFor: 'accessing' stamp: 'GET 9/27/2019 18:30:07'!
 indexRuleSelected
@@ -496,19 +598,30 @@ indexRuleSelected
 rules
 	^ rules! !
 
-!RuleList methodsFor: 'accessing' stamp: 'GET 9/27/2019 18:30:07'!
-selectedRule 
- ^ rules at: selectedRuleIndex .! !
+!RuleList methodsFor: 'action' stamp: 'GET 9/28/2019 14:00:52'!
+add: aRule
 
-!RuleList methodsFor: 'action' stamp: 'GET 9/27/2019 20:04:34'!
-ignoreRule: aRule
+	rules add:aRule .
+	selectedRuleIndex _ 1.! !
 
-	rules remove: aRule .
-	self indexRuleSelected: 1.! !
+!RuleList methodsFor: 'action' stamp: 'GET 9/29/2019 11:18:01'!
+ignoreRule
+	
+	| showRule |
+	showRule  _ rules at: selectedRuleIndex ifAbsent: [^self emptyShowMessage].
+	rules remove: showRule.
+	self indexRuleSelected: 0.
+	self changed: #rules.
+	^ 'Regla ignorada: ',showRule.
+	! !
 
 !RuleList methodsFor: 'action' stamp: 'GET 9/27/2019 18:30:07'!
 indexRuleSelected: anInteger
 	selectedRuleIndex _ anInteger ! !
+
+!RuleList class methodsFor: 'as yet unclassified' stamp: 'GET 9/28/2019 13:44:56'!
+mockRules
+	^ self new with: {'Soy una regla 1'. 'Soy una regla 2' }.! !
 
 !Parser methodsFor: '*Cuis-University-COOP' stamp: 'MEG 9/13/2019 18:53:03'!
 performCOOPChecksFor: aMethodNode
