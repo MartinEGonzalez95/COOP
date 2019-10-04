@@ -1,14 +1,24 @@
-'From Cuis 5.0 [latest update: #3839] on 29 September 2019 at 8:42:07 pm'!
+'From Cuis 5.0 [latest update: #3839] on 3 October 2019 at 8:43:23 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 7!
+!provides: 'Cuis-University-COOP' 1 8!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
 
 
+!classDefinition: #COOPBrowser category: #'Cuis-University-COOP-Morph'!
+Browser subclass: #COOPBrowser
+	instanceVariableNames: 'methodsWithRules browser'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPBrowser class' category: #'Cuis-University-COOP-Morph'!
+COOPBrowser class
+	instanceVariableNames: ''!
+
 !classDefinition: #COOPWindow category: #'Cuis-University-COOP-Morph'!
 BrowserWindow subclass: #COOPWindow
-	instanceVariableNames: 'ruleList'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
@@ -24,6 +34,16 @@ TestCase subclass: #COOPMethodFactoryTest
 	category: 'Cuis-University-COOP-Tests'!
 !classDefinition: 'COOPMethodFactoryTest class' category: #'Cuis-University-COOP-Tests'!
 COOPMethodFactoryTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPTest category: #'Cuis-University-COOP-Tests'!
+TestCase subclass: #COOPTest
+	instanceVariableNames: 'coop aRule2 aRule notifier'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPTest class' category: #'Cuis-University-COOP-Tests'!
+COOPTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #DemoTest category: #'Cuis-University-COOP-Tests'!
@@ -68,12 +88,22 @@ COOPMethodFactory class
 
 !classDefinition: #COOP category: #'Cuis-University-COOP'!
 Object subclass: #COOP
-	instanceVariableNames: 'rules'
+	instanceVariableNames: 'rules performer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOP class' category: #'Cuis-University-COOP'!
 COOP class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPPerformer category: #'Cuis-University-COOP'!
+Object subclass: #COOPPerformer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPPerformer class' category: #'Cuis-University-COOP'!
+COOPPerformer class
 	instanceVariableNames: ''!
 
 !classDefinition: #RuleCollectionSize category: #'Cuis-University-COOP'!
@@ -88,7 +118,7 @@ RuleCollectionSize class
 
 !classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
 Object subclass: #NotifierForTesting
-	instanceVariableNames: 'object hasNotified selector'
+	instanceVariableNames: 'object hasNotified selector lastParameterSended'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
@@ -127,6 +157,73 @@ RuleList class
 	instanceVariableNames: ''!
 
 
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/1/2019 23:50:38'!
+indexRuleSelected
+	
+	^ self ruleList indexRuleSelected ! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/1/2019 23:51:27'!
+indexRuleSelected: index
+	
+	^ self ruleList indexRuleSelected:index! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:37:54'!
+keyForRule: aMethodNode
+
+	^ aMethodNode classAndSelector .! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:40:08'!
+ruleList
+	
+	^ [ self ruleListOf: self selectedClassAndMessage ] ifError: [ RuleList new ].
+
+	! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/1/2019 22:09:35'!
+ruleListOf: symbol
+
+	^ methodsWithRules at: symbol ifAbsentPut:[ RuleList new ] .! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:28:55'!
+selectedClassAndMessage
+
+	^ self selectedClassName ,'>>', self selectedMessageName storeString .! !
+
+!COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/3/2019 19:17:08'!
+initialize
+	super initialize .
+	methodsWithRules _ Dictionary new.
+! !
+
+!COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/1/2019 23:49:47'!
+rules
+	^ self ruleList rulesTitles .! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/3/2019 20:37:54'!
+addRule: aRule for:aMethodNode
+
+	| aRuleList |
+	aRuleList _ self ruleListOf: (self keyForRule: aMethodNode ).	.
+
+	aRuleList add:aRule.
+	self changed: #rules.! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/2/2019 00:09:25'!
+describeRule
+	^ self ruleList describeRule .! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/3/2019 20:13:20'!
+displayRules
+	
+	self changed:#rules.! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/3/2019 19:19:37'!
+ignoreRule
+	| ignoredRule |
+	 ignoredRule _ self ruleList ignoreRule .
+	self changed:#rules.
+	^ ignoredRule .! !
+
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
 buildButtonRulePane
 
@@ -141,14 +238,13 @@ buildButtonRulePane
 
 	^ ruleViewPane.! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:20:14'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:26:57'!
 buildCOOPRulePane
 	"Construct the pane that shows the code.
 	Respect the Preference for standardCodeFont."
 		
 	| codePaneLayout ruleListPane |
-	codePaneLayout _ LayoutMorph newRow.
-
+	codePaneLayout _ LayoutMorph newRow.	
 	ruleListPane _ self buildRuleListPane.
 	
 	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.8.
@@ -165,19 +261,18 @@ buildMorphicCodePane
 		 
 	^ Preferences coopIsWatching ifTrue:[ self buildCOOPRulePane ] ifFalse: [ codePane] .! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/29/2019 16:26:06'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:27:04'!
 buildRuleListMorph
 
 	^ PluggableListMorph
-		model: self ruleList 
-		listGetter: #rulesTitles
+		model: model 
+		listGetter: #rules
 		indexGetter: #indexRuleSelected
 		indexSetter: #indexRuleSelected:! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:20:14'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/1/2019 00:34:04'!
 buildRuleListPane
 	| buttonPane  ruleListView ruleListPane |
-	ruleList _ self ruleList.
 	ruleListPane _ LayoutMorph newColumn.
 	
 	ruleListView _ self buildRuleListMorph.
@@ -205,32 +300,45 @@ createButtonMoreRuleInformation
 					action: #value
 					label: 'Ver') .! !
 
-!COOPWindow methodsFor: 'accessing' stamp: 'GET 9/28/2019 13:46:06'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:42:44'!
+update: anEvent
+	super update: anEvent.
+	
+	anEvent = #acceptedContents ifTrue: [ model displayRules ] ! !
+
+!COOPWindow methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:27:25'!
 ruleList
 
-	^ ruleList ifNil: [RuleList  mockRules ]  .! !
+	^ model ruleList.! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 9/28/2019 13:15:00'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 10/3/2019 20:27:32'!
 describeSelectedRule
-	PopUpMenu  inform: self ruleList describeRule.
+	PopUpMenu  inform: model describeRule.
 	! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 9/28/2019 23:56:51'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 10/3/2019 20:27:36'!
 ignoreRule
 
-	PopUpMenu  inform: self ruleList ignoreRule.! !
+	PopUpMenu  inform: model ignoreRule.! !
 
-!COOPWindow class methodsFor: 'menu world' stamp: 'MEG 9/28/2019 01:40:28'!
+!COOPWindow class methodsFor: 'menu world' stamp: 'GET 9/30/2019 23:26:29'!
 worldMenuForOpenGroup
 	^ `{{
 			#itemGroup 		-> 		10.
 			#itemOrder 		-> 		30.
 			#label 			->			'COOP Browser'.
 			#object 			-> 		COOPWindow.
-			#selector 		-> 		#openBrowser.
+			#selector 		-> 		#openCOOPWindow.
 			#icon 			-> 		#editFindReplaceIcon.
 			#balloonText 	-> 		'Browser with COOP'.
 		} asDictionary}`! !
+
+!COOPWindow class methodsFor: 'instance creation' stamp: 'GET 10/3/2019 19:09:32'!
+openCOOPWindow
+	| browser window |
+	browser _ COOPBrowser new.
+	window _ self open: browser label: browser defaultBrowserTitle.	
+	^ window! !
 
 !COOPMethodFactoryTest methodsFor: 'compiled-method-test' stamp: 'MEG 9/22/2019 23:49:16'!
 testCOOPMethodFactoryCompilesNewMethodNode
@@ -244,7 +352,52 @@ testCOOPMethodFactoryCompilesNewMethodNode
 	self assert: aMethodNode class equals: MethodNode.
 	self assert: aMethodNode selector equals: #temporal.! !
 
-!DemoTest methodsFor: 'apply' stamp: 'MEG 9/22/2019 23:52:06'!
+!COOPTest methodsFor: 'coop-notification' stamp: 'GET 9/30/2019 22:02:56'!
+searchMethodNode: selector
+
+	^ RuleCollectionSizeTest  new searchMethodNode: selector! !
+
+!COOPTest methodsFor: 'coop-notification' stamp: 'GET 9/30/2019 22:09:58'!
+testCOOPDoNotNotifyTheRulesWhenNoOneWasNotActivatedForAMethodNode
+	 
+	| methodNode  |
+	methodNode _ self searchMethodNode: #noErrorCase .
+	
+	coop performInteractiveChecksFor: methodNode .
+		
+	self deny: notifier hasNotified .
+	self deny: (notifier hasNotifiedWith: aRule) .! !
+
+!COOPTest methodsFor: 'coop-notification' stamp: 'GET 9/30/2019 22:22:55'!
+testCOOPKnowsTheRulesActivatedForAMethodNode
+	 
+	| methodNode  |
+	methodNode _ self searchMethodNode: #identityCase .
+		
+	self assert: ((coop rulesActivatedFor: methodNode ) includes: aRule ) .! !
+
+!COOPTest methodsFor: 'coop-notification' stamp: 'GET 9/30/2019 22:22:40'!
+testCOOPNotifyTheRulesActivatedForAMethodNode
+	 
+	| methodNode   |
+	methodNode _ self searchMethodNode: #identityCase .
+
+	coop performInteractiveChecksFor: methodNode .
+		
+	self assert: notifier hasNotified .
+	self assert: (notifier hasNotifiedWith: aRule) .! !
+
+!COOPTest methodsFor: 'setUp/tearDown' stamp: 'GET 10/1/2019 00:13:04'!
+setUp
+
+	aRule _ RuleCollectionSize new.
+	notifier _ NotifierForTesting new.
+	coop _ COOP withRules: {aRule} andPerformer: notifier .
+	notifier watch: coop.	
+
+! !
+
+!DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 20:30:15'!
 testCollectionSizeIsEqualToZeroOpensAPopUpOnAccept
 
 	| collection |
@@ -252,7 +405,7 @@ testCollectionSizeIsEqualToZeroOpensAPopUpOnAccept
 	
 	self assert: collection size = 0.! !
 
-!DemoTest methodsFor: 'apply' stamp: 'MEG 9/22/2019 23:52:12'!
+!DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 18:56:59'!
 testCollectionSizeIsIdenticalToZeroOpensAPopUpOnAccept
 
 	| collection |
@@ -260,7 +413,7 @@ testCollectionSizeIsIdenticalToZeroOpensAPopUpOnAccept
 	
 	self assert: collection size == 0.! !
 
-!DemoTest methodsFor: 'apply' stamp: 'MEG 9/22/2019 23:52:17'!
+!DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 19:45:38'!
 testZeroIsEqualToCollectionSizeOpensAPopUpOnAccept
 
 	| collection |
@@ -268,7 +421,7 @@ testZeroIsEqualToCollectionSizeOpensAPopUpOnAccept
 	
 	self assert: 0 = collection size.! !
 
-!DemoTest methodsFor: 'apply' stamp: 'MEG 9/22/2019 23:52:23'!
+!DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 20:30:06'!
 testZeroIsIdenticalToCollectionSizeOpensAPopUpOnAccept
 
 	| collection |
@@ -276,7 +429,7 @@ testZeroIsIdenticalToCollectionSizeOpensAPopUpOnAccept
 	
 	self assert: 0 == collection size.! !
 
-!DemoTest methodsFor: 'not-apply' stamp: 'MEG 9/22/2019 23:52:28'!
+!DemoTest methodsFor: 'not-apply' stamp: 'GET 10/3/2019 19:20:51'!
 testCollectionIsEmptyDoesNotOpenAPopUp
 
 	| collection |
@@ -514,6 +667,18 @@ testARuleListWithRulesShowTheSelectedRule
 	self assert: aRule description equals: ruleList describeRule .
 ! !
 
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/3/2019 19:36:44'!
+testRuleListOnlyContainsOneRuleByRuleClass
+
+	| firstAddedRule secondAddedRule |
+	firstAddedRule _ RuleCollectionSize new.
+	secondAddedRule _ RuleCollectionSize new.	
+	
+	ruleList add: firstAddedRule .
+	ruleList add: secondAddedRule.
+	self assert: ( ruleList includes: firstAddedRule ).
+	self deny: ( ruleList includes: secondAddedRule )! !
+
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:11'!
 testWhenARuleIsIgnoreTheRulesHasChanged
 
@@ -560,15 +725,21 @@ nameOfClassToBeRemoved
 	
 	^ #COOPClassToBeRemoved! !
 
-!COOP methodsFor: 'action' stamp: 'GET 9/29/2019 16:29:33'!
-opensPopUpFor: rule
+!COOP methodsFor: 'action' stamp: 'GET 10/1/2019 00:15:25'!
+activate: rule with:aMethodNode
 
-	PopUpMenu inform: rule description ! !
+	performer activate: rule with:aMethodNode
+! !
 
-!COOP methodsFor: 'action' stamp: 'MEG 9/13/2019 19:36:04'!
+!COOP methodsFor: 'action' stamp: 'GET 10/1/2019 00:15:06'!
 performInteractiveChecksFor: aMethodNode
 
-	^ rules do: [ :rule | (rule check: aMethodNode) ifTrue: [ self opensPopUpFor: rule ] ]! !
+	^ (self rulesActivatedFor: aMethodNode ) do: [ :rule | self activate: rule with:aMethodNode ] ! !
+
+!COOP methodsFor: 'action' stamp: 'GET 9/30/2019 21:37:58'!
+rulesActivatedFor: aMethodNode
+
+	^ rules select: [ :rule | rule check: aMethodNode]! !
 
 !COOP methodsFor: 'initialization' stamp: 'MEG 9/13/2019 18:49:41'!
 initialize
@@ -576,6 +747,28 @@ initialize
 	rules _ Set new.
 	
 	rules add: RuleCollectionSize new.! !
+
+!COOP methodsFor: 'initialization' stamp: 'GET 9/30/2019 23:58:34'!
+withRules: aRules andPerformer: aPerformer
+
+	rules _ aRules asSet.
+	performer _ aPerformer.! !
+
+!COOP class methodsFor: 'instance creation' stamp: 'GET 9/30/2019 23:56:17'!
+createWithRulesAndPerformer
+	
+	^ self withRules: {RuleCollectionSize new} andPerformer: COOPPerformer new.! !
+
+!COOP class methodsFor: 'instance creation' stamp: 'GET 9/30/2019 23:55:56'!
+withRules: rules andPerformer: aPerformer 
+	
+	^ self new withRules: rules andPerformer: aPerformer ! !
+
+!COOPPerformer methodsFor: 'notification' stamp: 'GET 10/1/2019 00:16:04'!
+activate: aRule with:aMethodNode
+
+	PopUpMenu inform: aRule description.
+	COOPBrowser allInstancesDo: [:coopBrowser | coopBrowser addRule: aRule for:aMethodNode]! !
 
 !RuleCollectionSize methodsFor: 'testing' stamp: 'GET 9/10/2019 22:34:46'!
 check: aMethodNode 
@@ -612,6 +805,11 @@ checkIfNodeHasRule: statementNode
 	and: [ involvedNodes anySatisfy: [:node | (node key == #==) or: [node key == #=] ] ] 
 	and: [  involvedNodes anySatisfy: [:node  | node key == 0 ] ].! !
 
+!RuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/3/2019 19:43:38'!
+sameClassAs: aRule
+	
+	^ aRule class = self class.! !
+
 !RuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:13:48'!
 description
 	^ RuleDescriptor new descriptionForColectionSize .! !
@@ -625,15 +823,31 @@ hasNotified
 
 	^ hasNotified.! !
 
-!NotifierForTesting methodsFor: 'initialize' stamp: 'GET 9/29/2019 00:01:18'!
+!NotifierForTesting methodsFor: 'testing' stamp: 'GET 9/30/2019 22:22:00'!
+hasNotifiedWith: aRule
+	
+	^ lastParameterSended = aRule.! !
+
+!NotifierForTesting methodsFor: 'initialize' stamp: 'GET 9/30/2019 22:21:49'!
 watch: anObject
 	anObject addDependent:self .
-
+	
 	hasNotified _ false .! !
 
-!NotifierForTesting methodsFor: 'events-old protocol' stamp: 'GET 9/29/2019 00:01:52'!
+!NotifierForTesting methodsFor: 'events-old protocol' stamp: 'GET 10/1/2019 00:15:46'!
+activate: aRule with:aMethodNode
+
+	self saveNotification:aRule .! !
+
+!NotifierForTesting methodsFor: 'events-old protocol' stamp: 'GET 9/30/2019 22:20:24'!
+saveNotification: aParameter
+
+	hasNotified _ true.	lastParameterSended _ aParameter! !
+
+!NotifierForTesting methodsFor: 'events-old protocol' stamp: 'GET 9/30/2019 22:20:24'!
 update: aParameter
-	hasNotified _ true.
+	self saveNotification: aParameter .
+	
 	^ super update: aParameter .! !
 
 !NotifierForTesting class methodsFor: 'class initialization' stamp: 'GET 9/29/2019 00:01:06'!
@@ -660,11 +874,11 @@ toggleCOOPPreference
 preferenceLabel
 	^ Preferences coopIsWatching ifTrue: 'COOP ON' ifFalse: 'COOP OFF'.! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 9/29/2019 12:13:37'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/3/2019 20:34:29'!
 descriptionForColectionSize
 
 	^ 'Se podria utilizar el mensaje #isEmpty
-	para cuando se chequea que el tama�o
+	para cuando se chequea que la longitud
 	de una coleccion es igual a cero'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 9/29/2019 12:06:08'!
@@ -676,10 +890,15 @@ initialize
 	rules _ OrderedCollection new.
 	selectedRuleIndex _ 0.! !
 
-!RuleList methodsFor: 'initialize' stamp: 'GET 9/28/2019 13:45:31'!
+!RuleList methodsFor: 'initialize' stamp: 'GET 10/3/2019 20:32:28'!
 with: aRules
 	rules _ aRules asOrderedCollection .
 	selectedRuleIndex _ 0.! !
+
+!RuleList methodsFor: 'testing' stamp: 'GET 10/3/2019 19:36:08'!
+includes: aRule 
+	
+	^ rules includes: aRule.! !
 
 !RuleList methodsFor: 'testing' stamp: 'MEG 9/28/2019 01:41:00'!
 isEmpty
@@ -698,24 +917,27 @@ emptyShowMessage
 indexRuleSelected
 	^ selectedRuleIndex! !
 
-!RuleList methodsFor: 'accessing' stamp: 'GET 9/29/2019 16:25:17'!
+!RuleList methodsFor: 'accessing' stamp: 'GET 10/1/2019 23:16:02'!
 rulesTitles
 	^ rules collect:[:rule | rule title]! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 9/28/2019 14:00:52'!
+!RuleList methodsFor: 'action' stamp: 'GET 10/3/2019 19:44:50'!
 add: aRule
+	(rules anySatisfy: [:rule| rule sameClassAs: aRule ] ) ifTrue: [^ self].
+	
+	rules add: aRule .
+	selectedRuleIndex _ 1.
+		self changed: #rules.
+! !
 
-	rules add:aRule .
-	selectedRuleIndex _ 1.! !
-
-!RuleList methodsFor: 'action' stamp: 'GET 9/29/2019 16:25:17'!
+!RuleList methodsFor: 'action' stamp: 'GET 10/1/2019 23:50:07'!
 ignoreRule
 
 	| aRule |
 	aRule  _ self selectedRule: [^self emptyShowMessage] .
 	rules remove: aRule.
 	self indexRuleSelected: 0.
-	self changed: #rulesTitles.
+	self changed: #rules.
 	^ 'Regla ignorada: ', (aRule title) .
 	! !
 
@@ -732,10 +954,14 @@ selectedRule: aBlock
 mockRules
 	^ self new with: {RuleCollectionSize new. RuleCollectionSize new}.! !
 
-!Parser methodsFor: '*Cuis-University-COOP' stamp: 'MEG 9/13/2019 18:53:03'!
+!RuleList class methodsFor: 'as yet unclassified' stamp: 'GET 9/30/2019 22:49:26'!
+with: rules
+	^ self new with: rules.! !
+
+!Parser methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/30/2019 23:56:17'!
 performCOOPChecksFor: aMethodNode
 
-	^ COOP new performInteractiveChecksFor: aMethodNode
+	^ COOP createWithRulesAndPerformer performInteractiveChecksFor: aMethodNode
 
 	! !
 
