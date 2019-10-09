@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 3 October 2019 at 8:43:23 pm'!
+'From Cuis 5.0 [latest update: #3839] on 6 October 2019 at 7:30:04 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 8!
+!provides: 'Cuis-University-COOP' 1 9!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -764,10 +764,9 @@ withRules: rules andPerformer: aPerformer
 	
 	^ self new withRules: rules andPerformer: aPerformer ! !
 
-!COOPPerformer methodsFor: 'notification' stamp: 'GET 10/1/2019 00:16:04'!
+!COOPPerformer methodsFor: 'notification' stamp: 'GET 10/6/2019 19:29:47'!
 activate: aRule with:aMethodNode
 
-	PopUpMenu inform: aRule description.
 	COOPBrowser allInstancesDo: [:coopBrowser | coopBrowser addRule: aRule for:aMethodNode]! !
 
 !RuleCollectionSize methodsFor: 'testing' stamp: 'GET 9/10/2019 22:34:46'!
