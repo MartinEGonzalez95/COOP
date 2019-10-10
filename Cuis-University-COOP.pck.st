@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 6 October 2019 at 7:30:04 pm'!
+'From Cuis 5.0 [latest update: #3839] on 10 October 2019 at 12:06:41 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 9!
+!provides: 'Cuis-University-COOP' 1 10!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -179,15 +179,15 @@ ruleList
 
 	! !
 
-!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/1/2019 22:09:35'!
+!COOPBrowser methodsFor: 'accessing' stamp: 'MEG 10/9/2019 21:02:02'!
 ruleListOf: symbol
 
-	^ methodsWithRules at: symbol ifAbsentPut:[ RuleList new ] .! !
+	^ methodsWithRules at: symbol ifAbsentPut: [ RuleList new ] .! !
 
-!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:28:55'!
+!COOPBrowser methodsFor: 'accessing' stamp: 'MEG 10/9/2019 21:10:08'!
 selectedClassAndMessage
 
-	^ self selectedClassName ,'>>', self selectedMessageName storeString .! !
+	^ self selectedClassName ,'>>', self selectedMessageName storeString.! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/3/2019 19:17:08'!
 initialize
@@ -206,6 +206,16 @@ addRule: aRule for:aMethodNode
 	aRuleList _ self ruleListOf: (self keyForRule: aMethodNode ).	.
 
 	aRuleList add:aRule.
+	self changed: #rules.! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/10/2019 00:04:00'!
+cleanBeforeRunning: aMethodNode
+
+	| aRuleList |
+	aRuleList _ self ruleListOf: ( self keyForRule: aMethodNode ).	.
+
+	aRuleList clean.
+	
 	self changed: #rules.! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'GET 10/2/2019 00:09:25'!
@@ -300,10 +310,11 @@ createButtonMoreRuleInformation
 					action: #value
 					label: 'Ver') .! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:42:44'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 10/9/2019 21:09:19'!
 update: anEvent
-	super update: anEvent.
 	
+	super update: anEvent.
+
 	anEvent = #acceptedContents ifTrue: [ model displayRules ] ! !
 
 !COOPWindow methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:27:25'!
@@ -397,21 +408,23 @@ setUp
 
 ! !
 
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 20:30:15'!
+!DemoTest methodsFor: 'apply' stamp: 'MEG 10/10/2019 00:04:17'!
 testCollectionSizeIsEqualToZeroOpensAPopUpOnAccept
 
 	| collection |
+
 	collection _ OrderedCollection new.
 	
-	self assert: collection size = 0.! !
+	self assert: collection size = 0 .! !
 
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 18:56:59'!
+!DemoTest methodsFor: 'apply' stamp: 'MEG 10/10/2019 00:04:44'!
 testCollectionSizeIsIdenticalToZeroOpensAPopUpOnAccept
 
 	| collection |
+
 	collection _ OrderedCollection new.
-	
-	self assert: collection size == 0.! !
+
+	self assert: collection size == 0 .! !
 
 !DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 19:45:38'!
 testZeroIsEqualToCollectionSizeOpensAPopUpOnAccept
@@ -667,6 +680,17 @@ testARuleListWithRulesShowTheSelectedRule
 	self assert: aRule description equals: ruleList describeRule .
 ! !
 
+!RuleListTest methodsFor: 'with-rules' stamp: 'MEG 10/9/2019 22:23:10'!
+testRuleListCanBeCleaned
+
+	ruleList add: aRule .
+
+	self deny: ruleList isEmpty .
+	
+	ruleList clean .
+	
+	self assert: ruleList isEmpty .! !
+
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/3/2019 19:36:44'!
 testRuleListOnlyContainsOneRuleByRuleClass
 
@@ -731,10 +755,12 @@ activate: rule with:aMethodNode
 	performer activate: rule with:aMethodNode
 ! !
 
-!COOP methodsFor: 'action' stamp: 'GET 10/1/2019 00:15:06'!
+!COOP methodsFor: 'action' stamp: 'MEG 10/9/2019 23:55:49'!
 performInteractiveChecksFor: aMethodNode
 
-	^ (self rulesActivatedFor: aMethodNode ) do: [ :rule | self activate: rule with:aMethodNode ] ! !
+	performer cleanBeforeRunning: aMethodNode .
+
+	^ ( self rulesActivatedFor: aMethodNode ) do: [ :rule | self activate: rule with: aMethodNode ] ! !
 
 !COOP methodsFor: 'action' stamp: 'GET 9/30/2019 21:37:58'!
 rulesActivatedFor: aMethodNode
@@ -764,10 +790,15 @@ withRules: rules andPerformer: aPerformer
 	
 	^ self new withRules: rules andPerformer: aPerformer ! !
 
-!COOPPerformer methodsFor: 'notification' stamp: 'GET 10/6/2019 19:29:47'!
-activate: aRule with:aMethodNode
+!COOPPerformer methodsFor: 'notification' stamp: 'MEG 10/9/2019 21:53:23'!
+activate: aRule with: aMethodNode
 
-	COOPBrowser allInstancesDo: [:coopBrowser | coopBrowser addRule: aRule for:aMethodNode]! !
+	COOPBrowser allInstancesDo: [ :coopBrowser | coopBrowser addRule: aRule for: aMethodNode ].! !
+
+!COOPPerformer methodsFor: 'action' stamp: 'MEG 10/9/2019 23:52:19'!
+cleanBeforeRunning: aMethodNode 
+	
+	COOPBrowser allInstancesDo: [ :coopBrowser | coopBrowser cleanBeforeRunning: aMethodNode ].! !
 
 !RuleCollectionSize methodsFor: 'testing' stamp: 'GET 9/10/2019 22:34:46'!
 check: aMethodNode 
@@ -833,10 +864,10 @@ watch: anObject
 	
 	hasNotified _ false .! !
 
-!NotifierForTesting methodsFor: 'events-old protocol' stamp: 'GET 10/1/2019 00:15:46'!
+!NotifierForTesting methodsFor: 'events-old protocol' stamp: 'MEG 10/9/2019 23:58:24'!
 activate: aRule with:aMethodNode
 
-	self saveNotification:aRule .! !
+	self saveNotification: aRule .! !
 
 !NotifierForTesting methodsFor: 'events-old protocol' stamp: 'GET 9/30/2019 22:20:24'!
 saveNotification: aParameter
@@ -848,6 +879,11 @@ update: aParameter
 	self saveNotification: aParameter .
 	
 	^ super update: aParameter .! !
+
+!NotifierForTesting methodsFor: 'mock' stamp: 'MEG 10/10/2019 00:00:07'!
+cleanBeforeRunning: aMethodNode 
+	
+	^ self "Nothing to do"! !
 
 !NotifierForTesting class methodsFor: 'class initialization' stamp: 'GET 9/29/2019 00:01:06'!
 watch: anObject
@@ -928,6 +964,11 @@ add: aRule
 	selectedRuleIndex _ 1.
 		self changed: #rules.
 ! !
+
+!RuleList methodsFor: 'action' stamp: 'MEG 10/9/2019 22:06:19'!
+clean
+	
+	rules removeAll.! !
 
 !RuleList methodsFor: 'action' stamp: 'GET 10/1/2019 23:50:07'!
 ignoreRule
