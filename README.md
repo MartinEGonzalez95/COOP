@@ -1,4 +1,6 @@
-# COOP (Cuis Object-Oriented Protector) [Icono]
+<p align="center"><img src="Icon.jpeg" alt="COOP Icon" width="161" height="188"/></p>
+
+# COOP (Cuis Object-Oriented Protector) 
 
 ## Descripción
 
