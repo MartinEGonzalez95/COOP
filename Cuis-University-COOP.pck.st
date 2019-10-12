@@ -1,6 +1,6 @@
 'From Cuis 5.0 [latest update: #3839] on 13 October 2019 at 9:00:32 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 11!
+!provides: 'Cuis-University-COOP' 1 12!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -274,7 +274,7 @@ ignoreRule
 	self changed:#rules.
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/12/2019 16:41:44'!
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/12/2019 17:03:37'!
 runCOOP
 
 	| selectedClass selectedMessageName methodNode |
@@ -283,8 +283,8 @@ runCOOP
 
 	methodNode _  (( selectedClass methodDictionary) at: selectedMessageName) methodNode.
 
-	COOP createWithRulesAndPerformer performInteractiveChecksFor: methodNode.
-
+	COOP new performInteractiveChecksFor: methodNode.
+	
 	"Mandatory to return self because method it's used on cascade"
 	^ self! !
 
@@ -968,12 +968,14 @@ rulesActivatedFor: aMethodNode
 
 	^ rules select: [ :rule | rule check: aMethodNode]! !
 
-!COOP methodsFor: 'initialization' stamp: 'MEG 9/13/2019 18:49:41'!
+!COOP methodsFor: 'initialization' stamp: 'MEG 10/12/2019 17:03:06'!
 initialize
 
 	rules _ Set new.
 	
-	rules add: RuleCollectionSize new.! !
+	rules add: RuleCollectionSize new.
+
+	performer _ COOPPerformer new.! !
 
 !COOP methodsFor: 'initialization' stamp: 'GET 9/30/2019 23:58:34'!
 withRules: aRules andPerformer: aPerformer
@@ -983,7 +985,7 @@ withRules: aRules andPerformer: aPerformer
 
 !COOP class methodsFor: 'instance creation' stamp: 'GET 10/13/2019 20:57:17'!
 createWithRulesAndPerformer
-	
+
 	^ self withRules: COOPRule allRules andPerformer: COOPPerformer new.! !
 
 !COOP class methodsFor: 'instance creation' stamp: 'GET 9/30/2019 23:55:56'!
