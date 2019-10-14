@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 13 October 2019 at 9:28:26 pm'!
+'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 12:39:34 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 13!
+!provides: 'Cuis-University-COOP' 1 14!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -224,10 +224,10 @@ ruleListOf: symbol
 
 	^ methodsWithRules at: symbol ifAbsentPut: [ RuleList new ] .! !
 
-!COOPBrowser methodsFor: 'accessing' stamp: 'MEG 10/9/2019 21:10:08'!
+!COOPBrowser methodsFor: 'accessing' stamp: 'MEG 10/14/2019 00:38:56'!
 selectedClassAndMessage
 
-	^ self selectedClassName ,'>>', self selectedMessageName storeString.! !
+	^ self selectedClassOrMetaClass name, '>>', self selectedMessageName storeString.! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/3/2019 19:17:08'!
 initialize
@@ -274,18 +274,14 @@ ignoreRule
 	self changed:#rules.
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/13/2019 21:23:45'!
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/14/2019 00:37:12'!
 runCOOP
 
+	| methodDictionary methodNode selectedMessageName |
+	methodDictionary _ ( self selectedClassOrMetaClass ifNil: [ ^ self ] ) methodDictionary.
+	selectedMessageName _ self selectedMessageName ifNil: [ ^ self ].
 
-	| classMethodDictionary instanceMethodDictionary methodNode selectedClass selectedMessageName |
-	selectedClass _ self selectedClass ifNil: [ ^ self ].
-	selectedMessageName _ self selectedMessageName ifNil: [ ^ self ]. 
-
-	instanceMethodDictionary _ selectedClass methodDictionary .
-	classMethodDictionary _ selectedClass class methodDictionary .
-
-	methodNode _  ( instanceMethodDictionary at: selectedMessageName ifAbsent: [ classMethodDictionary at: selectedMessageName ]) methodNode.
+	methodNode _  ( methodDictionary at: selectedMessageName ) methodNode.
 
 	COOP new performInteractiveChecksFor: methodNode.
 	
@@ -391,6 +387,11 @@ ignoreRule
 
 	PopUpMenu  inform: model ignoreRule.! !
 
+!COOPWindow methodsFor: 'action' stamp: 'MEG 10/14/2019 00:36:28'!
+informCOOP
+
+	model ifNotNil: [ model runCOOP ]! !
+
 !COOPWindow class methodsFor: 'menu world' stamp: 'GET 9/30/2019 23:26:29'!
 worldMenuForOpenGroup
 	^ `{{
@@ -409,6 +410,11 @@ openCOOPWindow
 	browser _ COOPBrowser new.
 	window _ self open: browser label: browser defaultBrowserTitle.	
 	^ window! !
+
+!COOPWindow class methodsFor: 'action' stamp: 'MEG 10/14/2019 00:36:20'!
+informCOOP
+
+	self allInstancesDo: [ :coopWindow | coopWindow informCOOP ]! !
 
 !COOPMethodFactoryTest methodsFor: 'compiled-method-test' stamp: 'MEG 9/22/2019 23:49:16'!
 testCOOPMethodFactoryCompilesNewMethodNode
@@ -1308,7 +1314,7 @@ isSelectorNode
 
 	^ true! !
 
-!InnerTextMorph methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/12/2019 16:25:53'!
+!InnerTextMorph methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/14/2019 00:34:11'!
 acceptContents
 	"The message is sent when the user hits return or Cmd-S.
 	Accept the current contents and end editing."
@@ -1335,10 +1341,13 @@ acceptContents
 		ifTrue: [
 			model refetch.
 			self editor selectFrom: prevSelection first to: prevSelection last.
-			COOPWindow allInstancesDo: [ :coopWindow | coopWindow update: #acceptedContents ].
 			UISupervisor whenUIinSafeState: [
 				self world ifNotNil: [ :w | w activeHand newKeyboardFocus: self ].
-				owner verticalScrollBar internalScrollValue: prevScrollValue].
+				owner verticalScrollBar internalScrollValue: prevScrollValue
+				].
+
+			COOPWindow informCOOP.
+
 			true]
 		ifFalse: [ false ]! !
 
