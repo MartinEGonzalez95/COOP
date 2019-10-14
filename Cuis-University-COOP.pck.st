@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 3:19:44 pm'!
+'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 4:22:23 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 16!
+!provides: 'Cuis-University-COOP' 1 17!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -775,7 +775,7 @@ testApplyWhenThereAreMoreThanThreeColaborationsChainedInsideABlock
 
 	self assert:  [1 + 1 + 1 +1] value   equals: 4.! !
 
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/13/2019 20:56:46'!
+!DemoTest methodsFor: 'apply' stamp: 'GET 10/14/2019 16:19:32'!
 testApplyWhenThereAreThreeColaborationsChained
 
 	self assert: (1 + 1 + 1 + 1 ) equals: 4.! !
@@ -1035,31 +1035,20 @@ allRules
 
 	^  rules! !
 
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:50:34'!
-applyConditionOn: aNode
+!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 16:18:06'!
+applyCondition: aNode 
+	
+ 	^ (self amountOfColaborations: aNode  ) > 2! !
 
-	^ (self amountOfColaborations: aNode ) > 2! !
+!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 16:12:47'!
+canHandle: aNode 
+	
+	^ aNode isMessageNode and: [ aNode isCascade not]! !
 
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:35:52'!
-canAddNode: aNode
-
-	^ aNode  isMessageNode and: [ aNode  isCascade not]! !
-
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:41:45'!
-onSelection: node add: collection
-
-	(self canAddNode: node)  ifTrue: [ collection add: node ]! !
-
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:41:45'!
-selectMessageNodes: aMethodNode
-
-	| parse nodes |
-	nodes _ OrderedCollection new.
-	parse _ ParseNodeEnumerator ofBlock: [:node | self onSelection: node add: nodes].
-
-	aMethodNode accept: parse .
-
-	^ nodes .! !
+!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 16:16:49'!
+canImproved: aMethodNode 
+	
+	^ (self canHandle: aMethodNode) and: [ self applyCondition: aMethodNode ]! !
 
 !RuleColaborationChain methodsFor: 'printing' stamp: 'GET 10/9/2019 20:57:37'!
 description
@@ -1076,13 +1065,12 @@ amountOfColaborations: aNode
 	aNode isMessageNode ifFalse:[^ 0].
 	^ (self amountOfColaborations: aNode receiver )+ 1 .! !
 
-!RuleColaborationChain methodsFor: 'inspect-node' stamp: 'GET 10/11/2019 22:51:35'!
+!RuleColaborationChain methodsFor: 'inspect-node' stamp: 'GET 10/14/2019 16:16:23'!
 check: aMethodNode
 
-	| messageNodes |
-	messageNodes _ self selectMessageNodes: aMethodNode .
+	aMethodNode nodesDo: [:node | (self canImproved: node) ifTrue:[^ true] ].
 
-	^ (messageNodes anySatisfy: [:node | self applyConditionOn: node  ]).! !
+	^ false ! !
 
 !RuleCollectionSize methodsFor: 'testing' stamp: 'MEG 9/13/2019 18:16:55'!
 checkIfNodeHasRule: statementNode 
