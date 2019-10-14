@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 13 October 2019 at 9:00:32 pm'!
+'From Cuis 5.0 [latest update: #3839] on 13 October 2019 at 9:28:26 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 12!
+!provides: 'Cuis-University-COOP' 1 13!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -274,14 +274,18 @@ ignoreRule
 	self changed:#rules.
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/12/2019 17:03:37'!
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/13/2019 21:23:45'!
 runCOOP
 
-	| selectedClass selectedMessageName methodNode |
-	selectedClass _ self selectedClass ifNil: [ ^ self ].
-	selectedMessageName _ self selectedMessageName ifNil: [ ^ self ].
 
-	methodNode _  (( selectedClass methodDictionary) at: selectedMessageName) methodNode.
+	| classMethodDictionary instanceMethodDictionary methodNode selectedClass selectedMessageName |
+	selectedClass _ self selectedClass ifNil: [ ^ self ].
+	selectedMessageName _ self selectedMessageName ifNil: [ ^ self ]. 
+
+	instanceMethodDictionary _ selectedClass methodDictionary .
+	classMethodDictionary _ selectedClass class methodDictionary .
+
+	methodNode _  ( instanceMethodDictionary at: selectedMessageName ifAbsent: [ classMethodDictionary at: selectedMessageName ]) methodNode.
 
 	COOP new performInteractiveChecksFor: methodNode.
 	
