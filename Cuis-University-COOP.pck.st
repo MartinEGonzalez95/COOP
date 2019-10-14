@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 12:39:34 am'!
+'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 3:19:44 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 14!
+!provides: 'Cuis-University-COOP' 1 16!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -224,10 +224,14 @@ ruleListOf: symbol
 
 	^ methodsWithRules at: symbol ifAbsentPut: [ RuleList new ] .! !
 
-!COOPBrowser methodsFor: 'accessing' stamp: 'MEG 10/14/2019 00:38:56'!
+!COOPBrowser methodsFor: 'accessing' stamp: 'MEG 10/14/2019 13:17:30'!
 selectedClassAndMessage
 
-	^ self selectedClassOrMetaClass name, '>>', self selectedMessageName storeString.! !
+	| selectedClassOrMetaClassName selectedMessageName |
+	selectedClassOrMetaClassName _ self selectedClassOrMetaClass name.
+	selectedMessageName _ self selectedMessageName storeString.
+
+	^ selectedClassOrMetaClassName, '>>', selectedMessageName.! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/3/2019 19:17:08'!
 initialize
@@ -302,20 +306,18 @@ buildButtonRulePane
 
 	^ ruleViewPane.! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:26:57'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 10/14/2019 15:14:05'!
 buildCOOPRulePane
-	"Construct the pane that shows the code.
-	Respect the Preference for standardCodeFont."
 		
 	| codePaneLayout ruleListPane |
 	codePaneLayout _ LayoutMorph newRow.
 	
 	ruleListPane _ self buildRuleListPane.
 	
-	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.8.
-	codePaneLayout addAdjusterAndMorph: ruleListPane proportionalWidth: 0.2.
+	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.7.
+	codePaneLayout addAdjusterAndMorph: ruleListPane proportionalWidth: 0.3.
 
-	^codePaneLayout .! !
+	^ codePaneLayout .! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:52'!
 buildMorphicCodePane
@@ -706,11 +708,6 @@ noErrorCase
 
 	^ col isEmpty! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/29/2019 18:44:45'!
-searchMethodNode: selectorName
-
-	^ (self class methodDictionary at: selectorName) methodNode! !
-
 !RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:37:50'!
 unorderedIdentityCase
 
@@ -955,10 +952,13 @@ nameOfClassToBeRemoved
 	
 	^ #COOPClassToBeRemoved! !
 
-!COOPMethodFactory methodsFor: 'accessing' stamp: 'GET 10/13/2019 16:30:03'!
-findMethodNodeNamed: aSelectorName in: aClass
+!COOPMethodFactory methodsFor: 'accessing' stamp: 'MEG 10/14/2019 13:14:11'!
+findMethodNodeNamed: selectorName in: class
 
-	^(aClass methodDictionary at: aSelectorName) methodNode.! !
+	| methodDictionary |
+	methodDictionary _ class methodDictionary.
+
+	^ (methodDictionary at: selectorName) methodNode.! !
 
 !COOP methodsFor: 'action' stamp: 'GET 10/1/2019 00:15:25'!
 activate: rule with:aMethodNode
@@ -978,12 +978,10 @@ rulesActivatedFor: aMethodNode
 
 	^ rules select: [ :rule | rule check: aMethodNode]! !
 
-!COOP methodsFor: 'initialization' stamp: 'MEG 10/12/2019 17:03:06'!
+!COOP methodsFor: 'initialization' stamp: 'MEG 10/14/2019 13:08:23'!
 initialize
 
-	rules _ Set new.
-	
-	rules add: RuleCollectionSize new.
+	rules _ COOPRule allRules.
 
 	performer _ COOPPerformer new.! !
 
@@ -992,11 +990,6 @@ withRules: aRules andPerformer: aPerformer
 
 	rules _ aRules asSet.
 	performer _ aPerformer.! !
-
-!COOP class methodsFor: 'instance creation' stamp: 'GET 10/13/2019 20:57:17'!
-createWithRulesAndPerformer
-
-	^ self withRules: COOPRule allRules andPerformer: COOPPerformer new.! !
 
 !COOP class methodsFor: 'instance creation' stamp: 'GET 9/30/2019 23:55:56'!
 withRules: rules andPerformer: aPerformer 
@@ -1031,10 +1024,16 @@ check: aMethodNode
 
 	self subclassResponsibility .! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 10/13/2019 16:02:12'!
+!COOPRule class methodsFor: 'as yet unclassified' stamp: 'MEG 10/14/2019 15:13:33'!
 allRules
 
-	^  Set with: RuleCollectionSize new  with: RuleColaborationChain new.! !
+	| rules |
+	rules _ Set new.
+	
+	rules add:  RuleCollectionSize new.
+	rules add: RuleColaborationChain new.
+
+	^  rules! !
 
 !RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:50:34'!
 applyConditionOn: aNode
@@ -1128,10 +1127,13 @@ description
 title
 	^ RuleDescriptor new titleForCollectionSize! !
 
-!RuleCollectionSize methodsFor: 'inspect-node' stamp: 'GET 9/10/2019 22:34:46'!
+!RuleCollectionSize methodsFor: 'inspect-node' stamp: 'MEG 10/14/2019 13:20:08'!
 check: aMethodNode
 
-	^ aMethodNode body statements anySatisfy: [:node | self checkIfNodeHasRule: node ]! !
+	| statements |
+	statements _ aMethodNode body statements.
+
+	^ statements anySatisfy: [:node | self checkIfNodeHasRule: node ]! !
 
 !NotifierForTesting methodsFor: 'testing' stamp: 'GET 9/28/2019 14:34:31'!
 hasNotified
@@ -1285,14 +1287,6 @@ indexRuleSelected: anInteger
 selectedRule: aBlock
 
 	^ rules at: selectedRuleIndex ifAbsent: aBlock.! !
-
-!RuleList class methodsFor: 'as yet unclassified' stamp: 'GET 9/29/2019 11:56:47'!
-mockRules
-	^ self new with: {RuleCollectionSize new. RuleCollectionSize new}.! !
-
-!RuleList class methodsFor: 'as yet unclassified' stamp: 'GET 9/30/2019 22:49:26'!
-with: rules
-	^ self new with: rules.! !
 
 !ParseNode methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/10/2019 22:28:52'!
 isLeafNode
