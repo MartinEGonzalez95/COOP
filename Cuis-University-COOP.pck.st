@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 3:19:44 pm'!
+'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 5:02:07 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 16!
+!provides: 'Cuis-University-COOP' 1 18!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -775,7 +775,7 @@ testApplyWhenThereAreMoreThanThreeColaborationsChainedInsideABlock
 
 	self assert:  [1 + 1 + 1 +1] value   equals: 4.! !
 
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/13/2019 20:56:46'!
+!DemoTest methodsFor: 'apply' stamp: 'GET 10/14/2019 16:19:32'!
 testApplyWhenThereAreThreeColaborationsChained
 
 	self assert: (1 + 1 + 1 + 1 ) equals: 4.! !
@@ -1006,6 +1006,21 @@ cleanBeforeRunning: aMethodNode
 	
 	COOPBrowser allInstancesDo: [ :coopBrowser | coopBrowser cleanBeforeRunning: aMethodNode ].! !
 
+!COOPRule methodsFor: 'testing' stamp: 'GET 10/14/2019 16:57:22'!
+applyCondition: aNode 
+	
+	^ self subclassResponsibility .! !
+
+!COOPRule methodsFor: 'testing' stamp: 'GET 10/14/2019 16:57:14'!
+canHandle: aNode 
+	
+	^ self subclassResponsibility .! !
+
+!COOPRule methodsFor: 'testing' stamp: 'GET 10/14/2019 16:57:28'!
+canImproved: aNode 
+	
+	^ (self canHandle: aNode) and: [ self applyCondition: aNode ]! !
+
 !COOPRule methodsFor: 'testing' stamp: 'GET 10/11/2019 22:57:06'!
 sameClassAs: aRule
 
@@ -1019,10 +1034,12 @@ description
 title
 	self subclassResponsibility .! !
 
-!COOPRule methodsFor: 'inspect-node' stamp: 'GET 10/11/2019 22:57:48'!
-check: aMethodNode 
+!COOPRule methodsFor: 'inspect-node' stamp: 'GET 10/14/2019 16:24:07'!
+check: aMethodNode
 
-	self subclassResponsibility .! !
+	aMethodNode nodesDo: [:node | (self canImproved: node) ifTrue:[^ true] ].
+
+	^ false ! !
 
 !COOPRule class methodsFor: 'as yet unclassified' stamp: 'MEG 10/14/2019 15:13:33'!
 allRules
@@ -1035,31 +1052,15 @@ allRules
 
 	^  rules! !
 
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:50:34'!
-applyConditionOn: aNode
+!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 17:00:54'!
+applyCondition: aMessageNode 
+	
+ 	^ (self amountOfColaborations: aMessageNode  ) > 2! !
 
-	^ (self amountOfColaborations: aNode ) > 2! !
-
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:35:52'!
-canAddNode: aNode
-
-	^ aNode  isMessageNode and: [ aNode  isCascade not]! !
-
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:41:45'!
-onSelection: node add: collection
-
-	(self canAddNode: node)  ifTrue: [ collection add: node ]! !
-
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/11/2019 22:41:45'!
-selectMessageNodes: aMethodNode
-
-	| parse nodes |
-	nodes _ OrderedCollection new.
-	parse _ ParseNodeEnumerator ofBlock: [:node | self onSelection: node add: nodes].
-
-	aMethodNode accept: parse .
-
-	^ nodes .! !
+!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 16:12:47'!
+canHandle: aNode 
+	
+	^ aNode isMessageNode and: [ aNode isCascade not]! !
 
 !RuleColaborationChain methodsFor: 'printing' stamp: 'GET 10/9/2019 20:57:37'!
 description
@@ -1070,54 +1071,22 @@ description
 title
 	^ RuleDescriptor new titleForChainedColaborations .! !
 
-!RuleColaborationChain methodsFor: 'count' stamp: 'GET 10/9/2019 20:53:22'!
+!RuleColaborationChain methodsFor: 'matcher' stamp: 'GET 10/14/2019 17:01:52'!
 amountOfColaborations: aNode
 
-	aNode isMessageNode ifFalse:[^ 0].
-	^ (self amountOfColaborations: aNode receiver )+ 1 .! !
+	aNode isMessageNode ifFalse: [ ^ 0 ].
+	^ (self amountOfColaborations: aNode receiver ) + 1 .! !
 
-!RuleColaborationChain methodsFor: 'inspect-node' stamp: 'GET 10/11/2019 22:51:35'!
-check: aMethodNode
-
-	| messageNodes |
-	messageNodes _ self selectMessageNodes: aMethodNode .
-
-	^ (messageNodes anySatisfy: [:node | self applyConditionOn: node  ]).! !
-
-!RuleCollectionSize methodsFor: 'testing' stamp: 'MEG 9/13/2019 18:16:55'!
-checkIfNodeHasRule: statementNode 
-
-	| parseNode nodesFlatten  referenceNode referenceNodePosition involvedNodes |
-	nodesFlatten _ OrderedCollection new.
-	parseNode _ ParseNodeEnumerator ofBlock: [:node| node isLeafNode ifTrue: [nodesFlatten add: node]].
+!RuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/14/2019 17:01:06'!
+applyCondition: aMessageNode 
 	
-	"nodesFlatten is empty until next line"
-	statementNode accept: parseNode. 	
+ 	^ (self withSelector: #= applyCondition: aMessageNode ) 
+	or: [ self withSelector: #== applyCondition: aMessageNode ].! !
+
+!RuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/14/2019 16:35:51'!
+canHandle: aNode 
 	
-	( ( nodesFlatten anySatisfy: [:node | node key == #size] ) 
-	and: [ nodesFlatten anySatisfy: [:node | (node key == #==) or: [ node key == #= ] ] ] 
-	and: [  nodesFlatten anySatisfy: [:node  | node key == 0 ] ] ) ifFalse: [ ^ false ] .
-	
-	referenceNode _ nodesFlatten detect: [ :node | (node isSelectorNode & node key == #size) or: [ node isLiteralNode & node key == 0] ] ifNone: [ ].
-
-	referenceNodePosition _ nodesFlatten indexOf: referenceNode.
-
-	involvedNodes _ OrderedCollection new.
-
-	involvedNodes add: ( nodesFlatten at: referenceNodePosition ).
-	involvedNodes add: ( nodesFlatten at: referenceNodePosition + 1 ).
-	involvedNodes add: ( nodesFlatten at: referenceNodePosition + 2 ).
-	
-	( referenceNode key == 0 ) ifTrue: [ involvedNodes add: ( nodesFlatten at: referenceNodePosition + 3)].
-
-	^ ( involvedNodes anySatisfy: [:node | node key == #size] ) 
-	and: [ involvedNodes anySatisfy: [:node | (node key == #==) or: [node key == #=] ] ] 
-	and: [  involvedNodes anySatisfy: [:node  | node key == 0 ] ].! !
-
-!RuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/3/2019 19:43:38'!
-sameClassAs: aRule
-	
-	^ aRule class = self class.! !
+	^ aNode isMessageNode! !
 
 !RuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:13:48'!
 description
@@ -1127,13 +1096,22 @@ description
 title
 	^ RuleDescriptor new titleForCollectionSize! !
 
-!RuleCollectionSize methodsFor: 'inspect-node' stamp: 'MEG 10/14/2019 13:20:08'!
-check: aMethodNode
+!RuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:42:01'!
+literalZero
+	
+	^ [:aNode | aNode isConstantNumber  and: [ aNode key = 0] ]! !
 
-	| statements |
-	statements _ aMethodNode body statements.
+!RuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:42:46'!
+messageSize
+	
+	^ [:aNode | aNode isMessageNamed: #size ]! !
 
-	^ statements anySatisfy: [:node | self checkIfNodeHasRule: node ]! !
+!RuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:50:18'!
+withSelector: messageName applyCondition: aMessageNode 
+	
+	^ (aMessageNode isMessage: messageName receiver: self messageSize  arguments: self literalZero) 
+	
+	or: [ aMessageNode isMessage: messageName receiver:  self literalZero arguments: self messageSize] .! !
 
 !NotifierForTesting methodsFor: 'testing' stamp: 'GET 9/28/2019 14:34:31'!
 hasNotified
