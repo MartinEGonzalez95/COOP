@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 14 October 2019 at 5:02:07 pm'!
+'From Cuis 5.0 [latest update: #3839] on 15 October 2019 at 4:38:54 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 18!
+!provides: 'Cuis-University-COOP' 1 19!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -46,24 +46,24 @@ TestCase subclass: #COOPRuleTest
 COOPRuleTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleColaborationChainTest category: #'Cuis-University-COOP-Tests'!
-COOPRuleTest subclass: #RuleColaborationChainTest
+!classDefinition: #COOPRuleColaborationChainTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleColaborationChainTest
 	instanceVariableNames: 'methodFactory rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'RuleColaborationChainTest class' category: #'Cuis-University-COOP-Tests'!
-RuleColaborationChainTest class
+!classDefinition: 'COOPRuleColaborationChainTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleColaborationChainTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #RuleCollectionSizeTest category: #'Cuis-University-COOP-Tests'!
-COOPRuleTest subclass: #RuleCollectionSizeTest
+!classDefinition: #COOPRuleCollectionSizeTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleCollectionSizeTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'RuleCollectionSizeTest class' category: #'Cuis-University-COOP-Tests'!
-RuleCollectionSizeTest class
+!classDefinition: 'COOPRuleCollectionSizeTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
 
 !classDefinition: #COOPTest category: #'Cuis-University-COOP-Tests'!
@@ -136,24 +136,24 @@ Object subclass: #COOPRule
 COOPRule class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleColaborationChain category: #'Cuis-University-COOP'!
-COOPRule subclass: #RuleColaborationChain
+!classDefinition: #COOPRuleColaborationChain category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleColaborationChain
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'RuleColaborationChain class' category: #'Cuis-University-COOP'!
-RuleColaborationChain class
+!classDefinition: 'COOPRuleColaborationChain class' category: #'Cuis-University-COOP'!
+COOPRuleColaborationChain class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleCollectionSize category: #'Cuis-University-COOP'!
-COOPRule subclass: #RuleCollectionSize
+!classDefinition: #COOPRuleCollectionSize category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleCollectionSize
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'RuleCollectionSize class' category: #'Cuis-University-COOP'!
-RuleCollectionSize class
+!classDefinition: 'COOPRuleCollectionSize class' category: #'Cuis-University-COOP'!
+COOPRuleCollectionSize class
 	instanceVariableNames: ''!
 
 !classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
@@ -233,10 +233,12 @@ selectedClassAndMessage
 
 	^ selectedClassOrMetaClassName, '>>', selectedMessageName.! !
 
-!COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/3/2019 19:17:08'!
+!COOPBrowser methodsFor: 'initialize' stamp: 'MEG 10/15/2019 16:13:22'!
 initialize
 	super initialize .
 	methodsWithRules _ Dictionary new.
+	
+	self when: #annotationChanged send: #runCOOP to: self.
 ! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/1/2019 23:49:47'!
@@ -367,13 +369,6 @@ createButtonMoreRuleInformation
 					action: #value
 					label: 'Ver') .! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 10/12/2019 15:33:53'!
-update: anEvent
-
-	super update: anEvent.
-
-	anEvent = #acceptedContents ifTrue: [ model runCOOP; displayRules ] ! !
-
 !COOPWindow methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:27:25'!
 ruleList
 
@@ -451,7 +446,7 @@ searchMethodNode: selectorName
 
 	^ coopMethodFactory findMethodNodeNamed: selectorName in: self class.  ! !
 
-!RuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/13/2019 15:51:56'!
+!COOPRuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/13/2019 15:51:56'!
 testAmountOfChainedColaborationsIsZeroForNoMessageNodes
 
 	| aNode |
@@ -459,7 +454,7 @@ testAmountOfChainedColaborationsIsZeroForNoMessageNodes
 
 	self assert: (rule amountOfColaborations: aNode ) equals: 0.! !
 
-!RuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/11/2019 23:10:54'!
+!COOPRuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/11/2019 23:10:54'!
 testDontApplyWhenTheMethodNodeHasTwoMessageColaborations
 
 	| methodNode |
@@ -468,7 +463,7 @@ testDontApplyWhenTheMethodNodeHasTwoMessageColaborations
 
 	self deny: (rule check: methodNode ).! !
 
-!RuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/11/2019 23:09:27'!
+!COOPRuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/11/2019 23:09:27'!
 testRuleDoNotApplyOnCascadeMessages
 
 	| methodNode |
@@ -476,7 +471,7 @@ testRuleDoNotApplyOnCascadeMessages
 
 	self deny: (rule check: methodNode ).! !
 
-!RuleColaborationChainTest methodsFor: 'rule-apply' stamp: 'GET 10/11/2019 23:09:20'!
+!COOPRuleColaborationChainTest methodsFor: 'rule-apply' stamp: 'GET 10/11/2019 23:09:20'!
 testApplyWhenTheMethodHasThreeChainedColaborations
 
 	| methodNode |
@@ -484,7 +479,7 @@ testApplyWhenTheMethodHasThreeChainedColaborations
 
 	self assert: (rule check: methodNode ).! !
 
-!RuleColaborationChainTest methodsFor: 'rule-apply' stamp: 'GET 10/11/2019 23:10:47'!
+!COOPRuleColaborationChainTest methodsFor: 'rule-apply' stamp: 'GET 10/11/2019 23:10:47'!
 testRuleCountTheMessageColaborationsInNode
 		
 	| messageNode |
@@ -492,12 +487,12 @@ testRuleCountTheMessageColaborationsInNode
 
 	self assert: (rule amountOfColaborations: messageNode ) equals: 3.! !
 
-!RuleColaborationChainTest methodsFor: 'setup/teardown' stamp: 'GET 10/13/2019 16:37:21'!
+!COOPRuleColaborationChainTest methodsFor: 'setup/teardown' stamp: 'MEG 10/15/2019 16:29:06'!
 setUp
 	super setUp.
-	rule _ RuleColaborationChain new.! !
+	rule _ COOPRuleColaborationChain new.! !
 
-!RuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/6/2019 20:46:38'!
+!COOPRuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/6/2019 20:46:38'!
 message: selectorName to: receiver
 	| selector |
 	selector _ SelectorNode new
@@ -509,7 +504,7 @@ message: selectorName to: receiver
 		arguments: #()
 		precedence: 1.! !
 
-!RuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:10:39'!
+!COOPRuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:10:39'!
 messageNodeWithOneColaboration
 
 	| selfReceiver |
@@ -517,32 +512,32 @@ messageNodeWithOneColaboration
 
 	^self message: #col1 to: selfReceiver.! !
 
-!RuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:10:54'!
+!COOPRuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:10:54'!
 messageNodeWithThreeChainedColaborations
 
 	^ self message:#col3 to: self messageNodeWithTwoChainedColaborations .! !
 
-!RuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:10:54'!
+!COOPRuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:10:54'!
 messageNodeWithTwoChainedColaborations
 
 	^ self message:#col2 to: self messageNodeWithOneColaboration! !
 
-!RuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:09:27'!
+!COOPRuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:09:27'!
 methodWithThreeCascadeChainedColaborations
 
 	^ self col1; col2; col3 ! !
 
-!RuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:09:20'!
+!COOPRuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:09:20'!
 methodWithThreeChainedColaborations
 
 	^ self col1 col2 col3.! !
 
-!RuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:09:10'!
+!COOPRuleColaborationChainTest methodsFor: 'method-for-testing' stamp: 'GET 10/11/2019 23:09:10'!
 methodWithTwoChainedColaborations
 
 	^ self col1 col2! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:46:49'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:46:49'!
 testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseInAComment
 
 	| aMethodNode |
@@ -551,7 +546,7 @@ testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseInAComment
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:03'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:03'!
 testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseUnordered
 
 	| aMethodNode |
@@ -560,7 +555,7 @@ testRuleCollectionSizeDoesNotApplyInAMethodNodeWithIdentityCaseUnordered
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:19'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:19'!
 testRuleCollectionSizeDoesNotApplyWhenAnyCaseAreNotInTheSameMessage
 
 	| aMethodNode |
@@ -569,7 +564,7 @@ testRuleCollectionSizeDoesNotApplyWhenAnyCaseAreNotInTheSameMessage
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:51:11'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:51:11'!
 testRuleCollectionSizeDoesNotApplyWhenCaseIsNotThere
 
 	| aMethodNode |
@@ -578,7 +573,7 @@ testRuleCollectionSizeDoesNotApplyWhenCaseIsNotThere
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:39'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-not-apply' stamp: 'MEG 9/29/2019 18:47:39'!
 testRuleCollectionSizeDoesNotApplyWhenTheCaseHidesOnTemporaryVariableNode
 
 	| aMethodNode |
@@ -587,7 +582,7 @@ testRuleCollectionSizeDoesNotApplyWhenTheCaseHidesOnTemporaryVariableNode
 	
 	self deny: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:44:08'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:44:08'!
 testRuleCollectionSizeApplyInAMethodNodeWithEqualCase
 
 	| aMethodNode |
@@ -596,7 +591,7 @@ testRuleCollectionSizeApplyInAMethodNodeWithEqualCase
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:45:44'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:45:44'!
 testRuleCollectionSizeApplyInAMethodNodeWithIdentityCase
 
 	| aMethodNode |
@@ -605,7 +600,7 @@ testRuleCollectionSizeApplyInAMethodNodeWithIdentityCase
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:45:58'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:45:58'!
 testRuleCollectionSizeApplyInAMethodNodeWithInvertedEqualCase
 
 	| aMethodNode |
@@ -614,7 +609,7 @@ testRuleCollectionSizeApplyInAMethodNodeWithInvertedEqualCase
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:46:16'!
+!COOPRuleCollectionSizeTest methodsFor: 'rule-apply' stamp: 'MEG 9/29/2019 18:46:16'!
 testRuleCollectionSizeApplyInAMethodNodeWithInvertedIdentityCase
 
 	| aMethodNode |
@@ -623,14 +618,14 @@ testRuleCollectionSizeApplyInAMethodNodeWithInvertedIdentityCase
 	
 	self assert: (rule check: aMethodNode)! !
 
-!RuleCollectionSizeTest methodsFor: 'setup/teardown' stamp: 'GET 10/13/2019 16:38:08'!
+!COOPRuleCollectionSizeTest methodsFor: 'setup/teardown' stamp: 'MEG 10/15/2019 16:29:23'!
 setUp
 
 	super setUp.
 
-	rule _ RuleCollectionSize new.! !
+	rule _ COOPRuleCollectionSize new.! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:35:54'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:35:54'!
 caseHiddenOnTemporaryVariable
 
 	| col zero |
@@ -641,7 +636,7 @@ caseHiddenOnTemporaryVariable
 
 	^ col size = zero! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:33:38'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:33:38'!
 caseNotInTheSameMessage
 
 	| col colSize |
@@ -652,7 +647,7 @@ caseNotInTheSameMessage
 
 	^ colSize ~= 0 and: [ (colSize + 1) > 2 ].! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:39:55'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:39:55'!
 equalCase
 
 	| col |
@@ -661,7 +656,7 @@ equalCase
 
 	^ col size = 0! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:55:12'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:55:12'!
 identityCase
 
 	| col |
@@ -670,7 +665,7 @@ identityCase
 
 	^ col size == 0! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:59:57'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:59:57'!
 identityCaseInAComment
 
 	| col |
@@ -681,7 +676,7 @@ identityCaseInAComment
 
 	^ col isEmpty ! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:55:41'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:55:41'!
 invertedEqualCase
 
 	| col |
@@ -690,7 +685,7 @@ invertedEqualCase
 
 	^ 0 = col size! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:48:59'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 19:48:59'!
 invertedIdentityCase
 
 	| col |
@@ -699,7 +694,7 @@ invertedIdentityCase
 
 	^ 0 == col size! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/29/2019 18:50:48'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/29/2019 18:50:48'!
 noErrorCase
 
 	| col |
@@ -708,7 +703,7 @@ noErrorCase
 
 	^ col isEmpty! !
 
-!RuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:37:50'!
+!COOPRuleCollectionSizeTest methodsFor: 'method-for-testing' stamp: 'MEG 9/28/2019 20:37:50'!
 unorderedIdentityCase
 
 	| col colSize |
@@ -719,10 +714,10 @@ unorderedIdentityCase
 
 	^ 0 == 1. ! !
 
-!COOPTest methodsFor: 'coop-notification' stamp: 'GET 10/13/2019 17:28:36'!
+!COOPTest methodsFor: 'coop-notification' stamp: 'MEG 10/15/2019 16:29:46'!
 searchMethodNode: selector
 
-	^ coopMethodFactory findMethodNodeNamed: selector in:  RuleCollectionSizeTest  .! !
+	^ coopMethodFactory findMethodNodeNamed: selector in:  COOPRuleCollectionSizeTest  .! !
 
 !COOPTest methodsFor: 'coop-notification' stamp: 'GET 9/30/2019 22:09:58'!
 testCOOPDoNotNotifyTheRulesWhenNoOneWasNotActivatedForAMethodNode
@@ -754,11 +749,11 @@ testCOOPNotifyTheRulesActivatedForAMethodNode
 	self assert: notifier hasNotified .
 	self assert: (notifier hasNotifiedWith: aRule) .! !
 
-!COOPTest methodsFor: 'setUp/tearDown' stamp: 'GET 10/13/2019 17:28:49'!
+!COOPTest methodsFor: 'setUp/tearDown' stamp: 'MEG 10/15/2019 16:29:23'!
 setUp
 
 	coopMethodFactory  _ COOPMethodFactory new.
-	aRule _ RuleCollectionSize new.
+	aRule _ COOPRuleCollectionSize new.
 	notifier _ NotifierForTesting new.
 	coop _ COOP withRules: {aRule} andPerformer: notifier .
 	notifier watch: coop.
@@ -780,7 +775,7 @@ testApplyWhenThereAreThreeColaborationsChained
 
 	self assert: (1 + 1 + 1 + 1 ) equals: 4.! !
 
-!DemoTest methodsFor: 'apply' stamp: 'MEG 10/10/2019 00:04:17'!
+!DemoTest methodsFor: 'apply' stamp: 'MEG 10/15/2019 16:32:07'!
 testCollectionSizeIsEqualToZeroOpensAPopUpOnAccept
 
 	| collection |
@@ -852,10 +847,10 @@ testAnEmptyRuleListIgnoreARuleShowEmptyMessage
 
 	self assert: ruleList ignoreRule equals: ruleList emptyShowMessage .! !
 
-!RuleListTest methodsFor: 'setUp/tearDown' stamp: 'GET 9/29/2019 11:58:25'!
+!RuleListTest methodsFor: 'setUp/tearDown' stamp: 'MEG 10/15/2019 16:29:23'!
 setUp
 	ruleList _ RuleList new .
-	aRule  _ RuleCollectionSize new.! !
+	aRule  _ COOPRuleCollectionSize new.! !
 
 !RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 16:26:58'!
 testARuleListCanAddARuleAndTheIndexIsTheFirst
@@ -894,12 +889,12 @@ testRuleListCanBeCleaned
 	
 	self assert: ruleList isEmpty .! !
 
-!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/3/2019 19:36:44'!
+!RuleListTest methodsFor: 'with-rules' stamp: 'MEG 10/15/2019 16:29:23'!
 testRuleListOnlyContainsOneRuleByRuleClass
 
 	| firstAddedRule secondAddedRule |
-	firstAddedRule _ RuleCollectionSize new.
-	secondAddedRule _ RuleCollectionSize new.	
+	firstAddedRule _ COOPRuleCollectionSize new.
+	secondAddedRule _ COOPRuleCollectionSize new.	
 	
 	ruleList add: firstAddedRule .
 	ruleList add: secondAddedRule.
@@ -1011,15 +1006,15 @@ applyCondition: aNode
 	
 	^ self subclassResponsibility .! !
 
+!COOPRule methodsFor: 'testing' stamp: 'MEG 10/15/2019 16:18:46'!
+canBeImproved: aNode 
+	
+	^ (self canHandle: aNode) and: [ self applyCondition: aNode ]! !
+
 !COOPRule methodsFor: 'testing' stamp: 'GET 10/14/2019 16:57:14'!
 canHandle: aNode 
 	
 	^ self subclassResponsibility .! !
-
-!COOPRule methodsFor: 'testing' stamp: 'GET 10/14/2019 16:57:28'!
-canImproved: aNode 
-	
-	^ (self canHandle: aNode) and: [ self applyCondition: aNode ]! !
 
 !COOPRule methodsFor: 'testing' stamp: 'GET 10/11/2019 22:57:06'!
 sameClassAs: aRule
@@ -1034,79 +1029,81 @@ description
 title
 	self subclassResponsibility .! !
 
-!COOPRule methodsFor: 'inspect-node' stamp: 'GET 10/14/2019 16:24:07'!
+!COOPRule methodsFor: 'inspect-node' stamp: 'MEG 10/15/2019 16:24:34'!
 check: aMethodNode
 
-	aMethodNode nodesDo: [:node | (self canImproved: node) ifTrue:[^ true] ].
+	aMethodNode nodesDo: [ :node | ( self canBeImproved: node ) ifTrue: [ ^ true ] ].
 
 	^ false ! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'MEG 10/14/2019 15:13:33'!
+!COOPRule class methodsFor: 'as yet unclassified' stamp: 'MEG 10/15/2019 16:34:26'!
 allRules
 
 	| rules |
 	rules _ Set new.
 	
-	rules add:  RuleCollectionSize new.
-	rules add: RuleColaborationChain new.
+	rules addAll: {
+		COOPRuleCollectionSize new.
+		COOPRuleColaborationChain new.
+	}.
 
 	^  rules! !
 
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 17:00:54'!
+!COOPRuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 17:00:54'!
 applyCondition: aMessageNode 
 	
  	^ (self amountOfColaborations: aMessageNode  ) > 2! !
 
-!RuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 16:12:47'!
+!COOPRuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 16:12:47'!
 canHandle: aNode 
 	
 	^ aNode isMessageNode and: [ aNode isCascade not]! !
 
-!RuleColaborationChain methodsFor: 'printing' stamp: 'GET 10/9/2019 20:57:37'!
+!COOPRuleColaborationChain methodsFor: 'printing' stamp: 'GET 10/9/2019 20:57:37'!
 description
 
 	^ RuleDescriptor new descriptionForChainedColaboration.! !
 
-!RuleColaborationChain methodsFor: 'printing' stamp: 'GET 10/9/2019 20:58:57'!
+!COOPRuleColaborationChain methodsFor: 'printing' stamp: 'GET 10/9/2019 20:58:57'!
 title
 	^ RuleDescriptor new titleForChainedColaborations .! !
 
-!RuleColaborationChain methodsFor: 'matcher' stamp: 'GET 10/14/2019 17:01:52'!
+!COOPRuleColaborationChain methodsFor: 'matcher' stamp: 'GET 10/14/2019 17:01:52'!
 amountOfColaborations: aNode
 
 	aNode isMessageNode ifFalse: [ ^ 0 ].
 	^ (self amountOfColaborations: aNode receiver ) + 1 .! !
 
-!RuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/14/2019 17:01:06'!
+!COOPRuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/14/2019 17:01:06'!
 applyCondition: aMessageNode 
 	
  	^ (self withSelector: #= applyCondition: aMessageNode ) 
 	or: [ self withSelector: #== applyCondition: aMessageNode ].! !
 
-!RuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/14/2019 16:35:51'!
+!COOPRuleCollectionSize methodsFor: 'testing' stamp: 'GET 10/14/2019 16:35:51'!
 canHandle: aNode 
 	
 	^ aNode isMessageNode! !
 
-!RuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:13:48'!
+!COOPRuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:13:48'!
 description
 	^ RuleDescriptor new descriptionForColectionSize .! !
 
-!RuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:02:44'!
+!COOPRuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:02:44'!
 title
 	^ RuleDescriptor new titleForCollectionSize! !
 
-!RuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:42:01'!
+!COOPRuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:42:01'!
 literalZero
 	
 	^ [:aNode | aNode isConstantNumber  and: [ aNode key = 0] ]! !
 
-!RuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:42:46'!
+!COOPRuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:42:46'!
 messageSize
 	
 	^ [:aNode | aNode isMessageNamed: #size ]! !
 
-!RuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:50:18'!
+!COOPRuleCollectionSize methodsFor: 'matcher' stamp: 'GET 10/14/2019 16:50:18'!
 withSelector: messageName applyCondition: aMessageNode 
 	
 	^ (aMessageNode isMessage: messageName receiver: self messageSize  arguments: self literalZero) 
@@ -1286,40 +1283,36 @@ isSelectorNode
 
 	^ true! !
 
-!InnerTextMorph methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/14/2019 00:34:11'!
+!InnerTextMorph methodsFor: '*Cuis-University-COOP' stamp: 'jmv 4/26/2019 11:02:36'!
 acceptContents
 	"The message is sent when the user hits return or Cmd-S.
 	Accept the current contents and end editing."
 	"Inform the model of text to be accepted, and return true if OK."
 
 	| accepted prevSelection prevScrollValue |
-
+	
 	prevSelection _ self editor selectionInterval copy.
 	prevScrollValue _ owner verticalScrollBar scrollValue.
-
+	
 	hasUnacceptedEdits ifFalse: [ self flash. ^true ].
 	hasEditingConflicts ifTrue: [
 		self confirmAcceptAnyway ifFalse: [self flash. ^false]].
-
+	
 	accepted _ model acceptContentsFrom: owner.
-	"During the step for the browser, updatePaneIfNeeded is called, and
+	"During the step for the browser, updatePaneIfNeeded is called, and 
 		invariably resets the contents of the code-holding PluggableTextMorph
 		at that time, resetting the cursor position and scroller in the process.
 		The following line forces that update without waiting for the step,
  		then restores the cursor and scrollbar"
-
+	
 	"some implementors of acceptContentsFrom: answer self :("
-	^accepted == true
+	^accepted == true 
 		ifTrue: [
 			model refetch.
 			self editor selectFrom: prevSelection first to: prevSelection last.
 			UISupervisor whenUIinSafeState: [
 				self world ifNotNil: [ :w | w activeHand newKeyboardFocus: self ].
-				owner verticalScrollBar internalScrollValue: prevScrollValue
-				].
-
-			COOPWindow informCOOP.
-
+				owner verticalScrollBar internalScrollValue: prevScrollValue].
 			true]
 		ifFalse: [ false ]! !
 
