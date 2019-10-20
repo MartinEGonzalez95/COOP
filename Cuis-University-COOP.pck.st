@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 15 October 2019 at 4:38:54 pm'!
+'From Cuis 5.0 [latest update: #3839] on 19 October 2019 at 10:32:29 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 19!
+!provides: 'Cuis-University-COOP' 1 20!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -388,18 +388,6 @@ ignoreRule
 informCOOP
 
 	model ifNotNil: [ model runCOOP ]! !
-
-!COOPWindow class methodsFor: 'menu world' stamp: 'GET 9/30/2019 23:26:29'!
-worldMenuForOpenGroup
-	^ `{{
-			#itemGroup 		-> 		10.
-			#itemOrder 		-> 		30.
-			#label 			->			'COOP Browser'.
-			#object 			-> 		COOPWindow.
-			#selector 		-> 		#openCOOPWindow.
-			#icon 			-> 		#editFindReplaceIcon.
-			#balloonText 	-> 		'Browser with COOP'.
-		} asDictionary}`! !
 
 !COOPWindow class methodsFor: 'instance creation' stamp: 'GET 10/3/2019 19:09:32'!
 openCOOPWindow
@@ -1152,7 +1140,7 @@ cleanBeforeRunning: aMethodNode
 watch: anObject
 	^ self new watch: anObject.! !
 
-!COOPPreferences class methodsFor: 'class initialization' stamp: 'GET 9/26/2019 19:01:57'!
+!COOPPreferences class methodsFor: 'class initialization' stamp: 'MEG 10/19/2019 22:25:36'!
 initialize
 	"
 	COOPPreferences initialize
@@ -1160,7 +1148,7 @@ initialize
 	Preferences
 		addPreference: #coopIsWatching 
 		category: #coop
-		default: false
+		default: true
 		balloonHelp: 'Activates COOP!!'.! !
 
 !COOPPreferences class methodsFor: 'action' stamp: 'GET 9/28/2019 00:11:31'!
@@ -1168,9 +1156,9 @@ toggleCOOPPreference
 
 	Preferences togglePreference: #coopIsWatching .! !
 
-!COOPPreferences class methodsFor: 'accesors' stamp: 'GET 9/28/2019 00:07:03'!
+!COOPPreferences class methodsFor: 'accesors' stamp: 'MEG 10/19/2019 22:30:35'!
 preferenceLabel
-	^ Preferences coopIsWatching ifTrue: 'COOP ON' ifFalse: 'COOP OFF'.! !
+	^ Preferences coopIsWatching ifTrue: 'COOP OFF' ifFalse: 'COOP ON'.! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/9/2019 23:08:05'!
 descriptionForChainedColaboration
@@ -1282,6 +1270,39 @@ isLeafNode
 isSelectorNode
 
 	^ true! !
+
+!DenotativeObjectBrowserWindow class methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/19/2019 22:31:59'!
+worldMenuOptions 
+
+	^`{
+	{
+		#itemGroup 	-> 		0.
+		#itemOrder 		-> 		10.
+		#label 			-> 		'DenotativeObject Browser'.
+		#selector 		-> 		#openBrowser.
+		#object 			-> 		DenotativeObjectBrowserWindow.
+		#icon 			-> 		#morphsIcon.
+		#balloonText 	-> 		'To work with denotative objects (without classes)'.
+	} asDictionary.
+	{
+		#itemGroup 	-> 		0.
+		#itemOrder 		-> 		20.
+		#label 			-> 		'Class Browser'.
+		#selector 		-> 		#openBrowser.
+		#object 			-> 		BrowserWindow.
+		#icon 			-> 		#editFindReplaceIcon.
+		#balloonText 	-> 		'Classical Smalltalk class browser'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 	0.
+		#itemOrder 		-> 		30.
+		#label 			->			'COOP Browser'.
+		#selector 		-> 		#openCOOPWindow.
+		#object 			-> 		COOPWindow.
+		#icon 			-> 		#editFindReplaceIcon.
+		#balloonText 	-> 		'Browser with COOP'.
+	} asDictionary. 
+	}`! !
 
 !InnerTextMorph methodsFor: '*Cuis-University-COOP' stamp: 'jmv 4/26/2019 11:02:36'!
 acceptContents
