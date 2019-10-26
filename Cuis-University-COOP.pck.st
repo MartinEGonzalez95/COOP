@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 19 October 2019 at 10:32:29 pm'!
+'From Cuis 5.0 [latest update: #3839] on 27 October 2019 at 12:49:13 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 20!
+!provides: 'Cuis-University-COOP' 1 22!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -65,6 +65,16 @@ COOPRuleTest subclass: #COOPRuleCollectionSizeTest
 !classDefinition: 'COOPRuleCollectionSizeTest class' category: #'Cuis-University-COOP-Tests'!
 COOPRuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
+
+!classDefinition: #COOPRuleNonsenseBooleanTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleNonsenseBooleanTest
+	instanceVariableNames: 'methodFactory rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNonsenseBooleanTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleNonsenseBooleanTest class
+	instanceVariableNames: ''!
 
 !classDefinition: #COOPTest category: #'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPTest
@@ -154,6 +164,16 @@ COOPRule subclass: #COOPRuleCollectionSize
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOPRuleCollectionSize class' category: #'Cuis-University-COOP'!
 COOPRuleCollectionSize class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleNonsenseBoolean category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleNonsenseBoolean
+	instanceVariableNames: 'booleanControllingMessages'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNonsenseBoolean class' category: #'Cuis-University-COOP'!
+COOPRuleNonsenseBoolean class
 	instanceVariableNames: ''!
 
 !classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
@@ -702,6 +722,153 @@ unorderedIdentityCase
 
 	^ 0 == 1. ! !
 
+!COOPRuleNonsenseBooleanTest methodsFor: 'setup/teardown' stamp: 'MEG 10/26/2019 15:02:56'!
+setUp
+
+	super setUp.
+
+	rule _ COOPRuleNonsenseBoolean new.! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 15:56:19'!
+testRuleNonsenseBooleanApplyOnFirstArgumentOfIfFalseIfTrueClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #firstArgumentIfFalseIfTrueClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 16:36:37'!
+testRuleNonsenseBooleanApplyOnFirstArgumentOfIfTrueIfFalseClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #firstArgumentIfTrueIfFalseClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 15:43:36'!
+testRuleNonsenseBooleanApplyOnIfFalseClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #ifFalseClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 15:42:57'!
+testRuleNonsenseBooleanApplyOnIfTrueClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #ifTrueClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 15:53:51'!
+testRuleNonsenseBooleanApplyOnInvertedIfFalseClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #invertedIfFalseClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 15:43:06'!
+testRuleNonsenseBooleanApplyOnInvertedIfTrueClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #invertedIfTrueClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 16:35:25'!
+testRuleNonsenseBooleanApplyOnSecondArgumentOfIfFalseIfTrueClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #secondArgumentIfFalseIfTrueClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-apply' stamp: 'MEG 10/26/2019 16:37:24'!
+testRuleNonsenseBooleanApplyOnSecondArgumentOfIfTrueIfFalseClause
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #secondArgumentIfTrueIfFalseClause.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-not-apply' stamp: 'MEG 10/26/2019 16:41:51'!
+testRuleNonsenseBooleanDoNotApplyOnIfFalseClauseWithReturnOnBlock
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #ifFalseWithReturnInsideBlock.
+	
+	self deny: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-not-apply' stamp: 'MEG 10/26/2019 16:41:37'!
+testRuleNonsenseBooleanDoNotApplyOnIfTrueClauseWithReturnOnBlock
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #ifTrueWithReturnInsideBlock.
+	
+	self deny: (rule check: aMethodNode)! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 15:57:05'!
+firstArgumentIfFalseIfTrueClause
+
+	^ 2 > 1 ifFalse: [ false ] ifTrue: [ 1 + 1 ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 16:36:03'!
+firstArgumentIfTrueIfFalseClause
+
+	^ 2 > 1 ifTrue: [ true ] ifFalse: [ 1 + 1 ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 15:43:23'!
+ifFalseClause
+
+	^ 2 > 1 ifFalse: [ false ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 16:43:00'!
+ifFalseWithReturnInsideBlock
+
+	^ 2 > 3 ifFalse: [ ^ false ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 15:40:08'!
+ifTrueClause
+
+	^ 2 > 1 ifTrue: [ true ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 16:40:19'!
+ifTrueWithReturnInsideBlock
+
+	^ 2 > 3 ifTrue: [ ^ true ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 16:38:14'!
+invertedIfFalseClause
+
+	^ 2 > 1 ifFalse: [ false ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 16:38:29'!
+invertedIfTrueClause
+
+	^ 2 > 1 ifTrue: [ true ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 16:35:12'!
+secondArgumentIfFalseIfTrueClause
+
+	^ 2 > 1 ifFalse: [ 1+1 ] ifTrue: [ true ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 16:37:04'!
+secondArgumentIfTrueIfFalseClause
+
+	^ 2 > 1 ifTrue: [ 1+1 ] ifFalse: [ false ]! !
+
 !COOPTest methodsFor: 'coop-notification' stamp: 'MEG 10/15/2019 16:29:46'!
 searchMethodNode: selector
 
@@ -781,6 +948,16 @@ testCollectionSizeIsIdenticalToZeroOpensAPopUpOnAccept
 
 	self assert: collection size == 0 .! !
 
+!DemoTest methodsFor: 'apply' stamp: 'MEG 10/26/2019 16:57:53'!
+testIfFalseClauseWithNonsenseBoolean
+
+	self deny: ( 5  > 8 ifFalse: [ false ] ).! !
+
+!DemoTest methodsFor: 'apply' stamp: 'MEG 10/26/2019 16:44:12'!
+testIfTrueClauseWithNonsenseBoolean
+
+	self assert: ( 5  > 3 ifTrue: [ true ] ).! !
+
 !DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 19:45:38'!
 testZeroIsEqualToCollectionSizeOpensAPopUpOnAccept
 
@@ -817,6 +994,16 @@ testCollectionIsEmptyDoesNotOpenAPopUp
 testDoesNotApplyWhenThereAreLessThanTwoColaborationsChained
 
 	self assert: (1   + 1 +  1 ) equals: 3.! !
+
+!DemoTest methodsFor: 'not-apply' stamp: 'MEG 10/26/2019 16:56:53'!
+testIfFalseClauseWithReturnOnBlock
+
+	self deny: ( 5  > 8 ifFalse: [ ^ false ] ).! !
+
+!DemoTest methodsFor: 'not-apply' stamp: 'MEG 10/26/2019 16:56:01'!
+testIfTrueClauseWithReturnOnBlock
+
+	self assert: ( 5  > 3 ifTrue: [ ^ true ] ).! !
 
 !RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 16:27:32'!
 testANewRuleListIsEmptyAndIndexIsZero
@@ -1024,7 +1211,7 @@ check: aMethodNode
 
 	^ false ! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'MEG 10/15/2019 16:34:26'!
+!COOPRule class methodsFor: 'as yet unclassified' stamp: 'MEG 10/26/2019 16:45:51'!
 allRules
 
 	| rules |
@@ -1033,6 +1220,7 @@ allRules
 	rules addAll: {
 		COOPRuleCollectionSize new.
 		COOPRuleColaborationChain new.
+		COOPRuleNonsenseBoolean new
 	}.
 
 	^  rules! !
@@ -1097,6 +1285,61 @@ withSelector: messageName applyCondition: aMessageNode
 	^ (aMessageNode isMessage: messageName receiver: self messageSize  arguments: self literalZero) 
 	
 	or: [ aMessageNode isMessage: messageName receiver:  self literalZero arguments: self messageSize] .! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:54:05'!
+description
+
+	^ RuleDescriptor new descriptionForNonsenseBoolean! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:46:29'!
+title
+	^ RuleDescriptor new titleForNonsenseBoolean .! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 10/27/2019 12:48:40'!
+applyCondition: aMessageNode
+
+ 	^ booleanControllingMessages anySatisfy: 
+		[ :controllingMessage | self withSelector: controllingMessage searchOnArguments: aMessageNode ]! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 10/26/2019 17:11:33'!
+booleanOnArguments: arguments
+
+	^ arguments anySatisfy: 
+		[ :argument | self statementWithBooleanVariableNode: argument statements ]! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 10/26/2019 15:06:10'!
+canHandle: aNode 
+	
+	^ aNode isMessageNode! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 10/26/2019 17:05:16'!
+keyIsABoolean: key
+
+	^ key = 'true' or: [ key = 'false' ] ! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 10/26/2019 17:11:33'!
+statementWithBooleanVariableNode: statements
+ 
+	^ statements anySatisfy: 
+		[ :statement | ( statement isVariableNode ) 
+			and: [ self keyIsABoolean: statement key ] ]! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'matcher' stamp: 'MEG 10/26/2019 17:10:31'!
+withSelector: messageName searchOnArguments: messageNode
+	
+	^ ( messageNode isMessageNamed: messageName ) and: [ self booleanOnArguments: messageNode arguments ]! !
+
+!COOPRuleNonsenseBoolean methodsFor: 'initialization' stamp: 'MEG 10/27/2019 12:46:43'!
+initialize
+
+	booleanControllingMessages _ Set new.
+	
+	booleanControllingMessages addAll: {
+		#ifFalse:.
+		#ifFalse:ifTrue.
+		#ifTrue:.
+		#ifTrue:ifFalse:
+	}.! !
 
 !NotifierForTesting methodsFor: 'testing' stamp: 'GET 9/28/2019 14:34:31'!
 hasNotified
@@ -1173,6 +1416,14 @@ descriptionForColectionSize
 	para cuando se chequea que la longitud
 	de una coleccion es igual a cero'! !
 
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:55:27'!
+descriptionForNonsenseBoolean
+	
+	^ 
+	'No es necesario utilizar clausulas booleanas 
+	ya que la misma comparacion cumple con esta condicion.
+	Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
+
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/13/2019 16:04:33'!
 titleForChainedColaborations
 	^ 'Uso colaboraciones encadenadas'.! !
@@ -1180,6 +1431,11 @@ titleForChainedColaborations
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 9/29/2019 12:06:08'!
 titleForCollectionSize
 	^'Uso de #isEmpty' ! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:58:22'!
+titleForNonsenseBoolean
+	
+	^ 'No hay que tener miedo al booleano' ! !
 
 !RuleList methodsFor: 'initialize' stamp: 'GET 9/28/2019 13:43:38'!
 initialize
