@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 27 October 2019 at 2:21:13 pm'!
+'From Cuis 5.0 [latest update: #3839] on 27 October 2019 at 8:40:00 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 23!
+!provides: 'Cuis-University-COOP' 1 24!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -294,6 +294,11 @@ addRule: aRule for:aMethodNode
 	aRuleList add:aRule.
 	self changed: #rules.! !
 
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 20:27:27'!
+affectedNodesFor: rule with: methodNode 
+	
+	^ rule selectAffectedNodes: methodNode! !
+
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/10/2019 00:04:00'!
 cleanBeforeRunning: aMethodNode
 
@@ -304,8 +309,11 @@ cleanBeforeRunning: aMethodNode
 	
 	self changed: #rules.! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 10/2/2019 00:09:25'!
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 19:54:34'!
 describeRule
+
+	self changed: #highlightCode.
+
 	^ self ruleList describeRule .! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/12/2019 16:40:04'!
@@ -333,6 +341,11 @@ runCOOP
 	
 	"Mandatory to return self because method it's used on cascade"
 	^ self! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 19:50:54'!
+selectedRule
+	
+	^ self ruleList selectedRule: [ nil ]! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
 buildButtonRulePane
@@ -419,6 +432,22 @@ describeSelectedRule
 	PopUpMenu  inform: model describeRule.
 	! !
 
+!COOPWindow methodsFor: 'action' stamp: 'MEG 10/27/2019 20:33:52'!
+highlightCode
+
+	| selectedRule affectedNodes ranges methodNode |
+	selectedRule _ model selectedRule ifNil: [ ^ nil ].
+	methodNode _ model currentCompiledMethod methodNode.
+	
+	affectedNodes _ model affectedNodesFor: selectedRule with: methodNode.
+	
+	ranges _ affectedNodes collect: 
+		[ :affectedNode |  methodNode rangeForNode: affectedNode ifAbsent: [ OrderedCollection new ] ].
+
+	ranges do: 
+		[ :range | codePane text 
+			addAttribute: ShoutTextBackgroundColor yellow from: range first to: range last ].! !
+
 !COOPWindow methodsFor: 'action' stamp: 'GET 10/3/2019 20:27:36'!
 ignoreRule
 
@@ -428,6 +457,13 @@ ignoreRule
 informCOOP
 
 	model ifNotNil: [ model runCOOP ]! !
+
+!COOPWindow methodsFor: 'updating' stamp: 'MEG 10/27/2019 19:54:09'!
+update: parameter
+	
+	super update: parameter.
+	
+	parameter = #highlightCode ifTrue: [ self highlightCode ]! !
 
 !COOPWindow class methodsFor: 'instance creation' stamp: 'GET 10/3/2019 19:09:32'!
 openCOOPWindow
@@ -1007,10 +1043,10 @@ setUp
 
 ! !
 
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/13/2019 16:02:54'!
+!DemoTest methodsFor: 'apply' stamp: 'MEG 10/27/2019 20:36:53'!
 testApplyWhenThereAreMoreThanThreeColaborationsChained
 
-	self assert: ( 1 + 1 + 1 +1   ) equals: 4.! !
+	self assert: ( 1 + 1 + 1 + 1 ) equals: 4.! !
 
 !DemoTest methodsFor: 'apply' stamp: 'GET 10/13/2019 16:05:35'!
 testApplyWhenThereAreMoreThanThreeColaborationsChainedInsideABlock
@@ -1307,6 +1343,15 @@ check: aMethodNode
 	aMethodNode nodesDo: [ :node | ( self canBeImproved: node ) ifTrue: [ ^ true ] ].
 
 	^ false ! !
+
+!COOPRule methodsFor: 'as yet unclassified' stamp: 'MEG 10/27/2019 20:30:30'!
+selectAffectedNodes: methodNode 
+
+	| affectedNodes |
+	affectedNodes _ Set new.
+	methodNode nodesDo: [ :node | ( self canBeImproved: node ) ifTrue: [ affectedNodes add: node ] ].
+
+	^ affectedNodes ! !
 
 !COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 10/27/2019 13:48:24'!
 allRules
