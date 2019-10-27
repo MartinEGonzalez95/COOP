@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 27 October 2019 at 12:49:13 pm'!
+'From Cuis 5.0 [latest update: #3839] on 27 October 2019 at 2:21:13 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 22!
+!provides: 'Cuis-University-COOP' 1 23!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -75,6 +75,16 @@ COOPRuleTest subclass: #COOPRuleNonsenseBooleanTest
 !classDefinition: 'COOPRuleNonsenseBooleanTest class' category: #'Cuis-University-COOP-Tests'!
 COOPRuleNonsenseBooleanTest class
 	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleTestAssertionTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleTestAssertionTest
+	instanceVariableNames: 'rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleTestAssertionTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleTestAssertionTest class
+	instanceVariableNames: 'coopHelper'!
 
 !classDefinition: #COOPTest category: #'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPTest
@@ -174,6 +184,16 @@ COOPRule subclass: #COOPRuleNonsenseBoolean
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOPRuleNonsenseBoolean class' category: #'Cuis-University-COOP'!
 COOPRuleNonsenseBoolean class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleTestAssertion category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleTestAssertion
+	instanceVariableNames: 'assertionsSelectors'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleTestAssertion class' category: #'Cuis-University-COOP'!
+COOPRuleTestAssertion class
 	instanceVariableNames: ''!
 
 !classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
@@ -869,6 +889,78 @@ secondArgumentIfTrueIfFalseClause
 
 	^ 2 > 1 ifTrue: [ 1+1 ] ifFalse: [ false ]! !
 
+!COOPRuleTestAssertionTest methodsFor: 'rule-not-apply' stamp: 'GET 10/22/2019 22:52:54'!
+testRuleDoNotApplyWhenHasAnAssertionAndIsNotATestSelector
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #methodWithAssert .
+
+	self deny: (rule check: methodNode ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'rule-not-apply' stamp: 'GET 10/27/2019 14:18:38'!
+testRuleDoNotApplyWhenTestHasAnAssertion
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #testRuleDoNotApplyWhenTestHasAnAssertion .
+
+	self deny: (rule check: methodNode ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'rule-not-apply' stamp: 'GET 10/27/2019 13:53:56'!
+testRuleDoNotApplyWhenTheClassIsNotSublcassOfTestCase
+
+	| methodNode |
+	methodNode  _  coopMethodFactory findMethodNodeNamed: #test in: EventSensor .
+
+	self deny: (rule check: methodNode ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'rule-apply' stamp: 'GET 10/22/2019 22:53:59'!
+testRuleApplyInTestMethodWithoutAssertion
+	| methodNode |
+	methodNode  _ self searchMethodNode: #testWithoutAssertion .
+
+	self assert: (rule check: methodNode ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'setup/teardown' stamp: 'GET 10/22/2019 22:55:51'!
+setUp
+	super setUp.		
+	rule _ COOPRuleTestAssertion new.! !
+
+!COOPRuleTestAssertionTest methodsFor: 'method-for-testing' stamp: 'GET 10/22/2019 21:57:49'!
+methodWithAssert
+
+	self assert:true.! !
+
+!COOPRuleTestAssertionTest methodsFor: 'method-for-testing' stamp: 'GET 10/19/2019 18:06:49'!
+testWithoutAssertion
+	
+
+	1 + 1 == 2 .! !
+
+!COOPRuleTestAssertionTest methodsFor: 'assertion-rule-selector' stamp: 'GET 10/26/2019 22:03:39'!
+testAssertEqualsIsAnAssertionSelector
+
+	self assert: (rule selectorIsAnAssertion: #assert:equals ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'assertion-rule-selector' stamp: 'GET 10/26/2019 21:48:40'!
+testAssertIsAnAssertionSelector
+
+	self assert: (rule selectorIsAnAssertion: #assert: ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'assertion-rule-selector' stamp: 'GET 10/26/2019 21:48:46'!
+testDenyIsAnAssertionSelector
+
+	self assert: (rule selectorIsAnAssertion: #deny: ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'assertion-rule-selector' stamp: 'GET 10/26/2019 21:49:13'!
+testShouldFailIsAnAssertionSelector
+
+	self assert: (rule selectorIsAnAssertion: #shouldFail: ).! !
+
+!COOPRuleTestAssertionTest methodsFor: 'assertion-rule-selector' stamp: 'GET 10/26/2019 21:49:00'!
+testShouldNotFailIsAnAssertionSelector
+
+	self assert: (rule selectorIsAnAssertion: #shouldntFail: ).! !
+
 !COOPTest methodsFor: 'coop-notification' stamp: 'MEG 10/15/2019 16:29:46'!
 searchMethodNode: selector
 
@@ -957,6 +1049,11 @@ testIfFalseClauseWithNonsenseBoolean
 testIfTrueClauseWithNonsenseBoolean
 
 	self assert: ( 5  > 3 ifTrue: [ true ] ).! !
+
+!DemoTest methodsFor: 'apply' stamp: 'GET 10/27/2019 13:49:04'!
+testWithoutAssert
+
+! !
 
 !DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 19:45:38'!
 testZeroIsEqualToCollectionSizeOpensAPopUpOnAccept
@@ -1211,7 +1308,7 @@ check: aMethodNode
 
 	^ false ! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'MEG 10/26/2019 16:45:51'!
+!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 10/27/2019 13:48:24'!
 allRules
 
 	| rules |
@@ -1220,7 +1317,8 @@ allRules
 	rules addAll: {
 		COOPRuleCollectionSize new.
 		COOPRuleColaborationChain new.
-		COOPRuleNonsenseBoolean new
+		COOPRuleNonsenseBoolean new.
+		COOPRuleTestAssertion new.
 	}.
 
 	^  rules! !
@@ -1341,6 +1439,74 @@ initialize
 		#ifTrue:ifFalse:
 	}.! !
 
+!COOPRuleTestAssertion methodsFor: 'printing' stamp: 'GET 10/22/2019 20:17:28'!
+description
+	
+	^ RuleDescriptor new descriptionForTestWithoutAssert ! !
+
+!COOPRuleTestAssertion methodsFor: 'printing' stamp: 'GET 10/22/2019 20:15:50'!
+title
+	
+	^ RuleDescriptor new titleForTestWithoutAssert ! !
+
+!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/27/2019 13:50:15'!
+applyCondition: aNode 
+		
+ 	^ self selectorIsAnAssertion: aNode selectorSymbol .
+! !
+
+!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/26/2019 22:43:59'!
+canAnalizeMethod: aMethodNode 
+	
+	^ ( self isATestCaseClass: aMethodNode ) and: [ self isATestSelector: aMethodNode ]! !
+
+!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/19/2019 18:08:27'!
+canHandle: aNode
+
+	^ aNode isMessageNode! !
+
+!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/26/2019 22:43:39'!
+isATestCaseClass: aMethodNode
+
+	^ aMethodNode methodClass inheritsFrom: TestCase! !
+
+!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/26/2019 22:47:56'!
+isATestSelector: aMethodNode
+
+	| selector |
+	selector _ aMethodNode selector.
+	
+	^ (selector beginsWith: 'test') and: [ selector numArgs isZero ]
+	! !
+
+!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/27/2019 13:50:06'!
+selectorIsAnAssertion: selector 
+	
+ 	^ assertionsSelectors anySatisfy: [:aSelector | selector includesSubString: aSelector].! !
+
+!COOPRuleTestAssertion methodsFor: 'initialize' stamp: 'GET 10/26/2019 21:58:42'!
+initialize
+	 
+	assertionsSelectors _ Set new .
+	assertionsSelectors addAll: {
+		#assert: . #deny: . #should: . #shouldFail: . #shouldnt: . #shouldntFail: . 
+	}.
+	! !
+
+!COOPRuleTestAssertion methodsFor: 'inspect-node' stamp: 'GET 10/26/2019 22:23:58'!
+check: methodNode
+
+	^ (self canAnalizeMethod: methodNode )  and: [ self findAssertionNode: methodNode ]! !
+
+!COOPRuleTestAssertion methodsFor: 'inspect-node' stamp: 'GET 10/22/2019 22:45:20'!
+findAssertionNode: methodNode
+
+	methodNode nodesDo: [ :node | ( self canBeImproved: node ) ifTrue: [ ^ false ] ] .
+	
+	^ true.
+	
+	! !
+
 !NotifierForTesting methodsFor: 'testing' stamp: 'GET 9/28/2019 14:34:31'!
 hasNotified
 
@@ -1424,6 +1590,11 @@ descriptionForNonsenseBoolean
 	ya que la misma comparacion cumple con esta condicion.
 	Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
 
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/26/2019 23:00:36'!
+descriptionForTestWithoutAssert
+	
+	^ 'El test debería de tener el assert'! !
+
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/13/2019 16:04:33'!
 titleForChainedColaborations
 	^ 'Uso colaboraciones encadenadas'.! !
@@ -1436,6 +1607,11 @@ titleForCollectionSize
 titleForNonsenseBoolean
 	
 	^ 'No hay que tener miedo al booleano' ! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/26/2019 23:00:11'!
+titleForTestWithoutAssert
+
+	^ 'Test sin Assert'.! !
 
 !RuleList methodsFor: 'initialize' stamp: 'GET 9/28/2019 13:43:38'!
 initialize
@@ -1559,39 +1735,6 @@ worldMenuOptions
 		#balloonText 	-> 		'Browser with COOP'.
 	} asDictionary. 
 	}`! !
-
-!InnerTextMorph methodsFor: '*Cuis-University-COOP' stamp: 'jmv 4/26/2019 11:02:36'!
-acceptContents
-	"The message is sent when the user hits return or Cmd-S.
-	Accept the current contents and end editing."
-	"Inform the model of text to be accepted, and return true if OK."
-
-	| accepted prevSelection prevScrollValue |
-	
-	prevSelection _ self editor selectionInterval copy.
-	prevScrollValue _ owner verticalScrollBar scrollValue.
-	
-	hasUnacceptedEdits ifFalse: [ self flash. ^true ].
-	hasEditingConflicts ifTrue: [
-		self confirmAcceptAnyway ifFalse: [self flash. ^false]].
-	
-	accepted _ model acceptContentsFrom: owner.
-	"During the step for the browser, updatePaneIfNeeded is called, and 
-		invariably resets the contents of the code-holding PluggableTextMorph
-		at that time, resetting the cursor position and scroller in the process.
-		The following line forces that update without waiting for the step,
- 		then restores the cursor and scrollbar"
-	
-	"some implementors of acceptContentsFrom: answer self :("
-	^accepted == true 
-		ifTrue: [
-			model refetch.
-			self editor selectFrom: prevSelection first to: prevSelection last.
-			UISupervisor whenUIinSafeState: [
-				self world ifNotNil: [ :w | w activeHand newKeyboardFocus: self ].
-				owner verticalScrollBar internalScrollValue: prevScrollValue].
-			true]
-		ifFalse: [ false ]! !
 
 !TheWorldMenu methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/28/2019 00:25:07'!
 preferencesMenu
