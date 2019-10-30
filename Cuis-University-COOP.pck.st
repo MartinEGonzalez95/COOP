@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 27 October 2019 at 2:21:13 pm'!
+'From Cuis 5.0 [latest update: #3839] on 30 October 2019 at 8:18:15 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 23!
+!provides: 'Cuis-University-COOP' 1 26!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -18,12 +18,22 @@ COOPBrowser class
 
 !classDefinition: #COOPWindow category: #'Cuis-University-COOP-Morph'!
 BrowserWindow subclass: #COOPWindow
-	instanceVariableNames: ''
+	instanceVariableNames: 'nodeHighlighter'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
 !classDefinition: 'COOPWindow class' category: #'Cuis-University-COOP-Morph'!
 COOPWindow class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPHighlighterTest category: #'Cuis-University-COOP-Tests'!
+TestCase subclass: #COOPHighlighterTest
+	instanceVariableNames: 'coopMethodFactory highlighter'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPHighlighterTest class' category: #'Cuis-University-COOP-Tests'!
+COOPHighlighterTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPMethodFactoryTest category: #'Cuis-University-COOP-Tests'!
@@ -94,16 +104,6 @@ TestCase subclass: #COOPTest
 	category: 'Cuis-University-COOP-Tests'!
 !classDefinition: 'COOPTest class' category: #'Cuis-University-COOP-Tests'!
 COOPTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #DemoTest category: #'Cuis-University-COOP-Tests'!
-TestCase subclass: #DemoTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'DemoTest class' category: #'Cuis-University-COOP-Tests'!
-DemoTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #RuleListTest category: #'Cuis-University-COOP-Tests'!
@@ -196,6 +196,16 @@ COOPRule subclass: #COOPRuleTestAssertion
 COOPRuleTestAssertion class
 	instanceVariableNames: ''!
 
+!classDefinition: #DemoCase category: #'Cuis-University-COOP-Tests'!
+Object subclass: #DemoCase
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'DemoCase class' category: #'Cuis-University-COOP-Tests'!
+DemoCase class
+	instanceVariableNames: ''!
+
 !classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
 Object subclass: #NotifierForTesting
 	instanceVariableNames: 'object hasNotified selector lastParameterSended'
@@ -204,6 +214,16 @@ Object subclass: #NotifierForTesting
 	category: 'Cuis-University-COOP-Tests'!
 !classDefinition: 'NotifierForTesting class' category: #'Cuis-University-COOP-Tests'!
 NotifierForTesting class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPHighlighter category: #'Cuis-University-COOP-Morph'!
+Object subclass: #COOPHighlighter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPHighlighter class' category: #'Cuis-University-COOP-Morph'!
+COOPHighlighter class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPPreferences category: #'Cuis-University-COOP-Morph'!
@@ -294,6 +314,11 @@ addRule: aRule for:aMethodNode
 	aRuleList add:aRule.
 	self changed: #rules.! !
 
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 20:27:27'!
+affectedNodesFor: rule with: methodNode 
+	
+	^ rule selectAffectedNodes: methodNode! !
+
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/10/2019 00:04:00'!
 cleanBeforeRunning: aMethodNode
 
@@ -304,8 +329,11 @@ cleanBeforeRunning: aMethodNode
 	
 	self changed: #rules.! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 10/2/2019 00:09:25'!
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 19:54:34'!
 describeRule
+
+	self changed: #highlightCode.
+
 	^ self ruleList describeRule .! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/12/2019 16:40:04'!
@@ -320,19 +348,22 @@ ignoreRule
 	self changed:#rules.
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/14/2019 00:37:12'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/30/2019 20:16:45'!
 runCOOP
 
-	| methodDictionary methodNode selectedMessageName |
-	methodDictionary _ ( self selectedClassOrMetaClass ifNil: [ ^ self ] ) methodDictionary.
-	selectedMessageName _ self selectedMessageName ifNil: [ ^ self ].
+	| methodNode |
 
-	methodNode _  ( methodDictionary at: selectedMessageName ) methodNode.
+	methodNode _ (self currentCompiledMethod ifNil: [ ^ self]) methodNode.
 
 	COOP new performInteractiveChecksFor: methodNode.
 	
 	"Mandatory to return self because method it's used on cascade"
 	^ self! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
+selectedRule
+	
+	^ self ruleList selectedRuleIfNone: [ nil ]! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
 buildButtonRulePane
@@ -419,6 +450,16 @@ describeSelectedRule
 	PopUpMenu  inform: model describeRule.
 	! !
 
+!COOPWindow methodsFor: 'action' stamp: 'GET 10/27/2019 23:16:17'!
+highlightCode
+
+	| selectedRule methodNode  |
+	selectedRule _ model selectedRule ifNil: [ ^ nil ].
+	methodNode _ model currentCompiledMethod methodNode.
+		
+	nodeHighlighter  change: codePane text of: methodNode using: selectedRule .
+		! !
+
 !COOPWindow methodsFor: 'action' stamp: 'GET 10/3/2019 20:27:36'!
 ignoreRule
 
@@ -428,6 +469,20 @@ ignoreRule
 informCOOP
 
 	model ifNotNil: [ model runCOOP ]! !
+
+!COOPWindow methodsFor: 'updating' stamp: 'MEG 10/27/2019 19:54:09'!
+update: parameter
+	
+	super update: parameter.
+	
+	parameter = #highlightCode ifTrue: [ self highlightCode ]! !
+
+!COOPWindow methodsFor: 'initialize' stamp: 'GET 10/30/2019 19:29:12'!
+initialize
+	super initialize.
+	
+	nodeHighlighter _ COOPHighlighter new.
+! !
 
 !COOPWindow class methodsFor: 'instance creation' stamp: 'GET 10/3/2019 19:09:32'!
 openCOOPWindow
@@ -440,6 +495,41 @@ openCOOPWindow
 informCOOP
 
 	self allInstancesDo: [ :coopWindow | coopWindow informCOOP ]! !
+
+!COOPHighlighterTest methodsFor: 'setUp/tearDown' stamp: 'GET 10/30/2019 19:29:13'!
+setUp
+
+	coopMethodFactory  _ COOPMethodFactory new.
+	highlighter _ COOPHighlighter new. 
+
+! !
+
+!COOPHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/30/2019 19:49:57'!
+testWhenTheMethodDoesNotHaveErrorsItDoesNotModifiedTheSourceText
+	
+	|methodSourceText methodNode |
+	methodNode  _  self searchMethodNode:  #caseWhenIfFalseClauseWithReturnOnBlockNotApply.
+	methodSourceText _ methodNode sourceText asText .
+	
+	highlighter change: methodSourceText of: methodNode using: COOPRuleNonsenseBoolean new. 
+		
+	self deny: methodSourceText hasAnyAttribute.! !
+
+!COOPHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/30/2019 19:49:23'!
+testWhenTheMethodHasErrorsTheHighligtherModifiesTheSourceText
+	
+	|methodSourceText methodNode |
+	methodNode  _  self searchMethodNode:  #oneRuleWithMoreCases.
+	methodSourceText _ methodNode sourceText asText .
+
+	highlighter change: methodSourceText of: methodNode using: COOPRuleCollectionSize new. 
+		
+	self assert: methodSourceText hasAnyAttribute.! !
+
+!COOPHighlighterTest methodsFor: 'factory-method-nodes' stamp: 'GET 10/27/2019 23:07:02'!
+searchMethodNode: selector
+
+	^ coopMethodFactory findMethodNodeNamed: selector in:  DemoCase  .! !
 
 !COOPMethodFactoryTest methodsFor: 'compiled-method-test' stamp: 'MEG 9/22/2019 23:49:16'!
 testCOOPMethodFactoryCompilesNewMethodNode
@@ -1007,101 +1097,6 @@ setUp
 
 ! !
 
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/13/2019 16:02:54'!
-testApplyWhenThereAreMoreThanThreeColaborationsChained
-
-	self assert: ( 1 + 1 + 1 +1   ) equals: 4.! !
-
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/13/2019 16:05:35'!
-testApplyWhenThereAreMoreThanThreeColaborationsChainedInsideABlock
-
-	self assert:  [1 + 1 + 1 +1] value   equals: 4.! !
-
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/14/2019 16:19:32'!
-testApplyWhenThereAreThreeColaborationsChained
-
-	self assert: (1 + 1 + 1 + 1 ) equals: 4.! !
-
-!DemoTest methodsFor: 'apply' stamp: 'MEG 10/15/2019 16:32:07'!
-testCollectionSizeIsEqualToZeroOpensAPopUpOnAccept
-
-	| collection |
-
-	collection _ OrderedCollection new.
-
-	self assert: collection size = 0 .! !
-
-!DemoTest methodsFor: 'apply' stamp: 'MEG 10/10/2019 00:04:44'!
-testCollectionSizeIsIdenticalToZeroOpensAPopUpOnAccept
-
-	| collection |
-
-	collection _ OrderedCollection new.
-
-	self assert: collection size == 0 .! !
-
-!DemoTest methodsFor: 'apply' stamp: 'MEG 10/26/2019 16:57:53'!
-testIfFalseClauseWithNonsenseBoolean
-
-	self deny: ( 5  > 8 ifFalse: [ false ] ).! !
-
-!DemoTest methodsFor: 'apply' stamp: 'MEG 10/26/2019 16:44:12'!
-testIfTrueClauseWithNonsenseBoolean
-
-	self assert: ( 5  > 3 ifTrue: [ true ] ).! !
-
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/27/2019 13:49:04'!
-testWithoutAssert
-
-! !
-
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/3/2019 19:45:38'!
-testZeroIsEqualToCollectionSizeOpensAPopUpOnAccept
-
-	| collection |
-	collection _ OrderedCollection new.
-
-	self assert: 0 = collection size.! !
-
-!DemoTest methodsFor: 'apply' stamp: 'GET 10/11/2019 23:25:09'!
-testZeroIsIdenticalToCollectionSizeOpensAPopUpOnAccept
-
-	| collection |
-	collection _ OrderedCollection new.
-
-	self assert: 0 == collection size.! !
-
-!DemoTest methodsFor: 'not-apply' stamp: 'GET 10/13/2019 16:08:05'!
-testColaborationChainDoesNotApplyInCascadeColaborations
-
-	| col |
-	col _ Set new.
-
-	self assert: (col  isEmpty ;isEmpty ;isEmpty ).! !
-
-!DemoTest methodsFor: 'not-apply' stamp: 'GET 10/3/2019 19:20:51'!
-testCollectionIsEmptyDoesNotOpenAPopUp
-
-	| collection |
-	collection _ OrderedCollection new.
-
-	self assert: collection isEmpty.! !
-
-!DemoTest methodsFor: 'not-apply' stamp: 'GET 10/13/2019 20:48:10'!
-testDoesNotApplyWhenThereAreLessThanTwoColaborationsChained
-
-	self assert: (1   + 1 +  1 ) equals: 3.! !
-
-!DemoTest methodsFor: 'not-apply' stamp: 'MEG 10/26/2019 16:56:53'!
-testIfFalseClauseWithReturnOnBlock
-
-	self deny: ( 5  > 8 ifFalse: [ ^ false ] ).! !
-
-!DemoTest methodsFor: 'not-apply' stamp: 'MEG 10/26/2019 16:56:01'!
-testIfTrueClauseWithReturnOnBlock
-
-	self assert: ( 5  > 3 ifTrue: [ ^ true ] ).! !
-
 !RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 16:27:32'!
 testANewRuleListIsEmptyAndIndexIsZero
 
@@ -1161,7 +1156,7 @@ testRuleListCanBeCleaned
 	
 	self assert: ruleList isEmpty .! !
 
-!RuleListTest methodsFor: 'with-rules' stamp: 'MEG 10/15/2019 16:29:23'!
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/30/2019 19:43:22'!
 testRuleListOnlyContainsOneRuleByRuleClass
 
 	| firstAddedRule secondAddedRule |
@@ -1170,6 +1165,7 @@ testRuleListOnlyContainsOneRuleByRuleClass
 	
 	ruleList add: firstAddedRule .
 	ruleList add: secondAddedRule.
+	
 	self assert: ( ruleList includes: firstAddedRule ).
 	self deny: ( ruleList includes: secondAddedRule )! !
 
@@ -1184,13 +1180,24 @@ testWhenARuleIsIgnoreTheRulesHasChanged
 	self assert: notifier hasNotified.
 	! !
 
-!RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:00'!
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/30/2019 19:44:28'!
 testWhenARuleListAddMoreRulesTheIndexIsTheFirst
 
 	ruleList add: aRule .
-	ruleList add: aRule .
+	ruleList add: COOPRuleColaborationChain  new.
 
 	self assert: 1 equals:  ruleList indexRuleSelected  .! !
+
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/30/2019 19:45:16'!
+testWhenIsCleanedTheRulesTheRulesHasChanged
+
+	| notifier |
+	notifier  _ NotifierForTesting watch: ruleList.
+	ruleList add: aRule .
+	ruleList clean.
+
+	self assert: notifier hasNotified.
+	! !
 
 !COOPMethodFactory methodsFor: 'action' stamp: 'MEG 9/22/2019 23:01:12'!
 compileAndReturnMethod: selector withSourceCode: sourceCode 
@@ -1307,6 +1314,15 @@ check: aMethodNode
 	aMethodNode nodesDo: [ :node | ( self canBeImproved: node ) ifTrue: [ ^ true ] ].
 
 	^ false ! !
+
+!COOPRule methodsFor: 'inspect-node' stamp: 'MEG 10/27/2019 20:30:30'!
+selectAffectedNodes: methodNode 
+
+	| affectedNodes |
+	affectedNodes _ Set new.
+	methodNode nodesDo: [ :node | ( self canBeImproved: node ) ifTrue: [ affectedNodes add: node ] ].
+
+	^ affectedNodes ! !
 
 !COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 10/27/2019 13:48:24'!
 allRules
@@ -1507,6 +1523,112 @@ findAssertionNode: methodNode
 	
 	! !
 
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:02:49'!
+caseEqualityCollectionSize
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	collection size = 0 ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:02:44'!
+caseIdentityCollectionSize
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	collection size == 0 ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:30'!
+caseIfFalseClauseWithNonsenseBoolean
+
+	( 5  > 8 ifFalse: [ false ] ).! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:35'!
+caseIfTrueClauseWithNonsenseBoolean
+
+  5  > 3 ifTrue: [ true ] ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:01:38'!
+caseRevertedEqualCollectionSize
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	0 = collection size! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:01:26'!
+caseRevertedIdentityCollectionSize
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	0 == collection size! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:21'!
+caseWhenAreMoreThanThreeColaborationsAreChained
+
+	[1 + 2 + 3 +4 ]   ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:38'!
+caseWhenThereAreMoreThanThreeColaborationsChained
+
+	( 1 + 1 + 1 + 1 ) ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:06'!
+caseWhenThreeColaborationsAreChained
+
+	Collection new size isZero. ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:10:27'!
+moreThanOneCase
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	collection size = 0 ifTrue:[ true] ifFalse: [false ].! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/30/2019 19:42:24'!
+oneRuleWithMoreCases
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	collection size = 0.
+	
+	0  == collection size.! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
+caseColaborationChainDoesNotApplyInCascadeColaborations
+
+	| col |
+	col _ Set new.
+
+	 col  isEmpty ;isEmpty ;isEmpty .! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:05:46'!
+caseWhenIfFalseClauseWithReturnOnBlockNotApply
+
+	5  > 8 ifFalse: [ ^ false ]! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:05:18'!
+caseWhenIfTrueClauseWithReturnOnBlockNotApply
+
+	5  > 3 ifTrue: [ ^ true ] .! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:05:58'!
+caseWhenOtherCollectionMessageIsSendedNotApplyCollectionSizeRule
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	collection isEmpty! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:05:33'!
+caseWhenThereAreLessThanTwoColaborationsChainedNotApply
+
+	Collection new isEmpty ! !
+
 !NotifierForTesting methodsFor: 'testing' stamp: 'GET 9/28/2019 14:34:31'!
 hasNotified
 
@@ -1548,6 +1670,37 @@ cleanBeforeRunning: aMethodNode
 !NotifierForTesting class methodsFor: 'class initialization' stamp: 'GET 9/29/2019 00:01:06'!
 watch: anObject
 	^ self new watch: anObject.! !
+
+!COOPHighlighter methodsFor: 'apply' stamp: 'GET 10/30/2019 19:30:03'!
+change: sourceText of: aMethodNode using: aRule 
+	
+	| affectedNodes |
+	affectedNodes _ aRule selectAffectedNodes: aMethodNode .
+	
+	affectedNodes do: [:affectedNode | 
+			self apply: affectedNode in: sourceText with: aMethodNode 
+		].! !
+
+!COOPHighlighter methodsFor: 'action' stamp: 'GET 10/27/2019 22:35:06'!
+apply: affectedNode in: aText with: aMethodNode
+
+	| range |
+	range _ aMethodNode rangeForNode: affectedNode ifAbsent: [ ^ nil].
+	 
+	self highlight: aText  with: range .! !
+
+!COOPHighlighter methodsFor: 'action' stamp: 'GET 10/30/2019 19:51:54'!
+highlight: aText with: range 
+	
+	aText 
+		addAttribute: self color 
+		from: range first 
+		to: range last.! !
+
+!COOPHighlighter methodsFor: 'accesing' stamp: 'GET 10/30/2019 19:51:54'!
+color
+
+	^ ShoutTextBackgroundColor yellow.! !
 
 !COOPPreferences class methodsFor: 'class initialization' stamp: 'MEG 10/19/2019 22:25:36'!
 initialize
@@ -1633,9 +1786,9 @@ isEmpty
 
 	^ rules isEmpty .! !
 
-!RuleList methodsFor: 'accessing' stamp: 'GET 9/29/2019 16:27:58'!
+!RuleList methodsFor: 'accessing' stamp: 'GET 10/30/2019 19:28:56'!
 describeRule
- ^ (self selectedRule: [^ self emptyShowMessage ]) description .! !
+ ^ (self selectedRuleIfNone: [^ self emptyShowMessage ]) description .! !
 
 !RuleList methodsFor: 'accessing' stamp: 'GET 9/29/2019 11:16:10'!
 emptyShowMessage
@@ -1663,11 +1816,11 @@ clean
 	
 	rules removeAll.! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 10/1/2019 23:50:07'!
+!RuleList methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
 ignoreRule
 
 	| aRule |
-	aRule  _ self selectedRule: [^self emptyShowMessage] .
+	aRule  _ self selectedRuleIfNone: [^self emptyShowMessage] .
 	rules remove: aRule.
 	self indexRuleSelected: 0.
 	self changed: #rules.
@@ -1678,30 +1831,10 @@ ignoreRule
 indexRuleSelected: anInteger
 	selectedRuleIndex _ anInteger ! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 9/29/2019 11:44:27'!
-selectedRule: aBlock
+!RuleList methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
+selectedRuleIfNone: aBlock
 
 	^ rules at: selectedRuleIndex ifAbsent: aBlock.! !
-
-!ParseNode methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/10/2019 22:28:52'!
-isLeafNode
-	"Leaf represent the final of the tree"
-	 ^ false.! !
-
-!ParseNode methodsFor: '*Cuis-University-COOP' stamp: 'MEG 9/11/2019 17:42:16'!
-isSelectorNode
-
-	^ false! !
-
-!LeafNode methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/10/2019 22:29:04'!
-isLeafNode
-
-	^ true.! !
-
-!SelectorNode methodsFor: '*Cuis-University-COOP' stamp: 'MEG 9/11/2019 17:41:50'!
-isSelectorNode
-
-	^ true! !
 
 !DenotativeObjectBrowserWindow class methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/19/2019 22:31:59'!
 worldMenuOptions 
