@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 27 October 2019 at 11:26:42 pm'!
+'From Cuis 5.0 [latest update: #3839] on 30 October 2019 at 8:18:15 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 25!
+!provides: 'Cuis-University-COOP' 1 26!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -24,6 +24,16 @@ BrowserWindow subclass: #COOPWindow
 	category: 'Cuis-University-COOP-Morph'!
 !classDefinition: 'COOPWindow class' category: #'Cuis-University-COOP-Morph'!
 COOPWindow class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPHighlighterTest category: #'Cuis-University-COOP-Tests'!
+TestCase subclass: #COOPHighlighterTest
+	instanceVariableNames: 'coopMethodFactory highlighter'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPHighlighterTest class' category: #'Cuis-University-COOP-Tests'!
+COOPHighlighterTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPMethodFactoryTest category: #'Cuis-University-COOP-Tests'!
@@ -94,16 +104,6 @@ TestCase subclass: #COOPTest
 	category: 'Cuis-University-COOP-Tests'!
 !classDefinition: 'COOPTest class' category: #'Cuis-University-COOP-Tests'!
 COOPTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #NodeHighlighterTest category: #'Cuis-University-COOP-Tests'!
-TestCase subclass: #NodeHighlighterTest
-	instanceVariableNames: 'coopMethodFactory highlighter'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'NodeHighlighterTest class' category: #'Cuis-University-COOP-Tests'!
-NodeHighlighterTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #RuleListTest category: #'Cuis-University-COOP-Tests'!
@@ -216,6 +216,16 @@ Object subclass: #NotifierForTesting
 NotifierForTesting class
 	instanceVariableNames: ''!
 
+!classDefinition: #COOPHighlighter category: #'Cuis-University-COOP-Morph'!
+Object subclass: #COOPHighlighter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPHighlighter class' category: #'Cuis-University-COOP-Morph'!
+COOPHighlighter class
+	instanceVariableNames: ''!
+
 !classDefinition: #COOPPreferences category: #'Cuis-University-COOP-Morph'!
 Object subclass: #COOPPreferences
 	instanceVariableNames: ''
@@ -224,16 +234,6 @@ Object subclass: #COOPPreferences
 	category: 'Cuis-University-COOP-Morph'!
 !classDefinition: 'COOPPreferences class' category: #'Cuis-University-COOP-Morph'!
 COOPPreferences class
-	instanceVariableNames: ''!
-
-!classDefinition: #NodeHighlighter category: #'Cuis-University-COOP-Morph'!
-Object subclass: #NodeHighlighter
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'NodeHighlighter class' category: #'Cuis-University-COOP-Morph'!
-NodeHighlighter class
 	instanceVariableNames: ''!
 
 !classDefinition: #RuleDescriptor category: #'Cuis-University-COOP-Morph'!
@@ -348,24 +348,22 @@ ignoreRule
 	self changed:#rules.
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/14/2019 00:37:12'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/30/2019 20:16:45'!
 runCOOP
 
-	| methodDictionary methodNode selectedMessageName |
-	methodDictionary _ ( self selectedClassOrMetaClass ifNil: [ ^ self ] ) methodDictionary.
-	selectedMessageName _ self selectedMessageName ifNil: [ ^ self ].
+	| methodNode |
 
-	methodNode _  ( methodDictionary at: selectedMessageName ) methodNode.
+	methodNode _ (self currentCompiledMethod ifNil: [ ^ self]) methodNode.
 
 	COOP new performInteractiveChecksFor: methodNode.
 	
 	"Mandatory to return self because method it's used on cascade"
 	^ self! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 19:50:54'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
 selectedRule
 	
-	^ self ruleList selectedRule: [ nil ]! !
+	^ self ruleList selectedRuleIfNone: [ nil ]! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
 buildButtonRulePane
@@ -479,11 +477,11 @@ update: parameter
 	
 	parameter = #highlightCode ifTrue: [ self highlightCode ]! !
 
-!COOPWindow methodsFor: 'initialize' stamp: 'GET 10/27/2019 22:42:05'!
+!COOPWindow methodsFor: 'initialize' stamp: 'GET 10/30/2019 19:29:12'!
 initialize
 	super initialize.
 	
-	nodeHighlighter _ NodeHighlighter new.
+	nodeHighlighter _ COOPHighlighter new.
 ! !
 
 !COOPWindow class methodsFor: 'instance creation' stamp: 'GET 10/3/2019 19:09:32'!
@@ -497,6 +495,41 @@ openCOOPWindow
 informCOOP
 
 	self allInstancesDo: [ :coopWindow | coopWindow informCOOP ]! !
+
+!COOPHighlighterTest methodsFor: 'setUp/tearDown' stamp: 'GET 10/30/2019 19:29:13'!
+setUp
+
+	coopMethodFactory  _ COOPMethodFactory new.
+	highlighter _ COOPHighlighter new. 
+
+! !
+
+!COOPHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/30/2019 19:49:57'!
+testWhenTheMethodDoesNotHaveErrorsItDoesNotModifiedTheSourceText
+	
+	|methodSourceText methodNode |
+	methodNode  _  self searchMethodNode:  #caseWhenIfFalseClauseWithReturnOnBlockNotApply.
+	methodSourceText _ methodNode sourceText asText .
+	
+	highlighter change: methodSourceText of: methodNode using: COOPRuleNonsenseBoolean new. 
+		
+	self deny: methodSourceText hasAnyAttribute.! !
+
+!COOPHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/30/2019 19:49:23'!
+testWhenTheMethodHasErrorsTheHighligtherModifiesTheSourceText
+	
+	|methodSourceText methodNode |
+	methodNode  _  self searchMethodNode:  #oneRuleWithMoreCases.
+	methodSourceText _ methodNode sourceText asText .
+
+	highlighter change: methodSourceText of: methodNode using: COOPRuleCollectionSize new. 
+		
+	self assert: methodSourceText hasAnyAttribute.! !
+
+!COOPHighlighterTest methodsFor: 'factory-method-nodes' stamp: 'GET 10/27/2019 23:07:02'!
+searchMethodNode: selector
+
+	^ coopMethodFactory findMethodNodeNamed: selector in:  DemoCase  .! !
 
 !COOPMethodFactoryTest methodsFor: 'compiled-method-test' stamp: 'MEG 9/22/2019 23:49:16'!
 testCOOPMethodFactoryCompilesNewMethodNode
@@ -1064,41 +1097,6 @@ setUp
 
 ! !
 
-!NodeHighlighterTest methodsFor: 'setUp/tearDown' stamp: 'GET 10/27/2019 23:08:22'!
-setUp
-
-	coopMethodFactory  _ COOPMethodFactory new.
-	highlighter _ NodeHighlighter new. 
-
-! !
-
-!NodeHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/27/2019 23:15:11'!
-testAMethodWithErrorsHasBeenModified
-	
-	|methodSourceText methodNode |
-	methodNode  _  self searchMethodNode:  #caseEqualityCollectionSize.
-	methodSourceText _ methodNode sourceText asText .
-
-	highlighter change: methodSourceText of: methodNode using: COOPRuleCollectionSize new. 
-		
-	self assert: methodSourceText hasAnyAttribute.! !
-
-!NodeHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/27/2019 23:15:16'!
-testAMethodWithoutErrorsHasNotBeenModified
-	
-	|methodSourceText methodNode |
-	methodNode  _  self searchMethodNode:  #caseWhenIfFalseClauseWithReturnOnBlockNotApply.
-	methodSourceText _ methodNode sourceText asText .
-	
-	highlighter change: methodSourceText of: methodNode using: COOPRuleNonsenseBoolean new. 
-		
-	self deny: methodSourceText hasAnyAttribute.! !
-
-!NodeHighlighterTest methodsFor: 'factory-method-nodes' stamp: 'GET 10/27/2019 23:07:02'!
-searchMethodNode: selector
-
-	^ coopMethodFactory findMethodNodeNamed: selector in:  DemoCase  .! !
-
 !RuleListTest methodsFor: 'empty-rules' stamp: 'GET 9/29/2019 16:27:32'!
 testANewRuleListIsEmptyAndIndexIsZero
 
@@ -1158,7 +1156,7 @@ testRuleListCanBeCleaned
 	
 	self assert: ruleList isEmpty .! !
 
-!RuleListTest methodsFor: 'with-rules' stamp: 'MEG 10/15/2019 16:29:23'!
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/30/2019 19:43:22'!
 testRuleListOnlyContainsOneRuleByRuleClass
 
 	| firstAddedRule secondAddedRule |
@@ -1167,6 +1165,7 @@ testRuleListOnlyContainsOneRuleByRuleClass
 	
 	ruleList add: firstAddedRule .
 	ruleList add: secondAddedRule.
+	
 	self assert: ( ruleList includes: firstAddedRule ).
 	self deny: ( ruleList includes: secondAddedRule )! !
 
@@ -1181,13 +1180,24 @@ testWhenARuleIsIgnoreTheRulesHasChanged
 	self assert: notifier hasNotified.
 	! !
 
-!RuleListTest methodsFor: 'with-rules' stamp: 'GET 9/29/2019 11:17:00'!
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/30/2019 19:44:28'!
 testWhenARuleListAddMoreRulesTheIndexIsTheFirst
 
 	ruleList add: aRule .
-	ruleList add: aRule .
+	ruleList add: COOPRuleColaborationChain  new.
 
 	self assert: 1 equals:  ruleList indexRuleSelected  .! !
+
+!RuleListTest methodsFor: 'with-rules' stamp: 'GET 10/30/2019 19:45:16'!
+testWhenIsCleanedTheRulesTheRulesHasChanged
+
+	| notifier |
+	notifier  _ NotifierForTesting watch: ruleList.
+	ruleList add: aRule .
+	ruleList clean.
+
+	self assert: notifier hasNotified.
+	! !
 
 !COOPMethodFactory methodsFor: 'action' stamp: 'MEG 9/22/2019 23:01:12'!
 compileAndReturnMethod: selector withSourceCode: sourceCode 
@@ -1578,6 +1588,16 @@ moreThanOneCase
 
 	collection size = 0 ifTrue:[ true] ifFalse: [false ].! !
 
+!DemoCase methodsFor: 'apply' stamp: 'GET 10/30/2019 19:42:24'!
+oneRuleWithMoreCases
+
+	| collection |
+	collection _ OrderedCollection new.
+
+	collection size = 0.
+	
+	0  == collection size.! !
+
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
 caseColaborationChainDoesNotApplyInCascadeColaborations
 
@@ -1651,6 +1671,37 @@ cleanBeforeRunning: aMethodNode
 watch: anObject
 	^ self new watch: anObject.! !
 
+!COOPHighlighter methodsFor: 'apply' stamp: 'GET 10/30/2019 19:30:03'!
+change: sourceText of: aMethodNode using: aRule 
+	
+	| affectedNodes |
+	affectedNodes _ aRule selectAffectedNodes: aMethodNode .
+	
+	affectedNodes do: [:affectedNode | 
+			self apply: affectedNode in: sourceText with: aMethodNode 
+		].! !
+
+!COOPHighlighter methodsFor: 'action' stamp: 'GET 10/27/2019 22:35:06'!
+apply: affectedNode in: aText with: aMethodNode
+
+	| range |
+	range _ aMethodNode rangeForNode: affectedNode ifAbsent: [ ^ nil].
+	 
+	self highlight: aText  with: range .! !
+
+!COOPHighlighter methodsFor: 'action' stamp: 'GET 10/30/2019 19:51:54'!
+highlight: aText with: range 
+	
+	aText 
+		addAttribute: self color 
+		from: range first 
+		to: range last.! !
+
+!COOPHighlighter methodsFor: 'accesing' stamp: 'GET 10/30/2019 19:51:54'!
+color
+
+	^ ShoutTextBackgroundColor yellow.! !
+
 !COOPPreferences class methodsFor: 'class initialization' stamp: 'MEG 10/19/2019 22:25:36'!
 initialize
 	"
@@ -1670,39 +1721,6 @@ toggleCOOPPreference
 !COOPPreferences class methodsFor: 'accesors' stamp: 'MEG 10/19/2019 22:30:35'!
 preferenceLabel
 	^ Preferences coopIsWatching ifTrue: 'COOP OFF' ifFalse: 'COOP ON'.! !
-
-!NodeHighlighter methodsFor: 'apply' stamp: 'GET 10/27/2019 23:17:11'!
-change: sourceText of: aMethodNode using: aRule 
-	
-	| affectedNodes |
-	affectedNodes _ aRule selectAffectedNodes: aMethodNode .
-	
-	affectedNodes do: [:affectedNode | 
-			self apply: affectedNode in: sourceText with: aMethodNode 
-		].
-	
-	^ sourceText ! !
-
-!NodeHighlighter methodsFor: 'action' stamp: 'GET 10/27/2019 22:35:06'!
-apply: affectedNode in: aText with: aMethodNode
-
-	| range |
-	range _ aMethodNode rangeForNode: affectedNode ifAbsent: [ ^ nil].
-	 
-	self highlight: aText  with: range .! !
-
-!NodeHighlighter methodsFor: 'action' stamp: 'GET 10/27/2019 23:13:26'!
-highlight: aText with: range 
-	
-	aText 
-		addAttribute: self colorToApply 
-		from: range first 
-		to: range last.! !
-
-!NodeHighlighter methodsFor: 'accesing' stamp: 'GET 10/27/2019 23:13:37'!
-colorToApply
-
-	^ ShoutTextBackgroundColor yellow.! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/9/2019 23:08:05'!
 descriptionForChainedColaboration
@@ -1768,9 +1786,9 @@ isEmpty
 
 	^ rules isEmpty .! !
 
-!RuleList methodsFor: 'accessing' stamp: 'GET 9/29/2019 16:27:58'!
+!RuleList methodsFor: 'accessing' stamp: 'GET 10/30/2019 19:28:56'!
 describeRule
- ^ (self selectedRule: [^ self emptyShowMessage ]) description .! !
+ ^ (self selectedRuleIfNone: [^ self emptyShowMessage ]) description .! !
 
 !RuleList methodsFor: 'accessing' stamp: 'GET 9/29/2019 11:16:10'!
 emptyShowMessage
@@ -1798,11 +1816,11 @@ clean
 	
 	rules removeAll.! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 10/1/2019 23:50:07'!
+!RuleList methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
 ignoreRule
 
 	| aRule |
-	aRule  _ self selectedRule: [^self emptyShowMessage] .
+	aRule  _ self selectedRuleIfNone: [^self emptyShowMessage] .
 	rules remove: aRule.
 	self indexRuleSelected: 0.
 	self changed: #rules.
@@ -1813,8 +1831,8 @@ ignoreRule
 indexRuleSelected: anInteger
 	selectedRuleIndex _ anInteger ! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 9/29/2019 11:44:27'!
-selectedRule: aBlock
+!RuleList methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
+selectedRuleIfNone: aBlock
 
 	^ rules at: selectedRuleIndex ifAbsent: aBlock.! !
 
