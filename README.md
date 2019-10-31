@@ -18,9 +18,17 @@ https://trello.com/b/W0UVxzHh/unq-ttip-13-coop
 
 ## Documentación del Proyecto
 
-### Entrega 1 y Entrega 2 
+### Entrega 1 
 
 https://docs.google.com/document/d/1Pm92avUA9weRbcWbBDD9_AGE61dwIU3bg0ZkyJ6YE8k/edit?usp=sharing
+
+### Entrega 2
+
+https://docs.google.com/document/d/1AUxm6ywuBBaqVjw3hm6vHw6HrahYCKvePLG6RQ0FDzg/edit?usp=sharing
+
+### Entrega 3
+
+https://docs.google.com/document/d/1apURKzq3PlW4QK-3a38l0XUGf5Tak86U-73qb-TiPd0/edit?usp=sharing
 
 ## Listado de Reglas
 
