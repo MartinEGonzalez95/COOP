@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 30 October 2019 at 8:18:15 pm'!
+'From Cuis 5.0 [latest update: #3839] on 3 November 2019 at 11:24:14 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 26!
+!provides: 'Cuis-University-COOP' 1 28!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -293,33 +293,51 @@ selectedClassAndMessage
 
 	^ selectedClassOrMetaClassName, '>>', selectedMessageName.! !
 
-!COOPBrowser methodsFor: 'initialize' stamp: 'MEG 10/15/2019 16:13:22'!
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 11/2/2019 20:09:51'!
+selectedCompiledMethodIfNone: aBlock
+	| class selector |
+
+	class _ self selectedClassOrMetaClass ifNil: aBlock .
+	selector _ self selectedMessageName ifNil: aBlock .
+	
+	^ class compiledMethodAt: selector ifAbsent: aBlock .
+	
+! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 11/2/2019 21:04:19'!
+selectedCurrentMethodNodeIfNone: aBlock
+	
+	^ (self selectedCompiledMethodIfNone: aBlock) methodNode! !
+
+!COOPBrowser methodsFor: 'initialize' stamp: 'GET 11/3/2019 22:55:24'!
 initialize
 	super initialize .
 	methodsWithRules _ Dictionary new.
 	
 	self when: #annotationChanged send: #runCOOP to: self.
+	self when: #annotationChanged send: #refetchRules to: self.
 ! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/1/2019 23:49:47'!
 rules
 	^ self ruleList rulesTitles .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 10/3/2019 20:37:54'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:14:29'!
 addRule: aRule for:aMethodNode
 
 	| aRuleList |
 	aRuleList _ self ruleListOf: (self keyForRule: aMethodNode ).	.
 
 	aRuleList add:aRule.
-	self changed: #rules.! !
+	
+	self refetchRules .! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 20:27:27'!
 affectedNodesFor: rule with: methodNode 
 	
 	^ rule selectAffectedNodes: methodNode! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/10/2019 00:04:00'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:15:40'!
 cleanBeforeRunning: aMethodNode
 
 	| aRuleList |
@@ -327,7 +345,7 @@ cleanBeforeRunning: aMethodNode
 
 	aRuleList clean.
 	
-	self changed: #rules.! !
+	self refetchRules .! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 19:54:34'!
 describeRule
@@ -336,34 +354,33 @@ describeRule
 
 	^ self ruleList describeRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/12/2019 16:40:04'!
-displayRules
-	
-	self changed: #rules.! !
-
-!COOPBrowser methodsFor: 'action' stamp: 'GET 10/3/2019 19:19:37'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:15:25'!
 ignoreRule
 	| ignoredRule |
 	 ignoredRule _ self ruleList ignoreRule .
-	self changed:#rules.
+
+	self refetchRules .
+	
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 10/30/2019 20:16:45'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/2/2019 19:01:20'!
+refetchRules
+	
+	self changed: #rules.! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:56:37'!
 runCOOP
 
 	| methodNode |
 
-	methodNode _ (self currentCompiledMethod ifNil: [ ^ self]) methodNode.
+	methodNode _ self selectedCurrentMethodNodeIfNone: [ ^ self].
 
-	COOP new performInteractiveChecksFor: methodNode.
-	
-	"Mandatory to return self because method it's used on cascade"
-	^ self! !
+	COOP new performInteractiveChecksFor: methodNode.! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
-selectedRule
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 23:22:42'!
+selectedRuleIfNone: aBlock
 	
-	^ self ruleList selectedRuleIfNone: [ nil ]! !
+	^ self ruleList selectedRuleIfNone: aBlock.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
 buildButtonRulePane
@@ -450,14 +467,14 @@ describeSelectedRule
 	PopUpMenu  inform: model describeRule.
 	! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 10/27/2019 23:16:17'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/3/2019 23:22:52'!
 highlightCode
 
 	| selectedRule methodNode  |
-	selectedRule _ model selectedRule ifNil: [ ^ nil ].
-	methodNode _ model currentCompiledMethod methodNode.
+	selectedRule _ model selectedRuleIfNone: [ ^ nil ].
+	methodNode _ model selectedCurrentMethodNodeIfNone: [^ nil].
 		
-	nodeHighlighter  change: codePane text of: methodNode using: selectedRule .
+	nodeHighlighter change: codePane text of: methodNode using: selectedRule .
 		! !
 
 !COOPWindow methodsFor: 'action' stamp: 'GET 10/3/2019 20:27:36'!
