@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 3 November 2019 at 11:24:14 pm'!
+'From Cuis 5.0 [latest update: #3839] on 10 November 2019 at 7:50:48 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 28!
+!provides: 'Cuis-University-COOP' 1 30!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -14,6 +14,16 @@ Browser subclass: #COOPBrowser
 	category: 'Cuis-University-COOP-Morph'!
 !classDefinition: 'COOPBrowser class' category: #'Cuis-University-COOP-Morph'!
 COOPBrowser class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPShoutTextBackgroundColor category: #'Cuis-University-COOP-Morph'!
+ShoutTextBackgroundColor subclass: #COOPShoutTextBackgroundColor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPShoutTextBackgroundColor class' category: #'Cuis-University-COOP-Morph'!
+COOPShoutTextBackgroundColor class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPWindow category: #'Cuis-University-COOP-Morph'!
@@ -382,6 +392,11 @@ selectedRuleIfNone: aBlock
 	
 	^ self ruleList selectedRuleIfNone: aBlock.! !
 
+!COOPShoutTextBackgroundColor methodsFor: 'testing' stamp: 'MEG 11/10/2019 19:33:22'!
+belongsToCOOP
+
+	^ true! !
+
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
 buildButtonRulePane
 
@@ -521,7 +536,33 @@ setUp
 
 ! !
 
-!COOPHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/30/2019 19:49:57'!
+!COOPHighlighterTest methodsFor: 'testing' stamp: 'MEG 11/10/2019 19:36:01'!
+testCOOPHighlighterCanNotCleanNonCOOPAttributesOfAText
+	
+	| text |
+	text _ 'Clean Highlight Attributes' asText .
+	text addAttribute: ShoutTextColor yellow from: 1 to: 2.
+		
+	self assert: text hasAnyAttribute.
+	
+	highlighter cleanHighlightOn: text.
+	
+	self assert: text hasAnyAttribute.! !
+
+!COOPHighlighterTest methodsFor: 'testing' stamp: 'MEG 11/10/2019 19:36:57'!
+testCOOPHighlighterCleansAllTheCOOPHighlightAttributesOfAText
+	
+	| text |
+	text _ 'Clean Highlight Attributes' asText .
+	text addAttribute: COOPShoutTextBackgroundColor yellow from: 1 to: 2.
+		
+	self assert: text hasAnyAttribute.
+	
+	highlighter cleanHighlightOn: text.
+	
+	self deny: text hasAnyAttribute.! !
+
+!COOPHighlighterTest methodsFor: 'testing' stamp: 'GET 10/30/2019 19:49:57'!
 testWhenTheMethodDoesNotHaveErrorsItDoesNotModifiedTheSourceText
 	
 	|methodSourceText methodNode |
@@ -532,7 +573,7 @@ testWhenTheMethodDoesNotHaveErrorsItDoesNotModifiedTheSourceText
 		
 	self deny: methodSourceText hasAnyAttribute.! !
 
-!COOPHighlighterTest methodsFor: 'assertions' stamp: 'GET 10/30/2019 19:49:23'!
+!COOPHighlighterTest methodsFor: 'testing' stamp: 'GET 10/30/2019 19:49:23'!
 testWhenTheMethodHasErrorsTheHighligtherModifiesTheSourceText
 	
 	|methodSourceText methodNode |
@@ -1597,13 +1638,13 @@ caseWhenThreeColaborationsAreChained
 
 	Collection new size isZero. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:10:27'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 11/10/2019 13:07:14'!
 moreThanOneCase
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection size = 0 ifTrue:[ true] ifFalse: [false ].! !
+	collection size = 0 ifTrue:[ true ] ifFalse: [ false ].! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 10/30/2019 19:42:24'!
 oneRuleWithMoreCases
@@ -1688,15 +1729,16 @@ cleanBeforeRunning: aMethodNode
 watch: anObject
 	^ self new watch: anObject.! !
 
-!COOPHighlighter methodsFor: 'apply' stamp: 'GET 10/30/2019 19:30:03'!
+!COOPHighlighter methodsFor: 'apply' stamp: 'MEG 11/10/2019 19:40:38'!
 change: sourceText of: aMethodNode using: aRule 
 	
 	| affectedNodes |
 	affectedNodes _ aRule selectAffectedNodes: aMethodNode .
 	
+	self cleanHighlightOn: sourceText .
+	
 	affectedNodes do: [:affectedNode | 
-			self apply: affectedNode in: sourceText with: aMethodNode 
-		].! !
+		self apply: affectedNode in: sourceText with: aMethodNode ].! !
 
 !COOPHighlighter methodsFor: 'action' stamp: 'GET 10/27/2019 22:35:06'!
 apply: affectedNode in: aText with: aMethodNode
@@ -1706,18 +1748,21 @@ apply: affectedNode in: aText with: aMethodNode
 	 
 	self highlight: aText  with: range .! !
 
-!COOPHighlighter methodsFor: 'action' stamp: 'GET 10/30/2019 19:51:54'!
-highlight: aText with: range 
+!COOPHighlighter methodsFor: 'action' stamp: 'MEG 11/10/2019 19:38:29'!
+cleanHighlightOn: text 
 	
-	aText 
-		addAttribute: self color 
-		from: range first 
-		to: range last.! !
+	text removeAttributesThat: [ :attribute | attribute belongsToCOOP ]! !
 
-!COOPHighlighter methodsFor: 'accesing' stamp: 'GET 10/30/2019 19:51:54'!
-color
+!COOPHighlighter methodsFor: 'action' stamp: 'MEG 11/10/2019 19:41:11'!
+highlight: text with: range
 
-	^ ShoutTextBackgroundColor yellow.! !
+	text addAttribute: self highlightColor 
+		from: range first to: range last.! !
+
+!COOPHighlighter methodsFor: 'accesing' stamp: 'MEG 11/10/2019 19:39:03'!
+highlightColor
+
+	^ COOPShoutTextBackgroundColor yellow.! !
 
 !COOPPreferences class methodsFor: 'class initialization' stamp: 'MEG 10/19/2019 22:25:36'!
 initialize
@@ -1852,6 +1897,11 @@ indexRuleSelected: anInteger
 selectedRuleIfNone: aBlock
 
 	^ rules at: selectedRuleIndex ifAbsent: aBlock.! !
+
+!TextAttribute methodsFor: '*Cuis-University-COOP' stamp: 'MEG 11/10/2019 19:33:49'!
+belongsToCOOP
+
+	^ false! !
 
 !DenotativeObjectBrowserWindow class methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/19/2019 22:31:59'!
 worldMenuOptions 
