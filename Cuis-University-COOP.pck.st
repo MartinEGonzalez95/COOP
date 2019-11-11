@@ -538,28 +538,28 @@ setUp
 
 !COOPHighlighterTest methodsFor: 'testing' stamp: 'MEG 11/10/2019 19:36:01'!
 testCOOPHighlighterCanNotCleanNonCOOPAttributesOfAText
-	
+
 	| text |
 	text _ 'Clean Highlight Attributes' asText .
 	text addAttribute: ShoutTextColor yellow from: 1 to: 2.
-		
+
 	self assert: text hasAnyAttribute.
-	
+
 	highlighter cleanHighlightOn: text.
-	
+
 	self assert: text hasAnyAttribute.! !
 
 !COOPHighlighterTest methodsFor: 'testing' stamp: 'MEG 11/10/2019 19:36:57'!
 testCOOPHighlighterCleansAllTheCOOPHighlightAttributesOfAText
-	
+
 	| text |
 	text _ 'Clean Highlight Attributes' asText .
 	text addAttribute: COOPShoutTextBackgroundColor yellow from: 1 to: 2.
-		
+
 	self assert: text hasAnyAttribute.
-	
+
 	highlighter cleanHighlightOn: text.
-	
+
 	self deny: text hasAnyAttribute.! !
 
 !COOPHighlighterTest methodsFor: 'testing' stamp: 'GET 10/30/2019 19:49:57'!
@@ -969,6 +969,15 @@ testRuleNonsenseBooleanApplyOnSecondArgumentOfIfTrueIfFalseClause
 	
 	self assert: (rule check: aMethodNode)! !
 
+!COOPRuleNonsenseBooleanTest methodsFor: 'rule-not-apply' stamp: 'MEG 11/10/2019 23:20:45'!
+testRuleNonsenseBooleanDoNotApplyOnIfClausesWithoutBlocks
+
+	| aMethodNode |
+
+	aMethodNode _ self searchMethodNode: #ifClauseWithoutBlocks .
+
+	self deny: (rule check: aMethodNode)! !
+
 !COOPRuleNonsenseBooleanTest methodsFor: 'rule-not-apply' stamp: 'MEG 10/26/2019 16:41:51'!
 testRuleNonsenseBooleanDoNotApplyOnIfFalseClauseWithReturnOnBlock
 
@@ -996,6 +1005,11 @@ firstArgumentIfFalseIfTrueClause
 firstArgumentIfTrueIfFalseClause
 
 	^ 2 > 1 ifTrue: [ true ] ifFalse: [ 1 + 1 ]! !
+
+!COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 11/10/2019 23:19:40'!
+ifClauseWithoutBlocks
+
+	^ 2 > 1 ifFalse: 'false' ifTrue: [ 1 + 1 ]! !
 
 !COOPRuleNonsenseBooleanTest methodsFor: 'method-for-testing' stamp: 'MEG 10/26/2019 15:43:23'!
 ifFalseClause
@@ -1070,7 +1084,8 @@ testRuleApplyInTestMethodWithoutAssertion
 
 !COOPRuleTestAssertionTest methodsFor: 'setup/teardown' stamp: 'GET 10/22/2019 22:55:51'!
 setUp
-	super setUp.		
+	super setUp.
+		
 	rule _ COOPRuleTestAssertion new.! !
 
 !COOPRuleTestAssertionTest methodsFor: 'method-for-testing' stamp: 'GET 10/22/2019 21:57:49'!
@@ -1473,11 +1488,12 @@ applyCondition: aMessageNode
  	^ booleanControllingMessages anySatisfy: 
 		[ :controllingMessage | self withSelector: controllingMessage searchOnArguments: aMessageNode ]! !
 
-!COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 10/26/2019 17:11:33'!
+!COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 11/10/2019 23:26:38'!
 booleanOnArguments: arguments
 
 	^ arguments anySatisfy: 
-		[ :argument | self statementWithBooleanVariableNode: argument statements ]! !
+		[ :argument |
+			argument isBlockNode and: [ self statementWithBooleanVariableNode: argument statements ] ]! !
 
 !COOPRuleNonsenseBoolean methodsFor: 'testing' stamp: 'MEG 10/26/2019 15:06:10'!
 canHandle: aNode 
@@ -1736,8 +1752,8 @@ change: sourceText of: aMethodNode using: aRule
 	affectedNodes _ aRule selectAffectedNodes: aMethodNode .
 	
 	self cleanHighlightOn: sourceText .
-	
-	affectedNodes do: [:affectedNode | 
+
+	affectedNodes do: [:affectedNode |
 		self apply: affectedNode in: sourceText with: aMethodNode ].! !
 
 !COOPHighlighter methodsFor: 'action' stamp: 'GET 10/27/2019 22:35:06'!
@@ -1749,14 +1765,14 @@ apply: affectedNode in: aText with: aMethodNode
 	self highlight: aText  with: range .! !
 
 !COOPHighlighter methodsFor: 'action' stamp: 'MEG 11/10/2019 19:38:29'!
-cleanHighlightOn: text 
+cleanHighlightOn: text
 	
 	text removeAttributesThat: [ :attribute | attribute belongsToCOOP ]! !
 
 !COOPHighlighter methodsFor: 'action' stamp: 'MEG 11/10/2019 19:41:11'!
 highlight: text with: range
 
-	text addAttribute: self highlightColor 
+	text addAttribute: self highlightColor
 		from: range first to: range last.! !
 
 !COOPHighlighter methodsFor: 'accesing' stamp: 'MEG 11/10/2019 19:39:03'!
@@ -1808,7 +1824,7 @@ descriptionForNonsenseBoolean
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/26/2019 23:00:36'!
 descriptionForTestWithoutAssert
 	
-	^ 'El test debería de tener el assert'! !
+	^ 'El test deberï¿½a de tener el assert'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/13/2019 16:04:33'!
 titleForChainedColaborations
