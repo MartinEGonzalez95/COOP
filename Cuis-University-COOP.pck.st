@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 10 November 2019 at 7:50:48 pm'!
+'From Cuis 5.0 [latest update: #3839] on 13 November 2019 at 12:52:23 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 30!
+!provides: 'Cuis-University-COOP' 1 31!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -85,6 +85,16 @@ COOPRuleTest subclass: #COOPRuleCollectionSizeTest
 !classDefinition: 'COOPRuleCollectionSizeTest class' category: #'Cuis-University-COOP-Tests'!
 COOPRuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
+
+!classDefinition: #COOPRuleInstanceMethodToClassTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleInstanceMethodToClassTest
+	instanceVariableNames: 'rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleInstanceMethodToClassTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleInstanceMethodToClassTest class
+	instanceVariableNames: ''!
 
 !classDefinition: #COOPRuleNonsenseBooleanTest category: #'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNonsenseBooleanTest
@@ -184,6 +194,16 @@ COOPRule subclass: #COOPRuleCollectionSize
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOPRuleCollectionSize class' category: #'Cuis-University-COOP'!
 COOPRuleCollectionSize class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleInstanceMethodToClass category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleInstanceMethodToClass
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleInstanceMethodToClass class' category: #'Cuis-University-COOP'!
+COOPRuleInstanceMethodToClass class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPRuleNonsenseBoolean category: #'Cuis-University-COOP'!
@@ -890,6 +910,88 @@ unorderedIdentityCase
 
 	^ 0 == 1. ! !
 
+!COOPRuleInstanceMethodToClassTest methodsFor: 'setup/teardown' stamp: 'GET 11/13/2019 00:45:48'!
+setUp
+
+	super setUp.
+
+	rule _ COOPRuleInstanceMethodToClass new.! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'method-for-testing' stamp: 'GET 11/13/2019 00:47:10'!
+instanceMethod
+
+	"for testing"! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'method-for-testing' stamp: 'GET 11/13/2019 00:47:02'!
+methodIsInInstanceAndClass
+
+	"for testing"! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/7/2019 20:47:26'!
+testNotApplyWhenMethodIsInClassAndInstance
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #caseClassMethodIsSendedAndIsInTheClassToo.
+	
+	self deny: (rule check: aMethodNode)! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/10/2019 23:02:43'!
+testNotApplyWhenMethodIsInSuperClass
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #caseNotApplyWhenMethodIsInSuperClass.
+	
+	self deny: (rule check: aMethodNode)! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/10/2019 23:02:50'!
+testNotApplyWhenMethodIsNotSendedToAClass
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #caseMethodIsNotSendedToAClass.
+	
+	self deny: (rule check: aMethodNode)! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'rule-apply' stamp: 'GET 11/7/2019 20:40:25'!
+testApplyWhenAnInstanceMessageIsSendedToTheClass
+
+	| aMethodNode |
+	
+	aMethodNode _ self searchMethodNode: #caseInstanceMessageSendsToClass.
+	
+	self assert: (rule check: aMethodNode)! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/13/2019 00:46:11'!
+caseClassMethodIsSendedAndIsInTheClassToo
+
+	COOPRuleInstanceMethodToClassTest methodIsInInstanceAndClass.! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/13/2019 00:46:11'!
+caseInstanceMessageSendsToClass
+
+
+	COOPRuleInstanceMethodToClassTest  instanceMethod.! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/7/2019 23:32:15'!
+caseMethodIsNotSendedToAClass
+
+	|col|
+	col _ Collection new.
+	
+	col size.! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/10/2019 23:02:06'!
+caseNotApplyWhenMethodIsInSuperClass
+
+	Set  = OrderedCollection! !
+
+!COOPRuleInstanceMethodToClassTest class methodsFor: 'method-for-testing' stamp: 'GET 11/13/2019 00:46:53'!
+methodIsInInstanceAndClass
+
+	"for testing"! !
+
 !COOPRuleNonsenseBooleanTest methodsFor: 'setup/teardown' stamp: 'MEG 10/26/2019 15:02:56'!
 setUp
 
@@ -1397,7 +1499,7 @@ selectAffectedNodes: methodNode
 
 	^ affectedNodes ! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 10/27/2019 13:48:24'!
+!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 11/13/2019 00:45:48'!
 allRules
 
 	| rules |
@@ -1408,6 +1510,8 @@ allRules
 		COOPRuleColaborationChain new.
 		COOPRuleNonsenseBoolean new.
 		COOPRuleTestAssertion new.
+		COOPRuleInstanceMethodToClass new.
+
 	}.
 
 	^  rules! !
@@ -1472,6 +1576,46 @@ withSelector: messageName applyCondition: aMessageNode
 	^ (aMessageNode isMessage: messageName receiver: self messageSize  arguments: self literalZero) 
 	
 	or: [ aMessageNode isMessage: messageName receiver:  self literalZero arguments: self messageSize] .! !
+
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:48:43'!
+applyCondition: aMessageNode 
+	
+	| aClass metaClass class |
+	aClass _ self canAnalize:aMessageNode ifNone: [ ^ false ].
+	metaClass _ aClass theMetaClass .
+	class _ aClass theNonMetaClass .
+	
+	^ (self selector: aMessageNode selectorSymbol IsInClass: class ) 
+	and: [ ( self selector: aMessageNode selectorSymbol IsInClass: metaClass ) not ] ! !
+
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:49:08'!
+canAnalize: aMessageNode ifNone: aBlockClosure 
+	 | receiver |
+	receiver _  aMessageNode receiver.
+	
+	^ (receiver notNil and: [receiver isLiteralVariableNode ]) 
+	ifFalse: aBlockClosure 
+	ifTrue: [ receiver key value]! !
+
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/7/2019 18:06:43'!
+canHandle: aNode 
+	
+	^ aNode  isMessageNode .! !
+
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/10/2019 22:53:35'!
+selector: aSymbol IsInClass: aClass 
+	
+	^ aClass canUnderstand: aSymbol ! !
+
+!COOPRuleInstanceMethodToClass methodsFor: 'printing' stamp: 'GET 11/11/2019 19:43:05'!
+description
+
+	^ RuleDescriptor new descriptionForSendInstanceMethodToClass .! !
+
+!COOPRuleInstanceMethodToClass methodsFor: 'printing' stamp: 'GET 11/10/2019 11:46:24'!
+title
+	
+	^ RuleDescriptor new titleForSendInstanceMethodToClass! !
 
 !COOPRuleNonsenseBoolean methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:54:05'!
 description
@@ -1623,6 +1767,11 @@ caseIfTrueClauseWithNonsenseBoolean
 
   5  > 3 ifTrue: [ true ] ! !
 
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/11/2019 19:55:02'!
+caseInstanceMethodSendedToClass
+
+	Set isEmpty.! !
+
 !DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:01:38'!
 caseRevertedEqualCollectionSize
 
@@ -1648,6 +1797,11 @@ caseWhenAreMoreThanThreeColaborationsAreChained
 caseWhenThereAreMoreThanThreeColaborationsChained
 
 	( 1 + 1 + 1 + 1 ) ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/11/2019 19:54:36'!
+caseWhenThereAreMoreThanThreeColaborationsChainedApply
+
+	(( OrderedCollection new add: 1 ) add: 2 ) add: 3! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:06'!
 caseWhenThreeColaborationsAreChained
@@ -1679,6 +1833,16 @@ caseColaborationChainDoesNotApplyInCascadeColaborations
 	col _ Set new.
 
 	 col  isEmpty ;isEmpty ;isEmpty .! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 11/11/2019 19:55:41'!
+caseMethodInBothSidesIsSendedToClassNotApply
+	
+	Set = Set! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 11/11/2019 19:55:53'!
+caseMethodInClassSidesIsSendedToClassNotApply
+	
+	Set new! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:05:46'!
 caseWhenIfFalseClauseWithReturnOnBlockNotApply
@@ -1821,10 +1985,15 @@ descriptionForNonsenseBoolean
 	ya que la misma comparacion cumple con esta condicion.
 	Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/26/2019 23:00:36'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:33'!
+descriptionForSendInstanceMethodToClass
+	
+	^ 'Se esta enviando un mensaje de instancia a una clase'! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:23'!
 descriptionForTestWithoutAssert
 	
-	^ 'El test deber�a de tener el assert'! !
+	^ 'El test deberia de tener el assert'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/13/2019 16:04:33'!
 titleForChainedColaborations
@@ -1838,6 +2007,11 @@ titleForCollectionSize
 titleForNonsenseBoolean
 	
 	^ 'No hay que tener miedo al booleano' ! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:52'!
+titleForSendInstanceMethodToClass
+
+	^ 'Envio de mensaje de instancia a clase'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/26/2019 23:00:11'!
 titleForTestWithoutAssert
