@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 16 November 2019 at 6:00:54 pm'!
+'From Cuis 5.0 [latest update: #3958] on 16 November 2019 at 7:02:45 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 32!
+!provides: 'Cuis-University-COOP' 1 33!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -576,7 +576,7 @@ setUp
 	fixer _ COOPFixer new
 ! !
 
-!COOPFixerTest methodsFor: 'method-for-testing' stamp: 'MEG 11/16/2019 16:17:16'!
+!COOPFixerTest methodsFor: 'method-for-testing' stamp: 'MEG 11/16/2019 18:58:52'!
 equalCase
 
 	| col |
@@ -604,33 +604,58 @@ searchMethodNode: selectorName
 
 	^ coopMethodFactory findMethodNodeNamed: selectorName in: self class! !
 
-!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 17:35:32'!
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 19:00:59'!
 testCOOPFixerIdentifiesRangeToFixForCollectionSizeRuleWithEqualCase
+	
+	| methodNode affectedNode expectedInterval rule |
 
-	| aMethodNode affectedNode expectedInterval rule |
-
-	aMethodNode _ self searchMethodNode: #equalCase .
+	methodNode _ self searchMethodNode: #equalCase .
 	rule _ COOPRuleCollectionSize new .
-	affectedNode _ ( rule selectAffectedNodes: aMethodNode ) anyOne .
+	affectedNode _ ( rule selectAffectedNodes: methodNode ) anyOne .
 
-	expectedInterval _ fixer intervalFor: affectedNode on: aMethodNode ifAbsent: [ Interval from: 0 to: 0 ] .
+	expectedInterval _ fixer intervalFor: affectedNode on: methodNode ifAbsent: [ Interval from: 0 to: 0 ] .
 
-	self assert: expectedInterval first equals: 60 .
-	self assert: expectedInterval last equals: 67 .! !
+	self assert: expectedInterval first equals: 61 .
+	self assert: expectedInterval last equals: 68 .! !
 
-!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 17:36:39'!
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 18:35:14'!
 testCOOPFixerIdentifiesRangeToFixForCollectionSizeRuleWithInvertedEqualCase
+	
+	| methodNode affectedNode expectedInterval rule |
 
-	| aMethodNode affectedNode expectedInterval rule |
-
-	aMethodNode _ self searchMethodNode: #invertedEqualCase .
+	methodNode _ self searchMethodNode: #invertedEqualCase .
 	rule _ COOPRuleCollectionSize new .
-	affectedNode _ ( rule selectAffectedNodes: aMethodNode ) anyOne .
+	affectedNode _ ( rule selectAffectedNodes: methodNode ) anyOne .
 
-	expectedInterval _ fixer intervalFor: affectedNode on: aMethodNode ifAbsent: [ Interval from: 0 to: 0 ] .
-
+	expectedInterval _ fixer intervalFor: affectedNode on: methodNode ifAbsent: [ Interval from: 0 to: 0 ] .
+	
 	self assert: expectedInterval first equals: 64 .
 	self assert: expectedInterval last equals: 75 .! !
+
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 19:01:23'!
+testCOOPFixerReplacesAffectedIntervalFromAMethodNode
+
+	| methodNode affectedNode expectedInterval rule wrongSourceText rightSourceText |
+
+	methodNode _ self searchMethodNode: #equalCase .
+	wrongSourceText _ methodNode sourceText .
+	rule _ COOPRuleCollectionSize new .
+	affectedNode _ ( rule selectAffectedNodes: methodNode ) anyOne .
+
+	expectedInterval _ fixer intervalFor: affectedNode on: methodNode ifAbsent: [ Interval from: 0 to: 0 ] .
+
+	rightSourceText _ (fixer replace: expectedInterval from: wrongSourceText with: 'isEmpty').
+
+	self deny: ( wrongSourceText includesSubString: '^ col isEmpty' ) .
+	self assert: ( rightSourceText includesSubString: '^ col isEmpty' )! !
+
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 18:36:06'!
+testCOOPFixerReplacesIntervalFromAText
+
+	| interval |
+	interval _ Interval from: 6 to: 9.
+
+	self assert: (fixer replace: interval from: 'Hola Juan, Como Estas?' with: 'Martin') equals: 'Hola Martin, Como Estas?' .! !
 
 !COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 17:56:54'!
 testCOOPFixerUsesIfAbsentBlock
@@ -1595,6 +1620,11 @@ intervalFor: affectedNode on: methodNode ifAbsent: aBlock
 	intervalForArguments _ self fullInterval: ( methodNode rangeForNode: affectedNode arguments first ifAbsent: aBlock ) for: affectedNode on: methodNode .
 
 	^ Interval from: intervalForReceiver first to: intervalForArguments last. ! !
+
+!COOPFixer methodsFor: 'as yet unclassified' stamp: 'MEG 11/16/2019 18:27:52'!
+replace: interval from: originalText with: textToAdd
+
+	^ originalText copyReplaceFrom: interval first to: interval last with: textToAdd! !
 
 !COOPPerformer methodsFor: 'notification' stamp: 'MEG 10/9/2019 21:53:23'!
 activate: aRule with: aMethodNode
