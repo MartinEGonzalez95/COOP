@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 17 November 2019 at 2:06:35 am'!
+'From Cuis 5.0 [latest update: #3958] on 17 November 2019 at 2:22:55 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 36!
+!provides: 'Cuis-University-COOP' 1 37!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -1601,7 +1601,7 @@ apply: affectedNode in: sourceText with: methodNode
 
 	methodNode methodClass compile: newSourceText! !
 
-!COOPFixer methodsFor: 'action' stamp: 'MEG 11/16/2019 20:13:39'!
+!COOPFixer methodsFor: 'action' stamp: 'MEG 11/17/2019 14:00:51'!
 fix: methodNode
 
 	| affectedNodes collectionSizeRule sourceText |
@@ -1609,7 +1609,7 @@ fix: methodNode
 	affectedNodes _ collectionSizeRule selectAffectedNodes: methodNode .
 	sourceText _ methodNode sourceText .
 
-	affectedNodes do: [:affectedNode | self apply: affectedNode in: sourceText with: methodNode ].! !
+	affectedNodes do: [:affectedNode | self apply: affectedNode in: sourceText with: methodNode ]! !
 
 !COOPFixer methodsFor: 'action' stamp: 'MEG 11/16/2019 18:27:52'!
 replace: interval from: originalText with: textToAdd
@@ -1666,10 +1666,15 @@ findRightTextFor: affectedNode
 				^ prefix append: ' isEmpty'
 			]! !
 
-!COOPFixer methodsFor: 'texts' stamp: 'MEG 11/17/2019 01:16:09'!
+!COOPFixer methodsFor: 'texts' stamp: 'MEG 11/17/2019 14:18:19'!
 receiverNameOf: messageNode
 
-	^ messageNode receiver key! !
+	messageNode receiver isMessageNode ifTrue: 
+		[ ^ ( ( self receiverNameOf: messageNode receiver ) name ) append: ' new' ] .
+
+	messageNode receiver isTemp ifTrue: [ ^ messageNode receiver name ] .
+
+	^  messageNode receiver! !
 
 !COOPPerformer methodsFor: 'notification' stamp: 'MEG 10/9/2019 21:53:23'!
 activate: aRule with: aMethodNode
@@ -1977,21 +1982,21 @@ findAssertionNode: methodNode
 	
 	! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:02:49'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:18:42'!
 caseEqualityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection size = 0 ! !
+	collection isEmpty ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:02:44'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:18:54'!
 caseIdentityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection size == 0 ! !
+	collection isEmpty ! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:30'!
 caseIfFalseClauseWithNonsenseBoolean
@@ -2008,21 +2013,21 @@ caseInstanceMethodSendedToClass
 
 	Set isEmpty.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:01:38'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:05'!
 caseRevertedEqualCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	0 = collection size! !
+	collection isEmpty! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:01:26'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:25'!
 caseRevertedIdentityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	0 == collection size! !
+	collection isEmpty! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:21'!
 caseWhenAreMoreThanThreeColaborationsAreChained
@@ -2044,15 +2049,15 @@ caseWhenThreeColaborationsAreChained
 
 	Collection new size isZero. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/16/2019 20:23:08'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:42'!
 moreThanOneCase
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection size = 0 ifTrue: [ true ] ifFalse: [ false ].! !
+	collection isEmpty ifTrue: [ true ] ifFalse: [ false ].! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/30/2019 19:42:24'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:52'!
 oneRuleWithMoreCases
 
 	| collection |
@@ -2060,7 +2065,7 @@ oneRuleWithMoreCases
 
 	collection size = 0.
 	
-	0  == collection size.! !
+	collection isEmpty.! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
 caseColaborationChainDoesNotApplyInCascadeColaborations
