@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 17 November 2019 at 2:22:55 pm'!
+'From Cuis 5.0 [latest update: #3839] on 18 November 2019 at 2:43:08 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 37!
+!provides: 'Cuis-University-COOP' 1 38!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -536,17 +536,17 @@ describeSelectedRule
 
 	PopUpMenu inform: model describeRule .! !
 
-!COOPWindow methodsFor: 'action' stamp: 'MEG 11/16/2019 19:52:57'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/18/2019 02:35:35'!
 fixMethod
 
-	fixer fix: ( model selectedCurrentMethodNodeIfNone: [ nil ]).! !
+	fixer fix: ( model selectedCurrentMethodNodeIfNone: [ ^ self ]).! !
 
-!COOPWindow methodsFor: 'action' stamp: 'MEG 11/16/2019 19:43:10'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/18/2019 02:35:46'!
 highlightCode
 
 	| selectedRule methodNode  |
-	selectedRule _ model selectedRuleIfNone: [ ^ nil ].
-	methodNode _ model selectedCurrentMethodNodeIfNone: [^ nil].
+	selectedRule _ model selectedRuleIfNone: [ ^ self ].
+	methodNode _ model selectedCurrentMethodNodeIfNone: [^ self ].
 		
 	highlighter change: codePane text of: methodNode using: selectedRule .
 		! !
@@ -1982,21 +1982,21 @@ findAssertionNode: methodNode
 	
 	! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:18:42'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:34'!
 caseEqualityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection isEmpty ! !
+	collection size = 0. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:18:54'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:41'!
 caseIdentityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection isEmpty ! !
+	collection size == 0 ! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:30'!
 caseIfFalseClauseWithNonsenseBoolean
@@ -2013,31 +2013,31 @@ caseInstanceMethodSendedToClass
 
 	Set isEmpty.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:05'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:09'!
 caseRevertedEqualCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection isEmpty! !
+	0 = collection size! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:25'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:02'!
 caseRevertedIdentityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection isEmpty! !
+	0 == collection size! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:21'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:28'!
 caseWhenAreMoreThanThreeColaborationsAreChained
 
-	[1 + 2 + 3 +4 ]   ! !
+	Set new size isZero! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:38'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:19:07'!
 caseWhenThereAreMoreThanThreeColaborationsChained
 
-	( 1 + 1 + 1 + 1 ) ! !
+	(SortedCollection new) size isZero == true! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/11/2019 19:54:36'!
 caseWhenThereAreMoreThanThreeColaborationsChainedApply
@@ -2049,15 +2049,15 @@ caseWhenThreeColaborationsAreChained
 
 	Collection new size isZero. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:42'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:21:42'!
 moreThanOneCase
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection isEmpty ifTrue: [ true ] ifFalse: [ false ].! !
+	(collection size = 0)  ifTrue: [ true ] ifFalse: [ false ].! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/17/2019 14:19:52'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:23:25'!
 oneRuleWithMoreCases
 
 	| collection |
@@ -2065,7 +2065,15 @@ oneRuleWithMoreCases
 
 	collection size = 0.
 	
-	collection isEmpty.! !
+	collection size == 0.
+	
+	0  = collection size.
+	
+	0 == collection size.
+
+	Set new size = 0 .
+	
+	0 = Set new size .! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
 caseColaborationChainDoesNotApplyInCascadeColaborations
