@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 13 November 2019 at 12:52:23 am'!
+'From Cuis 5.0 [latest update: #3839] on 18 November 2019 at 2:43:08 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 31!
+!provides: 'Cuis-University-COOP' 1 38!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -28,12 +28,22 @@ COOPShoutTextBackgroundColor class
 
 !classDefinition: #COOPWindow category: #'Cuis-University-COOP-Morph'!
 BrowserWindow subclass: #COOPWindow
-	instanceVariableNames: 'nodeHighlighter'
+	instanceVariableNames: 'highlighter fixer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
 !classDefinition: 'COOPWindow class' category: #'Cuis-University-COOP-Morph'!
 COOPWindow class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPFixerTest category: #'Cuis-University-COOP-Tests'!
+TestCase subclass: #COOPFixerTest
+	instanceVariableNames: 'coopMethodFactory fixer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPFixerTest class' category: #'Cuis-University-COOP-Tests'!
+COOPFixerTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPHighlighterTest category: #'Cuis-University-COOP-Tests'!
@@ -154,6 +164,16 @@ Object subclass: #COOP
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOP class' category: #'Cuis-University-COOP'!
 COOP class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPFixer category: #'Cuis-University-COOP'!
+Object subclass: #COOPFixer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPFixer class' category: #'Cuis-University-COOP'!
+COOPFixer class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPPerformer category: #'Cuis-University-COOP'!
@@ -453,6 +473,15 @@ buildMorphicCodePane
 		 
 	^ Preferences coopIsWatching ifTrue:[ self buildCOOPRulePane ] ifFalse: [ codePane] .! !
 
+!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 11/16/2019 20:22:42'!
+buildQuickFixMenu
+
+	| answer |
+	answer _ PopUpMenu confirm: model describeRule
+				trueChoice: 'Si' falseChoice: 'No' icons: #(acceptIcon cancelIcon).
+
+	answer ifTrue: [ self fixMethod ]! !
+
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:27:04'!
 buildRuleListMorph
 
@@ -497,19 +526,29 @@ ruleList
 
 	^ model ruleList.! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 10/3/2019 20:27:32'!
+!COOPWindow methodsFor: 'action' stamp: 'MEG 11/16/2019 20:22:42'!
 describeSelectedRule
-	PopUpMenu  inform: model describeRule.
-	! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 11/3/2019 23:22:52'!
+	| selectedRule |
+	selectedRule _ model selectedRuleIfNone: [ nil ] .
+
+	selectedRule ifNotNil: [ selectedRule couldBeFixed ifTrue: [ ^ self buildQuickFixMenu ] ] .
+
+	PopUpMenu inform: model describeRule .! !
+
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/18/2019 02:35:35'!
+fixMethod
+
+	fixer fix: ( model selectedCurrentMethodNodeIfNone: [ ^ self ]).! !
+
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/18/2019 02:35:46'!
 highlightCode
 
 	| selectedRule methodNode  |
-	selectedRule _ model selectedRuleIfNone: [ ^ nil ].
-	methodNode _ model selectedCurrentMethodNodeIfNone: [^ nil].
+	selectedRule _ model selectedRuleIfNone: [ ^ self ].
+	methodNode _ model selectedCurrentMethodNodeIfNone: [^ self ].
 		
-	nodeHighlighter change: codePane text of: methodNode using: selectedRule .
+	highlighter change: codePane text of: methodNode using: selectedRule .
 		! !
 
 !COOPWindow methodsFor: 'action' stamp: 'GET 10/3/2019 20:27:36'!
@@ -529,11 +568,14 @@ update: parameter
 	
 	parameter = #highlightCode ifTrue: [ self highlightCode ]! !
 
-!COOPWindow methodsFor: 'initialize' stamp: 'GET 10/30/2019 19:29:12'!
+!COOPWindow methodsFor: 'initialize' stamp: 'MEG 11/16/2019 19:43:26'!
 initialize
+
 	super initialize.
 	
-	nodeHighlighter _ COOPHighlighter new.
+	highlighter _ COOPHighlighter new.
+
+	fixer _ COOPFixer new.
 ! !
 
 !COOPWindow class methodsFor: 'instance creation' stamp: 'GET 10/3/2019 19:09:32'!
@@ -547,6 +589,110 @@ openCOOPWindow
 informCOOP
 
 	self allInstancesDo: [ :coopWindow | coopWindow informCOOP ]! !
+
+!COOPFixerTest methodsFor: 'setUp/tearDown' stamp: 'MEG 11/16/2019 16:24:05'!
+setUp
+
+	coopMethodFactory  _ COOPMethodFactory new .
+
+	fixer _ COOPFixer new
+! !
+
+!COOPFixerTest methodsFor: 'method-for-testing' stamp: 'MEG 11/16/2019 18:58:52'!
+equalCase
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	^ col size = 0! !
+
+!COOPFixerTest methodsFor: 'method-for-testing' stamp: 'MEG 11/16/2019 17:55:39'!
+ifFalseClause
+
+	^ 2 > 1 ifFalse: [ false ]! !
+
+!COOPFixerTest methodsFor: 'method-for-testing' stamp: 'MEG 11/16/2019 17:35:55'!
+invertedEqualCase
+
+	| col |
+
+	col _ OrderedCollection new.
+
+	^ 0 = col size! !
+
+!COOPFixerTest methodsFor: 'method-for-testing' stamp: 'MEG 11/16/2019 16:23:37'!
+searchMethodNode: selectorName
+
+	^ coopMethodFactory findMethodNodeNamed: selectorName in: self class! !
+
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/17/2019 02:05:31'!
+testCOOPFixerIdentifiesRangeToFixForCollectionSizeRuleWithEqualCase
+
+	| methodNode affectedNode expectedInterval rule |
+
+	methodNode _ self searchMethodNode: #equalCase .
+	rule _ COOPRuleCollectionSize new .
+	affectedNode _ ( rule selectAffectedNodes: methodNode ) anyOne .
+
+	expectedInterval _ fixer intervalFor: affectedNode on: methodNode ifAbsent: [ Interval from: 0 to: 0 ] .
+
+	self assert: expectedInterval first equals: 60 .
+	self assert: expectedInterval last equals: 67 .! !
+
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 18:35:14'!
+testCOOPFixerIdentifiesRangeToFixForCollectionSizeRuleWithInvertedEqualCase
+
+	| methodNode affectedNode expectedInterval rule |
+
+	methodNode _ self searchMethodNode: #invertedEqualCase .
+	rule _ COOPRuleCollectionSize new .
+	affectedNode _ ( rule selectAffectedNodes: methodNode ) anyOne .
+
+	expectedInterval _ fixer intervalFor: affectedNode on: methodNode ifAbsent: [ Interval from: 0 to: 0 ] .
+
+	self assert: expectedInterval first equals: 64 .
+	self assert: expectedInterval last equals: 75 .! !
+
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 19:01:23'!
+testCOOPFixerReplacesAffectedIntervalFromAMethodNode
+
+	| methodNode affectedNode expectedInterval rule wrongSourceText rightSourceText |
+
+	methodNode _ self searchMethodNode: #equalCase .
+	wrongSourceText _ methodNode sourceText .
+	rule _ COOPRuleCollectionSize new .
+	affectedNode _ ( rule selectAffectedNodes: methodNode ) anyOne .
+
+	expectedInterval _ fixer intervalFor: affectedNode on: methodNode ifAbsent: [ Interval from: 0 to: 0 ] .
+
+	rightSourceText _ (fixer replace: expectedInterval from: wrongSourceText with: 'isEmpty').
+
+	self deny: ( wrongSourceText includesSubString: '^ col isEmpty' ) .
+	self assert: ( rightSourceText includesSubString: '^ col isEmpty' )! !
+
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 18:36:06'!
+testCOOPFixerReplacesIntervalFromAText
+
+	| interval |
+	interval _ Interval from: 6 to: 9.
+
+	self assert: (fixer replace: interval from: 'Hola Juan, Como Estas?' with: 'Martin') equals: 'Hola Martin, Como Estas?' .! !
+
+!COOPFixerTest methodsFor: 'testing' stamp: 'MEG 11/16/2019 17:56:54'!
+testCOOPFixerUsesIfAbsentBlock
+
+	| expectedInterval notAffectedNode rule equalCaseMethodNode ifFalseMethodNode |
+
+	equalCaseMethodNode _ self searchMethodNode: #equalCase .
+	ifFalseMethodNode _ self searchMethodNode: #ifFalseClause.
+	rule _ COOPRuleCollectionSize new .
+	notAffectedNode _ ( rule selectAffectedNodes: equalCaseMethodNode ) anyOne .
+
+	expectedInterval _ fixer intervalFor: notAffectedNode on: ifFalseMethodNode ifAbsent: [ Interval from: 5 to: 10 ] .
+
+	self assert: expectedInterval first equals: 5 .
+	self assert: expectedInterval last equals: 10 .! !
 
 !COOPHighlighterTest methodsFor: 'setUp/tearDown' stamp: 'GET 10/30/2019 19:29:13'!
 setUp
@@ -637,10 +783,10 @@ setUp
 
 	coopMethodFactory _ COOPMethodFactory new.! !
 
-!COOPRuleTest methodsFor: 'method-for-testing' stamp: 'GET 10/13/2019 16:36:45'!
+!COOPRuleTest methodsFor: 'method-for-testing' stamp: 'MEG 11/16/2019 16:23:29'!
 searchMethodNode: selectorName
 
-	^ coopMethodFactory findMethodNodeNamed: selectorName in: self class.  ! !
+	^ coopMethodFactory findMethodNodeNamed: selectorName in: self class! !
 
 !COOPRuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/13/2019 15:51:56'!
 testAmountOfChainedColaborationsIsZeroForNoMessageNodes
@@ -931,36 +1077,36 @@ methodIsInInstanceAndClass
 testNotApplyWhenMethodIsInClassAndInstance
 
 	| aMethodNode |
-	
+
 	aMethodNode _ self searchMethodNode: #caseClassMethodIsSendedAndIsInTheClassToo.
-	
+
 	self deny: (rule check: aMethodNode)! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/10/2019 23:02:43'!
 testNotApplyWhenMethodIsInSuperClass
 
 	| aMethodNode |
-	
+
 	aMethodNode _ self searchMethodNode: #caseNotApplyWhenMethodIsInSuperClass.
-	
+
 	self deny: (rule check: aMethodNode)! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/10/2019 23:02:50'!
 testNotApplyWhenMethodIsNotSendedToAClass
 
 	| aMethodNode |
-	
+
 	aMethodNode _ self searchMethodNode: #caseMethodIsNotSendedToAClass.
-	
+
 	self deny: (rule check: aMethodNode)! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'rule-apply' stamp: 'GET 11/7/2019 20:40:25'!
 testApplyWhenAnInstanceMessageIsSendedToTheClass
 
 	| aMethodNode |
-	
+
 	aMethodNode _ self searchMethodNode: #caseInstanceMessageSendsToClass.
-	
+
 	self assert: (rule check: aMethodNode)! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/13/2019 00:46:11'!
@@ -979,7 +1125,7 @@ caseMethodIsNotSendedToAClass
 
 	|col|
 	col _ Collection new.
-	
+
 	col size.! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/10/2019 23:02:06'!
@@ -1445,6 +1591,91 @@ withRules: rules andPerformer: aPerformer
 	
 	^ self new withRules: rules andPerformer: aPerformer ! !
 
+!COOPFixer methodsFor: 'action' stamp: 'MEG 11/17/2019 00:40:07'!
+apply: affectedNode in: sourceText with: methodNode
+
+	| affectedInterval newSourceText |
+	affectedInterval _ self intervalFor: affectedNode on: methodNode ifAbsent: [ Interval from: 0 to: 0 ] .
+
+	newSourceText _ self replace: affectedInterval from: sourceText with: ( self findRightTextFor: affectedNode) .
+
+	methodNode methodClass compile: newSourceText! !
+
+!COOPFixer methodsFor: 'action' stamp: 'MEG 11/17/2019 14:00:51'!
+fix: methodNode
+
+	| affectedNodes collectionSizeRule sourceText |
+	collectionSizeRule _ COOPRuleCollectionSize new.
+	affectedNodes _ collectionSizeRule selectAffectedNodes: methodNode .
+	sourceText _ methodNode sourceText .
+
+	affectedNodes do: [:affectedNode | self apply: affectedNode in: sourceText with: methodNode ]! !
+
+!COOPFixer methodsFor: 'action' stamp: 'MEG 11/16/2019 18:27:52'!
+replace: interval from: originalText with: textToAdd
+
+	^ originalText copyReplaceFrom: interval first to: interval last with: textToAdd! !
+
+!COOPFixer methodsFor: 'arithmetic' stamp: 'MEG 11/16/2019 17:51:05'!
+differenceBetween: firstNumber and: secondNumber
+
+	^ ( firstNumber - secondNumber ) abs! !
+
+!COOPFixer methodsFor: 'intervals' stamp: 'MEG 11/17/2019 01:24:53'!
+findRightIntervalUsing: affectedIntervals on: originalRange
+
+	^ [ affectedIntervals detectMin: [ :interval |  self differenceBetween: interval last and: originalRange first ] ]
+		ifError:
+			[ affectedIntervals detectMax: [ :interval |  self differenceBetween: interval first and: originalRange last ] ]
+	! !
+
+!COOPFixer methodsFor: 'intervals' stamp: 'MEG 11/16/2019 20:17:16'!
+fullInterval: affectedIntervals for: affectedNode on: methodNode
+
+	| originalRange |
+
+	originalRange _ methodNode rangeForNode: affectedNode ifAbsent: [ Interval from: 0 to: 0 ] .
+
+	( affectedIntervals isKindOf: Interval ) ifFalse: [ ^ self findRightIntervalUsing: affectedIntervals on: originalRange ] .
+
+	^ affectedIntervals! !
+
+!COOPFixer methodsFor: 'intervals' stamp: 'MEG 11/16/2019 17:17:54'!
+intervalFor: affectedNode on: methodNode ifAbsent: aBlock
+
+	| intervalForArguments intervalForReceiver |
+
+	intervalForReceiver _ self fullInterval: ( methodNode rangeForNode: affectedNode receiver ifAbsent: aBlock ) for: affectedNode on: methodNode .
+
+	intervalForArguments _ self fullInterval: ( methodNode rangeForNode: affectedNode arguments first ifAbsent: aBlock ) for: affectedNode on: methodNode .
+
+	^ Interval from: intervalForReceiver first to: intervalForArguments last. ! !
+
+!COOPFixer methodsFor: 'texts' stamp: 'MEG 11/17/2019 01:15:55'!
+findRightTextFor: affectedNode
+
+	| prefix receiverIsMessageNode |
+	receiverIsMessageNode _ ( affectedNode receiver isMessageNode ) .
+
+	receiverIsMessageNode
+		ifTrue: [ ^ 'isEmpty' ]
+		ifFalse:
+			[
+				prefix _ self receiverNameOf: affectedNode arguments first .
+
+				^ prefix append: ' isEmpty'
+			]! !
+
+!COOPFixer methodsFor: 'texts' stamp: 'MEG 11/17/2019 14:18:19'!
+receiverNameOf: messageNode
+
+	messageNode receiver isMessageNode ifTrue: 
+		[ ^ ( ( self receiverNameOf: messageNode receiver ) name ) append: ' new' ] .
+
+	messageNode receiver isTemp ifTrue: [ ^ messageNode receiver name ] .
+
+	^  messageNode receiver! !
+
 !COOPPerformer methodsFor: 'notification' stamp: 'MEG 10/9/2019 21:53:23'!
 activate: aRule with: aMethodNode
 
@@ -1469,6 +1700,11 @@ canBeImproved: aNode
 canHandle: aNode 
 	
 	^ self subclassResponsibility .! !
+
+!COOPRule methodsFor: 'testing' stamp: 'MEG 11/16/2019 20:18:45'!
+couldBeFixed
+
+	^ false! !
 
 !COOPRule methodsFor: 'testing' stamp: 'GET 10/11/2019 22:57:06'!
 sameClassAs: aRule
@@ -1552,9 +1788,14 @@ canHandle: aNode
 	
 	^ aNode isMessageNode! !
 
-!COOPRuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:13:48'!
+!COOPRuleCollectionSize methodsFor: 'testing' stamp: 'MEG 11/16/2019 20:18:45'!
+couldBeFixed
+
+	^ true! !
+
+!COOPRuleCollectionSize methodsFor: 'printing' stamp: 'MEG 11/16/2019 19:38:37'!
 description
-	^ RuleDescriptor new descriptionForColectionSize .! !
+	^ RuleDescriptor new descriptionForCollectionSize .! !
 
 !COOPRuleCollectionSize methodsFor: 'printing' stamp: 'GET 9/29/2019 12:02:44'!
 title
@@ -1578,33 +1819,33 @@ withSelector: messageName applyCondition: aMessageNode
 	or: [ aMessageNode isMessage: messageName receiver:  self literalZero arguments: self messageSize] .! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:48:43'!
-applyCondition: aMessageNode 
-	
+applyCondition: aMessageNode
+
 	| aClass metaClass class |
 	aClass _ self canAnalize:aMessageNode ifNone: [ ^ false ].
 	metaClass _ aClass theMetaClass .
 	class _ aClass theNonMetaClass .
-	
-	^ (self selector: aMessageNode selectorSymbol IsInClass: class ) 
+
+	^ (self selector: aMessageNode selectorSymbol IsInClass: class )
 	and: [ ( self selector: aMessageNode selectorSymbol IsInClass: metaClass ) not ] ! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:49:08'!
-canAnalize: aMessageNode ifNone: aBlockClosure 
+canAnalize: aMessageNode ifNone: aBlockClosure
 	 | receiver |
 	receiver _  aMessageNode receiver.
-	
-	^ (receiver notNil and: [receiver isLiteralVariableNode ]) 
-	ifFalse: aBlockClosure 
+
+	^ (receiver notNil and: [receiver isLiteralVariableNode ])
+	ifFalse: aBlockClosure
 	ifTrue: [ receiver key value]! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/7/2019 18:06:43'!
-canHandle: aNode 
-	
+canHandle: aNode
+
 	^ aNode  isMessageNode .! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/10/2019 22:53:35'!
-selector: aSymbol IsInClass: aClass 
-	
+selector: aSymbol IsInClass: aClass
+
 	^ aClass canUnderstand: aSymbol ! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'printing' stamp: 'GET 11/11/2019 19:43:05'!
@@ -1614,7 +1855,7 @@ description
 
 !COOPRuleInstanceMethodToClass methodsFor: 'printing' stamp: 'GET 11/10/2019 11:46:24'!
 title
-	
+
 	^ RuleDescriptor new titleForSendInstanceMethodToClass! !
 
 !COOPRuleNonsenseBoolean methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:54:05'!
@@ -1741,15 +1982,15 @@ findAssertionNode: methodNode
 	
 	! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:02:49'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:34'!
 caseEqualityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection size = 0 ! !
+	collection size = 0. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:02:44'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:41'!
 caseIdentityCollectionSize
 
 	| collection |
@@ -1772,7 +2013,7 @@ caseInstanceMethodSendedToClass
 
 	Set isEmpty.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:01:38'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:09'!
 caseRevertedEqualCollectionSize
 
 	| collection |
@@ -1780,7 +2021,7 @@ caseRevertedEqualCollectionSize
 
 	0 = collection size! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:01:26'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:02'!
 caseRevertedIdentityCollectionSize
 
 	| collection |
@@ -1788,15 +2029,15 @@ caseRevertedIdentityCollectionSize
 
 	0 == collection size! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:21'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:28'!
 caseWhenAreMoreThanThreeColaborationsAreChained
 
-	[1 + 2 + 3 +4 ]   ! !
+	Set new size isZero! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:38'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:19:07'!
 caseWhenThereAreMoreThanThreeColaborationsChained
 
-	( 1 + 1 + 1 + 1 ) ! !
+	(SortedCollection new) size isZero == true! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/11/2019 19:54:36'!
 caseWhenThereAreMoreThanThreeColaborationsChainedApply
@@ -1808,15 +2049,15 @@ caseWhenThreeColaborationsAreChained
 
 	Collection new size isZero. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 11/10/2019 13:07:14'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:21:42'!
 moreThanOneCase
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection size = 0 ifTrue:[ true ] ifFalse: [ false ].! !
+	(collection size = 0)  ifTrue: [ true ] ifFalse: [ false ].! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/30/2019 19:42:24'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:23:25'!
 oneRuleWithMoreCases
 
 	| collection |
@@ -1824,7 +2065,15 @@ oneRuleWithMoreCases
 
 	collection size = 0.
 	
-	0  == collection size.! !
+	collection size == 0.
+	
+	0  = collection size.
+	
+	0 == collection size.
+
+	Set new size = 0 .
+	
+	0 = Set new size .! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
 caseColaborationChainDoesNotApplyInCascadeColaborations
@@ -1836,12 +2085,12 @@ caseColaborationChainDoesNotApplyInCascadeColaborations
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 11/11/2019 19:55:41'!
 caseMethodInBothSidesIsSendedToClassNotApply
-	
+
 	Set = Set! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 11/11/2019 19:55:53'!
 caseMethodInClassSidesIsSendedToClassNotApply
-	
+
 	Set new! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:05:46'!
@@ -1920,13 +2169,13 @@ change: sourceText of: aMethodNode using: aRule
 	affectedNodes do: [:affectedNode |
 		self apply: affectedNode in: sourceText with: aMethodNode ].! !
 
-!COOPHighlighter methodsFor: 'action' stamp: 'GET 10/27/2019 22:35:06'!
+!COOPHighlighter methodsFor: 'action' stamp: 'MEG 11/16/2019 13:54:43'!
 apply: affectedNode in: aText with: aMethodNode
 
 	| range |
-	range _ aMethodNode rangeForNode: affectedNode ifAbsent: [ ^ nil].
+	range _ aMethodNode rangeForNode: affectedNode ifAbsent: [ ^ nil ].
 	 
-	self highlight: aText  with: range .! !
+	self highlight: aText with: range .! !
 
 !COOPHighlighter methodsFor: 'action' stamp: 'MEG 11/10/2019 19:38:29'!
 cleanHighlightOn: text
@@ -1970,12 +2219,13 @@ descriptionForChainedColaboration
 	- guardarlos en colaboradores temporales
 	- refactorizarlos en mensajes'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/3/2019 20:34:29'!
-descriptionForColectionSize
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 11/17/2019 02:05:42'!
+descriptionForCollectionSize
 
 	^ 'Se podria utilizar el mensaje #isEmpty
 	para cuando se chequea que la longitud
-	de una coleccion es igual a cero'! !
+	de una coleccion es igual a cero.
+	Es posible arreglarlo, �Deseas realizar el cambio?'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:55:27'!
 descriptionForNonsenseBoolean
@@ -1987,7 +2237,7 @@ descriptionForNonsenseBoolean
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:33'!
 descriptionForSendInstanceMethodToClass
-	
+
 	^ 'Se esta enviando un mensaje de instancia a una clase'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:23'!
