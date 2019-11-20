@@ -24,6 +24,8 @@ Decidimos utilizar [Trello](https://trello.com) para poder tener control sobre e
 
 ### [Entrega 3](<https://docs.google.com/document/d/1apURKzq3PlW4QK-3a38l0XUGf5Tak86U-73qb-TiPd0/edit?usp=sharing>)
 
+### [Entrega 4](<https://docs.google.com/document/d/1iP75eZCT-rJ-nEDHhM_XHK0St7ch8ZCn0qZbUypG7AI/edit?usp=sharing>)
+
 ## Listado de Reglas
 
 En el siguiente [documento](<https://docs.google.com/spreadsheets/d/1V2cVyd9_ZCzpSsjmLckqZV7el3XrbKX_mz8eNJ5rJtk/edit?usp=sharing>
