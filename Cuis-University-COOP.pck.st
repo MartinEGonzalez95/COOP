@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 18 November 2019 at 2:43:08 am'!
+'From Cuis 5.0 [latest update: #3839] on 20 November 2019 at 10:14:00 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 38!
+!provides: 'Cuis-University-COOP' 1 39!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -105,6 +105,16 @@ COOPRuleTest subclass: #COOPRuleInstanceMethodToClassTest
 !classDefinition: 'COOPRuleInstanceMethodToClassTest class' category: #'Cuis-University-COOP-Tests'!
 COOPRuleInstanceMethodToClassTest class
 	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleNilAssigmentTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleNilAssigmentTest
+	instanceVariableNames: 'rule anInstanceVariable'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNilAssigmentTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleNilAssigmentTest class
+	instanceVariableNames: 'coopHelper'!
 
 !classDefinition: #COOPRuleNonsenseBooleanTest category: #'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNonsenseBooleanTest
@@ -226,6 +236,16 @@ COOPRule subclass: #COOPRuleInstanceMethodToClass
 COOPRuleInstanceMethodToClass class
 	instanceVariableNames: ''!
 
+!classDefinition: #COOPRuleNilAssigment category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleNilAssigment
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNilAssigment class' category: #'Cuis-University-COOP'!
+COOPRuleNilAssigment class
+	instanceVariableNames: ''!
+
 !classDefinition: #COOPRuleNonsenseBoolean category: #'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleNonsenseBoolean
 	instanceVariableNames: 'booleanControllingMessages'
@@ -248,7 +268,7 @@ COOPRuleTestAssertion class
 
 !classDefinition: #DemoCase category: #'Cuis-University-COOP-Tests'!
 Object subclass: #DemoCase
-	instanceVariableNames: ''
+	instanceVariableNames: 'aNilInstanceVariable'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
@@ -1138,6 +1158,48 @@ methodIsInInstanceAndClass
 
 	"for testing"! !
 
+!COOPRuleNilAssigmentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/20/2019 21:20:54'!
+testRuleDoNotApplyWhenAssigmentIsNotNil
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #testRuleDoNotApplyWhenAssigmentIsNotNil.
+
+	self deny: (rule check: methodNode ).! !
+
+!COOPRuleNilAssigmentTest methodsFor: 'rule-apply' stamp: 'GET 11/20/2019 21:52:37'!
+testRuleApplyWhenAssigmentIsNilInInstanceVariable
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #assigmentIsNilInInstancelVariable.
+
+	self assert: (rule check: methodNode ).! !
+
+!COOPRuleNilAssigmentTest methodsFor: 'rule-apply' stamp: 'GET 11/20/2019 21:52:25'!
+testRuleApplyWhenAssigmentIsNilInTemporaryVariable
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #assigmentIsNilInTemporalVariable.
+
+	self assert: (rule check: methodNode ).! !
+
+!COOPRuleNilAssigmentTest methodsFor: 'setup/teardown' stamp: 'GET 11/20/2019 21:19:47'!
+setUp
+	super setUp.
+		
+	rule _ COOPRuleNilAssigment new.! !
+
+!COOPRuleNilAssigmentTest methodsFor: 'method-for-testing' stamp: 'GET 11/20/2019 21:51:20'!
+assigmentIsNilInInstancelVariable
+	
+	anInstanceVariable _ nil.! !
+
+!COOPRuleNilAssigmentTest methodsFor: 'method-for-testing' stamp: 'GET 11/20/2019 21:51:34'!
+assigmentIsNilInTemporalVariable
+
+	| aTemporaryVariable |
+	
+	aTemporaryVariable _ nil.! !
+
 !COOPRuleNonsenseBooleanTest methodsFor: 'setup/teardown' stamp: 'MEG 10/26/2019 15:02:56'!
 setUp
 
@@ -1735,7 +1797,7 @@ selectAffectedNodes: methodNode
 
 	^ affectedNodes ! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 11/13/2019 00:45:48'!
+!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 11/20/2019 21:42:17'!
 allRules
 
 	| rules |
@@ -1747,7 +1809,7 @@ allRules
 		COOPRuleNonsenseBoolean new.
 		COOPRuleTestAssertion new.
 		COOPRuleInstanceMethodToClass new.
-
+		COOPRuleNilAssigment new.
 	}.
 
 	^  rules! !
@@ -1857,6 +1919,28 @@ description
 title
 
 	^ RuleDescriptor new titleForSendInstanceMethodToClass! !
+
+!COOPRuleNilAssigment methodsFor: 'testing' stamp: 'GET 11/20/2019 22:12:47'!
+applyCondition: anAssigmentNode 
+	
+	|aNode|
+	aNode _ anAssigmentNode value .
+	
+	^ aNode isVariableNode  and: [ aNode isNilPseudoVariable].! !
+
+!COOPRuleNilAssigment methodsFor: 'testing' stamp: 'GET 11/20/2019 22:11:39'!
+canHandle: aNode
+
+	^ aNode isAssignmentNode .! !
+
+!COOPRuleNilAssigment methodsFor: 'printing' stamp: 'GET 11/20/2019 21:45:44'!
+description
+	
+	^ RuleDescriptor new descriptionForAssigmentNil! !
+
+!COOPRuleNilAssigment methodsFor: 'printing' stamp: 'GET 11/20/2019 21:45:09'!
+title
+	^ RuleDescriptor new titleForAssigmentIsNil.! !
 
 !COOPRuleNonsenseBoolean methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:54:05'!
 description
@@ -1981,6 +2065,18 @@ findAssertionNode: methodNode
 	^ true.
 	
 	! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:15'!
+caseAssigmentNilInTemporalVariable
+
+	| aNil| 
+	
+	aNil _ nil.! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:35'!
+caseAssigmentNilToInstanceVariable
+
+	aNilInstanceVariable _ nil.! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:34'!
 caseEqualityCollectionSize
@@ -2213,6 +2309,11 @@ toggleCOOPPreference
 preferenceLabel
 	^ Preferences coopIsWatching ifTrue: 'COOP OFF' ifFalse: 'COOP ON'.! !
 
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 21:53:38'!
+descriptionForAssigmentNil
+	
+	^ 'Se esta asignando nil a un colaborador interno/temporal'.! !
+
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/9/2019 23:08:05'!
 descriptionForChainedColaboration
 	^ 'Cuando ocurren muchas colaboraciones encadenadas se recomienda:
@@ -2244,6 +2345,10 @@ descriptionForSendInstanceMethodToClass
 descriptionForTestWithoutAssert
 	
 	^ 'El test deberia de tener el assert'! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 21:44:12'!
+titleForAssigmentIsNil
+	^ 'Asignacion de Nil'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/13/2019 16:04:33'!
 titleForChainedColaborations
