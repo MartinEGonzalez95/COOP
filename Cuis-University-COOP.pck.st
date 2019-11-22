@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 20 November 2019 at 11:01:25 pm'!
+'From Cuis 5.0 [latest update: #3958] on 21 November 2019 at 11:46:17 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 39!
+!provides: 'Cuis-University-COOP' 1 40!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -244,6 +244,16 @@ COOPRule subclass: #COOPRuleInstanceMethodToClass
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOPRuleInstanceMethodToClass class' category: #'Cuis-University-COOP'!
 COOPRuleInstanceMethodToClass class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleNilAsArgument category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleNilAsArgument
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNilAsArgument class' category: #'Cuis-University-COOP'!
+COOPRuleNilAsArgument class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPRuleNilAssigment category: #'Cuis-University-COOP'!
@@ -1864,7 +1874,7 @@ selectAffectedNodes: methodNode
 
 	^ affectedNodes ! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 11/20/2019 22:48:40'!
+!COOPRule class methodsFor: 'information' stamp: 'GET 11/21/2019 18:41:41'!
 allRules
 
 	| rules |
@@ -1878,6 +1888,7 @@ allRules
 		COOPRuleInstanceMethodToClass new.
 		COOPRuleNilAssigment new.
 		COOPRuleReturnNil new.
+		COOPRuleNilAsArgument new.
 	}.
 
 	^  rules! !
@@ -1987,6 +1998,26 @@ description
 title
 
 	^ RuleDescriptor new titleForSendInstanceMethodToClass! !
+
+!COOPRuleNilAsArgument methodsFor: 'testing' stamp: 'GET 11/21/2019 18:38:05'!
+applyCondition: aMessageNode
+
+	^ aMessageNode arguments anySatisfy: [:argumentNode | argumentNode isNilPseudoVariable] ! !
+
+!COOPRuleNilAsArgument methodsFor: 'testing' stamp: 'GET 11/21/2019 18:23:02'!
+canHandle: aMethodNode
+
+	^ aMethodNode isMessageNode .! !
+
+!COOPRuleNilAsArgument methodsFor: 'printing' stamp: 'GET 11/21/2019 18:43:43'!
+description
+
+	^ RuleDescriptor new descriptionForPassingNIlAsArgument! !
+
+!COOPRuleNilAsArgument methodsFor: 'printing' stamp: 'GET 11/21/2019 18:42:32'!
+title
+
+	^ RuleDescriptor new titleForPassingNIlAsArgument! !
 
 !COOPRuleNilAssigment methodsFor: 'testing' stamp: 'GET 11/20/2019 22:12:47'!
 applyCondition: anAssigmentNode
@@ -2194,6 +2225,16 @@ caseIfTrueClauseWithNonsenseBoolean
 caseInstanceMethodSendedToClass
 
 	Set isEmpty.! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/21/2019 18:53:37'!
+casePassingNilAsArgument
+
+	Set with: nil.
+
+	Set with: nil with: 1 .
+
+	1 - nil.
+! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 22:50:18'!
 caseReturningNil
@@ -2434,10 +2475,15 @@ descriptionForNonsenseBoolean
 	ya que la misma comparacion cumple con esta condicion.
 	Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
 
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/21/2019 18:43:12'!
+descriptionForPassingNIlAsArgument
+
+	^ 'No es una buena practica enviar Nil como argumento'! !
+
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:53:24'!
 descriptionForReturningNil
-	^'No es una buena pr�ctica devolver Nil.
-	Se podr�a pensar en utilizar un NullObject,
+	^'No es una buena practica devolver Nil.
+	Se podria pensar en utilizar un NullObject,
 	devolver self u otorgar un bloque para que
 	quien llame al mensaje lo maneje'! !
 
@@ -2467,6 +2513,11 @@ titleForCollectionSize
 titleForNonsenseBoolean
 	
 	^ 'No hay que tener miedo al booleano' ! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/21/2019 18:42:53'!
+titleForPassingNIlAsArgument
+
+	^ 'Pasando nil como Argumento'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:50:07'!
 titleForReturningNil
