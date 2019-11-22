@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 21 November 2019 at 11:46:17 pm'!
+'From Cuis 5.0 [latest update: #3839] on 22 November 2019 at 5:50:15 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 40!
+!provides: 'Cuis-University-COOP' 1 41!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -105,6 +105,16 @@ COOPRuleTest subclass: #COOPRuleInstanceMethodToClassTest
 !classDefinition: 'COOPRuleInstanceMethodToClassTest class' category: #'Cuis-University-COOP-Tests'!
 COOPRuleInstanceMethodToClassTest class
 	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleNilAsArgumentTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleNilAsArgumentTest
+	instanceVariableNames: 'rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNilAsArgumentTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleNilAsArgumentTest class
+	instanceVariableNames: 'coopHelper'!
 
 !classDefinition: #COOPRuleNilAssigmentTest category: #'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNilAssigmentTest
@@ -1187,6 +1197,67 @@ caseNotApplyWhenMethodIsInSuperClass
 methodIsInInstanceAndClass
 
 	"for testing"! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/21/2019 18:25:00'!
+testDoNotApplyWhenPassingAnythingAsAnArgument
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passAnything .
+
+	self deny: (rule check:  aMethodNode).! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-apply' stamp: 'GET 11/21/2019 18:40:14'!
+testApplyWhenPassingNilAsAnArgumentInAnyParameter
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passNilAsArgumentInAnyParameter.
+
+	self assert: (rule check:  aMethodNode).! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-apply' stamp: 'GET 11/21/2019 18:39:12'!
+testApplyWhenPassingNilAsAnArgumentInBinaryMessage
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passNilAsArgumentInInBinaryMessage.
+
+	self assert: (rule check:  aMethodNode).! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-apply' stamp: 'GET 11/21/2019 18:39:24'!
+testApplyWhenPassingNilAsAnArgumentInOneParameter
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passNilAsArgumentInOneParameter.
+
+	self assert: (rule check:  aMethodNode).! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'setup/teardown' stamp: 'GET 11/21/2019 18:20:19'!
+setUp
+	super setUp.
+		
+	rule _ COOPRuleNilAsArgument new.! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/21/2019 18:41:09'!
+passAnything
+
+	 Set with: 1 .! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/21/2019 18:39:59'!
+passNilAsArgumentInAnyParameter
+
+
+	Set with: 1 with: nil.! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/21/2019 18:38:56'!
+passNilAsArgumentInInBinaryMessage
+
+
+	1 + nil! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/21/2019 18:39:43'!
+passNilAsArgumentInOneParameter
+
+
+	Set with: nil.! !
 
 !COOPRuleNilAssigmentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/20/2019 21:20:54'!
 testRuleDoNotApplyWhenAssigmentIsNotNil
