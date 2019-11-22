@@ -1,4 +1,4 @@
-'From Cuis 5.0 [latest update: #3839] on 20 November 2019 at 10:14:00 pm'!
+'From Cuis 5.0 [latest update: #3839] on 20 November 2019 at 11:01:25 pm'!
 'Description '!
 !provides: 'Cuis-University-COOP' 1 39!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
@@ -125,6 +125,16 @@ COOPRuleTest subclass: #COOPRuleNonsenseBooleanTest
 !classDefinition: 'COOPRuleNonsenseBooleanTest class' category: #'Cuis-University-COOP-Tests'!
 COOPRuleNonsenseBooleanTest class
 	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleReturnNilTest category: #'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPRuleReturnNilTest
+	instanceVariableNames: 'rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleReturnNilTest class' category: #'Cuis-University-COOP-Tests'!
+COOPRuleReturnNilTest class
+	instanceVariableNames: 'coopHelper'!
 
 !classDefinition: #COOPRuleTestAssertionTest category: #'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleTestAssertionTest
@@ -254,6 +264,16 @@ COOPRule subclass: #COOPRuleNonsenseBoolean
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOPRuleNonsenseBoolean class' category: #'Cuis-University-COOP'!
 COOPRuleNonsenseBoolean class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPRuleReturnNil category: #'Cuis-University-COOP'!
+COOPRule subclass: #COOPRuleReturnNil
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleReturnNil class' category: #'Cuis-University-COOP'!
+COOPRuleReturnNil class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPRuleTestAssertion category: #'Cuis-University-COOP'!
@@ -1185,19 +1205,19 @@ testRuleApplyWhenAssigmentIsNilInTemporaryVariable
 !COOPRuleNilAssigmentTest methodsFor: 'setup/teardown' stamp: 'GET 11/20/2019 21:19:47'!
 setUp
 	super setUp.
-		
+
 	rule _ COOPRuleNilAssigment new.! !
 
 !COOPRuleNilAssigmentTest methodsFor: 'method-for-testing' stamp: 'GET 11/20/2019 21:51:20'!
 assigmentIsNilInInstancelVariable
-	
+
 	anInstanceVariable _ nil.! !
 
 !COOPRuleNilAssigmentTest methodsFor: 'method-for-testing' stamp: 'GET 11/20/2019 21:51:34'!
 assigmentIsNilInTemporalVariable
 
 	| aTemporaryVariable |
-	
+
 	aTemporaryVariable _ nil.! !
 
 !COOPRuleNonsenseBooleanTest methodsFor: 'setup/teardown' stamp: 'MEG 10/26/2019 15:02:56'!
@@ -1360,6 +1380,53 @@ secondArgumentIfFalseIfTrueClause
 secondArgumentIfTrueIfFalseClause
 
 	^ 2 > 1 ifTrue: [ 1+1 ] ifFalse: [ false ]! !
+
+!COOPRuleReturnNilTest methodsFor: 'rule-not-apply' stamp: 'GET 11/20/2019 22:32:09'!
+testRuleDoNotApplyWhenReturnIsNotNil
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #returnOtherthing .
+
+	self deny: (rule check: methodNode ).! !
+
+!COOPRuleReturnNilTest methodsFor: 'rule-apply' stamp: 'GET 11/20/2019 22:34:46'!
+testRuleApplyWhenReturnIsNil
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #returnNil .
+
+	self assert: (rule check: methodNode ).! !
+
+!COOPRuleReturnNilTest methodsFor: 'rule-apply' stamp: 'GET 11/20/2019 22:42:10'!
+testRuleApplyWhenReturnNilInsideBlock
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #returnNilInsideBlock.
+
+	self assert: (rule check: methodNode ).! !
+
+!COOPRuleReturnNilTest methodsFor: 'setup/teardown' stamp: 'GET 11/20/2019 22:29:48'!
+setUp
+	super setUp.
+
+	rule _ COOPRuleReturnNil new.! !
+
+!COOPRuleReturnNilTest methodsFor: 'method-for-testing' stamp: 'GET 11/20/2019 22:24:32'!
+returnNil
+
+	^ nil! !
+
+!COOPRuleReturnNilTest methodsFor: 'method-for-testing' stamp: 'GET 11/20/2019 22:26:13'!
+returnNilInsideBlock
+
+	[ ^ nil].
+
+	^ 1! !
+
+!COOPRuleReturnNilTest methodsFor: 'method-for-testing' stamp: 'GET 11/20/2019 22:29:39'!
+returnOtherthing
+
+	^ 1! !
 
 !COOPRuleTestAssertionTest methodsFor: 'rule-not-apply' stamp: 'GET 10/22/2019 22:52:54'!
 testRuleDoNotApplyWhenHasAnAssertionAndIsNotATestSelector
@@ -1797,7 +1864,7 @@ selectAffectedNodes: methodNode
 
 	^ affectedNodes ! !
 
-!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 11/20/2019 21:42:17'!
+!COOPRule class methodsFor: 'as yet unclassified' stamp: 'GET 11/20/2019 22:48:40'!
 allRules
 
 	| rules |
@@ -1810,6 +1877,7 @@ allRules
 		COOPRuleTestAssertion new.
 		COOPRuleInstanceMethodToClass new.
 		COOPRuleNilAssigment new.
+		COOPRuleReturnNil new.
 	}.
 
 	^  rules! !
@@ -1921,11 +1989,11 @@ title
 	^ RuleDescriptor new titleForSendInstanceMethodToClass! !
 
 !COOPRuleNilAssigment methodsFor: 'testing' stamp: 'GET 11/20/2019 22:12:47'!
-applyCondition: anAssigmentNode 
-	
+applyCondition: anAssigmentNode
+
 	|aNode|
 	aNode _ anAssigmentNode value .
-	
+
 	^ aNode isVariableNode  and: [ aNode isNilPseudoVariable].! !
 
 !COOPRuleNilAssigment methodsFor: 'testing' stamp: 'GET 11/20/2019 22:11:39'!
@@ -1935,7 +2003,7 @@ canHandle: aNode
 
 !COOPRuleNilAssigment methodsFor: 'printing' stamp: 'GET 11/20/2019 21:45:44'!
 description
-	
+
 	^ RuleDescriptor new descriptionForAssigmentNil! !
 
 !COOPRuleNilAssigment methodsFor: 'printing' stamp: 'GET 11/20/2019 21:45:09'!
@@ -1997,6 +2065,24 @@ initialize
 		#ifTrue:.
 		#ifTrue:ifFalse:
 	}.! !
+
+!COOPRuleReturnNil methodsFor: 'testing' stamp: 'GET 11/20/2019 22:41:01'!
+applyCondition: aReturnNode
+
+	^ aReturnNode expr isNilPseudoVariable! !
+
+!COOPRuleReturnNil methodsFor: 'testing' stamp: 'GET 11/20/2019 22:35:24'!
+canHandle: aNode
+
+	^ aNode isReturn ! !
+
+!COOPRuleReturnNil methodsFor: 'printing' stamp: 'GET 11/20/2019 22:50:44'!
+description
+	^ RuleDescriptor new descriptionForReturningNil! !
+
+!COOPRuleReturnNil methodsFor: 'printing' stamp: 'GET 11/20/2019 22:49:44'!
+title
+	^ RuleDescriptor new titleForReturningNil! !
 
 !COOPRuleTestAssertion methodsFor: 'printing' stamp: 'GET 10/22/2019 20:17:28'!
 description
@@ -2069,8 +2155,8 @@ findAssertionNode: methodNode
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:15'!
 caseAssigmentNilInTemporalVariable
 
-	| aNil| 
-	
+	| aNil|
+
 	aNil _ nil.! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:35'!
@@ -2108,6 +2194,18 @@ caseIfTrueClauseWithNonsenseBoolean
 caseInstanceMethodSendedToClass
 
 	Set isEmpty.! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 22:50:18'!
+caseReturningNil
+
+	^ nil! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 22:55:07'!
+caseReturningNilInsideABlock
+
+	[ ^ nil].
+
+	^1! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:09'!
 caseRevertedEqualCollectionSize
@@ -2311,7 +2409,7 @@ preferenceLabel
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 21:53:38'!
 descriptionForAssigmentNil
-	
+
 	^ 'Se esta asignando nil a un colaborador interno/temporal'.! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/9/2019 23:08:05'!
@@ -2335,6 +2433,13 @@ descriptionForNonsenseBoolean
 	'No es necesario utilizar clausulas booleanas 
 	ya que la misma comparacion cumple con esta condicion.
 	Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:53:24'!
+descriptionForReturningNil
+	^'No es una buena pr�ctica devolver Nil.
+	Se podr�a pensar en utilizar un NullObject,
+	devolver self u otorgar un bloque para que
+	quien llame al mensaje lo maneje'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:33'!
 descriptionForSendInstanceMethodToClass
@@ -2362,6 +2467,10 @@ titleForCollectionSize
 titleForNonsenseBoolean
 	
 	^ 'No hay que tener miedo al booleano' ! !
+
+!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:50:07'!
+titleForReturningNil
+	^'Se esta devolviendo nil'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:52'!
 titleForSendInstanceMethodToClass
