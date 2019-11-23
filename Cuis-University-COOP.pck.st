@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 22 November 2019 at 5:50:15 pm'!
+'From Cuis 5.0 [latest update: #3958] on 23 November 2019 at 9:13:37 am'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 41!
+!provides: 'Cuis-University-COOP' 1 42!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -1123,6 +1123,11 @@ setUp
 
 	rule _ COOPRuleInstanceMethodToClass new.! !
 
+!COOPRuleInstanceMethodToClassTest methodsFor: 'method-for-testing' stamp: 'GET 11/23/2019 08:37:40'!
+aGlobalVariableIsNotCounted
+
+	Smalltalk imagePath .! !
+
 !COOPRuleInstanceMethodToClassTest methodsFor: 'method-for-testing' stamp: 'GET 11/13/2019 00:47:10'!
 instanceMethod
 
@@ -1132,6 +1137,15 @@ instanceMethod
 methodIsInInstanceAndClass
 
 	"for testing"! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/23/2019 08:39:49'!
+testNotApplyWhenLiteralIsAGlobalVariable
+
+	| aMethodNode |
+
+	aMethodNode _ self searchMethodNode: #caseNotApplyWhenIsGlobalVariable.
+
+	self deny: (rule check: aMethodNode)! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/7/2019 20:47:26'!
 testNotApplyWhenMethodIsInClassAndInstance
@@ -1187,6 +1201,11 @@ caseMethodIsNotSendedToAClass
 	col _ Collection new.
 
 	col size.! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/23/2019 08:39:13'!
+caseNotApplyWhenIsGlobalVariable
+
+	Smalltalk imagePath .! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/10/2019 23:02:06'!
 caseNotApplyWhenMethodIsInSuperClass
@@ -2041,12 +2060,12 @@ applyCondition: aMessageNode
 	^ (self selector: aMessageNode selectorSymbol IsInClass: class )
 	and: [ ( self selector: aMessageNode selectorSymbol IsInClass: metaClass ) not ] ! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:49:08'!
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/23/2019 09:02:15'!
 canAnalize: aMessageNode ifNone: aBlockClosure
 	 | receiver |
 	receiver _  aMessageNode receiver.
 
-	^ (receiver notNil and: [receiver isLiteralVariableNode ])
+	^ (self isAClass: receiver)
 	ifFalse: aBlockClosure
 	ifTrue: [ receiver key value]! !
 
@@ -2054,6 +2073,11 @@ canAnalize: aMessageNode ifNone: aBlockClosure
 canHandle: aNode
 
 	^ aNode  isMessageNode .! !
+
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/23/2019 09:01:19'!
+isAClass: receiver 
+
+	^ receiver notNil and: [receiver isLiteralVariableNode ] and:[( Smalltalk classNamed: receiver name) notNil]! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/10/2019 22:53:35'!
 selector: aSymbol IsInClass: aClass
@@ -2254,6 +2278,13 @@ findAssertionNode: methodNode
 	
 	! !
 
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/23/2019 09:07:19'!
+caseAGlobalIsNotCountedAsClass
+
+	Smalltalk size.
+	
+	Smalltalk copyright! !
+
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:15'!
 caseAssigmentNilInTemporalVariable
 
@@ -2297,9 +2328,11 @@ caseInstanceMethodSendedToClass
 
 	Set isEmpty.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/21/2019 18:53:37'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/23/2019 09:10:18'!
 casePassingNilAsArgument
-
+	
+	"Set with: nil."
+	
 	Set with: nil.
 
 	Set with: nil with: 1 .
