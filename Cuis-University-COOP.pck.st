@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 24 November 2019 at 9:38:44 pm'!
+'From Cuis 5.0 [latest update: #3958] on 24 November 2019 at 9:44:37 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 43!
+!provides: 'Cuis-University-COOP' 1 44!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -2324,11 +2324,9 @@ caseInstanceMethodSendedToClass
 
 	Set isEmpty.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/23/2019 09:10:18'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/21/2019 18:53:37'!
 casePassingNilAsArgument
-	
-	"Set with: nil."
-	
+
 	Set with: nil.
 
 	Set with: nil with: 1 .
