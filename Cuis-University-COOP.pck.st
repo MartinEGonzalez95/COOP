@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 23 November 2019 at 9:13:37 am'!
+'From Cuis 5.0 [latest update: #3958] on 24 November 2019 at 9:38:44 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 42!
+!provides: 'Cuis-University-COOP' 1 43!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -2049,40 +2049,36 @@ withSelector: messageName applyCondition: aMessageNode
 	
 	or: [ aMessageNode isMessage: messageName receiver:  self literalZero arguments: self messageSize] .! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:48:43'!
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 21:31:01'!
 applyCondition: aMessageNode
 
-	| aClass metaClass class |
-	aClass _ self canAnalize:aMessageNode ifNone: [ ^ false ].
-	metaClass _ aClass theMetaClass .
-	class _ aClass theNonMetaClass .
+	| classToAnalize metaClass class aSelector|
+	classToAnalize _ self canAnalize: aMessageNode ifNone: [ ^ false ].
+	aSelector _ aMessageNode selectorSymbol.
+	metaClass _ classToAnalize theMetaClass .
+	class _ classToAnalize theNonMetaClass .
 
-	^ (self selector: aMessageNode selectorSymbol IsInClass: class )
-	and: [ ( self selector: aMessageNode selectorSymbol IsInClass: metaClass ) not ] ! !
+	^ ( class canUnderstand: aSelector  )
+	and: [ ( metaClass canUnderstand: aSelector  ) not ] ! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/23/2019 09:02:15'!
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 21:11:40'!
 canAnalize: aMessageNode ifNone: aBlockClosure
 	 | receiver |
-	receiver _  aMessageNode receiver.
+	receiver _  aMessageNode receiver ifNil: aBlockClosure .
 
-	^ (self isAClass: receiver)
+	^ ( self isAAnalyzableReceiver: receiver )
 	ifFalse: aBlockClosure
 	ifTrue: [ receiver key value]! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/7/2019 18:06:43'!
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 20:56:45'!
 canHandle: aNode
 
-	^ aNode  isMessageNode .! !
+	^ aNode isMessageNode .! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/23/2019 09:01:19'!
-isAClass: receiver 
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 20:56:34'!
+isAAnalyzableReceiver: receiver 
 
-	^ receiver notNil and: [receiver isLiteralVariableNode ] and:[( Smalltalk classNamed: receiver name) notNil]! !
-
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/10/2019 22:53:35'!
-selector: aSymbol IsInClass: aClass
-
-	^ aClass canUnderstand: aSymbol ! !
+	^ receiver isLiteralVariableNode and:[( Smalltalk classNamed: receiver name) notNil]! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'printing' stamp: 'GET 11/11/2019 19:43:05'!
 description
