@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3839] on 22 November 2019 at 5:50:15 pm'!
+'From Cuis 5.0 [latest update: #3958] on 24 November 2019 at 9:44:37 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 41!
+!provides: 'Cuis-University-COOP' 1 44!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -1123,6 +1123,11 @@ setUp
 
 	rule _ COOPRuleInstanceMethodToClass new.! !
 
+!COOPRuleInstanceMethodToClassTest methodsFor: 'method-for-testing' stamp: 'GET 11/23/2019 08:37:40'!
+aGlobalVariableIsNotCounted
+
+	Smalltalk imagePath .! !
+
 !COOPRuleInstanceMethodToClassTest methodsFor: 'method-for-testing' stamp: 'GET 11/13/2019 00:47:10'!
 instanceMethod
 
@@ -1132,6 +1137,15 @@ instanceMethod
 methodIsInInstanceAndClass
 
 	"for testing"! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/23/2019 08:39:49'!
+testNotApplyWhenLiteralIsAGlobalVariable
+
+	| aMethodNode |
+
+	aMethodNode _ self searchMethodNode: #caseNotApplyWhenIsGlobalVariable.
+
+	self deny: (rule check: aMethodNode)! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'rule-not-apply' stamp: 'GET 11/7/2019 20:47:26'!
 testNotApplyWhenMethodIsInClassAndInstance
@@ -1187,6 +1201,11 @@ caseMethodIsNotSendedToAClass
 	col _ Collection new.
 
 	col size.! !
+
+!COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/23/2019 08:39:13'!
+caseNotApplyWhenIsGlobalVariable
+
+	Smalltalk imagePath .! !
 
 !COOPRuleInstanceMethodToClassTest methodsFor: 'assertion-cases' stamp: 'GET 11/10/2019 23:02:06'!
 caseNotApplyWhenMethodIsInSuperClass
@@ -2030,35 +2049,36 @@ withSelector: messageName applyCondition: aMessageNode
 	
 	or: [ aMessageNode isMessage: messageName receiver:  self literalZero arguments: self messageSize] .! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:48:43'!
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 21:31:01'!
 applyCondition: aMessageNode
 
-	| aClass metaClass class |
-	aClass _ self canAnalize:aMessageNode ifNone: [ ^ false ].
-	metaClass _ aClass theMetaClass .
-	class _ aClass theNonMetaClass .
+	| classToAnalize metaClass class aSelector|
+	classToAnalize _ self canAnalize: aMessageNode ifNone: [ ^ false ].
+	aSelector _ aMessageNode selectorSymbol.
+	metaClass _ classToAnalize theMetaClass .
+	class _ classToAnalize theNonMetaClass .
 
-	^ (self selector: aMessageNode selectorSymbol IsInClass: class )
-	and: [ ( self selector: aMessageNode selectorSymbol IsInClass: metaClass ) not ] ! !
+	^ ( class canUnderstand: aSelector  )
+	and: [ ( metaClass canUnderstand: aSelector  ) not ] ! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/13/2019 00:49:08'!
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 21:11:40'!
 canAnalize: aMessageNode ifNone: aBlockClosure
 	 | receiver |
-	receiver _  aMessageNode receiver.
+	receiver _  aMessageNode receiver ifNil: aBlockClosure .
 
-	^ (receiver notNil and: [receiver isLiteralVariableNode ])
+	^ ( self isAAnalyzableReceiver: receiver )
 	ifFalse: aBlockClosure
 	ifTrue: [ receiver key value]! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/7/2019 18:06:43'!
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 20:56:45'!
 canHandle: aNode
 
-	^ aNode  isMessageNode .! !
+	^ aNode isMessageNode .! !
 
-!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/10/2019 22:53:35'!
-selector: aSymbol IsInClass: aClass
+!COOPRuleInstanceMethodToClass methodsFor: 'testing' stamp: 'GET 11/24/2019 20:56:34'!
+isAAnalyzableReceiver: receiver 
 
-	^ aClass canUnderstand: aSymbol ! !
+	^ receiver isLiteralVariableNode and:[( Smalltalk classNamed: receiver name) notNil]! !
 
 !COOPRuleInstanceMethodToClass methodsFor: 'printing' stamp: 'GET 11/11/2019 19:43:05'!
 description
@@ -2253,6 +2273,13 @@ findAssertionNode: methodNode
 	^ true.
 	
 	! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/23/2019 09:07:19'!
+caseAGlobalIsNotCountedAsClass
+
+	Smalltalk size.
+	
+	Smalltalk copyright! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:15'!
 caseAssigmentNilInTemporalVariable
