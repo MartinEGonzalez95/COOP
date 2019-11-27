@@ -37,6 +37,8 @@ Ademas de poner el nombre tecnico, tenemos la breve explicación que se adjunta 
 
 [_Prueba de Concepto_](<https://docs.google.com/presentation/d/1TBDwdjCoTbitEdNZ-EoUDZ9slGRvc4-74TzpAKrOkC4/edit?usp=sharing>)
 
+[_Presentación Final_](<https://docs.google.com/presentation/d/1lxGj8QYvZ-5ZnKZd8Bk9jFYGg35FBX2ARrJA-Ut9NwQ/edit?usp=sharing>)
+
 ## Guía de Paquetizado
 
 [_Link a la guía_](<https://docs.google.com/document/d/1SuJOZ_x5Ef5DRhOzpfKQgn5CtQqXcikA5C3stGB1q64/edit?usp=sharing>)
