@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 24 November 2019 at 9:44:37 pm'!
+'From Cuis 5.0 [latest update: #3958] on 29 November 2019 at 6:09:26 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 44!
+!provides: 'Cuis-University-COOP' 1 45!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -372,15 +372,25 @@ indexRuleSelected
 	
 	^ self ruleList indexRuleSelected ! !
 
-!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/1/2019 23:51:27'!
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 11/29/2019 17:53:01'!
 indexRuleSelected: index
 	
-	^ self ruleList indexRuleSelected:index! !
+	| aRule |
+	aRule  _ self ruleList indexRuleSelected:index.
+	self onSelectedRuleChange.
+	
+	^ aRule! !
 
 !COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:37:54'!
 keyForRule: aMethodNode
 
 	^ aMethodNode classAndSelector .! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 11/29/2019 17:53:01'!
+onSelectedRuleChange
+
+	self changed: #selectedRuleDescription.
+	self highlightSelectedRule! !
 
 !COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:40:08'!
 ruleList
@@ -419,14 +429,13 @@ selectedCurrentMethodNodeIfNone: aBlock
 	
 	^ (self selectedCompiledMethodIfNone: aBlock) methodNode! !
 
-!COOPBrowser methodsFor: 'initialize' stamp: 'GET 11/3/2019 22:55:24'!
+!COOPBrowser methodsFor: 'initialize' stamp: 'GET 11/29/2019 17:58:08'!
 initialize
 	super initialize .
 	methodsWithRules _ Dictionary new.
 	
 	self when: #annotationChanged send: #runCOOP to: self.
-	self when: #annotationChanged send: #refetchRules to: self.
-! !
+	self when: #acceptedContents send: #runCOOP to: self.! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/1/2019 23:49:47'!
 rules
@@ -457,12 +466,14 @@ cleanBeforeRunning: aMethodNode
 	
 	self refetchRules .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 19:54:34'!
-describeRule
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:47:11'!
+highlightSelectedRule
 
-	self changed: #highlightCode.
-
-	^ self ruleList describeRule .! !
+	self selectedRuleIfNone: [ ^ self ].
+	
+	self changed: #highlightCode.	
+	self changed: #shoutStyled.
+! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:15:25'!
 ignoreRule
@@ -473,19 +484,28 @@ ignoreRule
 	
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/2/2019 19:01:20'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:53:09'!
 refetchRules
 	
-	self changed: #rules.! !
+	self changed: #rules.
+	self onSelectedRuleChange.
+! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:56:37'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:57:22'!
 runCOOP
 
 	| methodNode |
 
 	methodNode _ self selectedCurrentMethodNodeIfNone: [ ^ self].
 
-	COOP new performInteractiveChecksFor: methodNode.! !
+	COOP new performInteractiveChecksFor: methodNode.
+	
+	self refetchRules! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:30:08'!
+selectedRuleDescription
+
+	^ self ruleList describeRule! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 23:22:42'!
 selectedRuleIfNone: aBlock
@@ -497,19 +517,19 @@ belongsToCOOP
 
 	^ true! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 18:08:08'!
 buildButtonRulePane
 
-	| buttonIgnoreRule buttonMoreRuleInformation ruleViewPane |
-	ruleViewPane _ LayoutMorph newRow.
+	| buttonIgnoreRule buttonRuleQuickFix ruleButtonPane |
+	ruleButtonPane _ LayoutMorph newRow.
 
-	buttonMoreRuleInformation _ self createButtonMoreRuleInformation.
+	buttonRuleQuickFix _ self createButtonMoreRuleInformation.
 	buttonIgnoreRule _ self createButtonIgnoreRule.
 	
-	ruleViewPane addMorph: buttonMoreRuleInformation proportionalWidth: 0.5.
-	ruleViewPane addMorph: buttonIgnoreRule proportionalWidth: 0.5.
+	ruleButtonPane addMorph: buttonRuleQuickFix proportionalWidth: 0.5.
+	ruleButtonPane addMorph: buttonIgnoreRule proportionalWidth: 0.5.
 
-	^ ruleViewPane.! !
+	^ ruleButtonPane.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'MEG 10/14/2019 15:14:05'!
 buildCOOPRulePane
@@ -533,14 +553,21 @@ buildMorphicCodePane
 		 
 	^ Preferences coopIsWatching ifTrue:[ self buildCOOPRulePane ] ifFalse: [ codePane] .! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 11/16/2019 20:22:42'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 17:31:13'!
 buildQuickFixMenu
 
 	| answer |
-	answer _ PopUpMenu confirm: model describeRule
+	answer _ PopUpMenu confirm: model selectedRuleDescription 
 				trueChoice: 'Si' falseChoice: 'No' icons: #(acceptIcon cancelIcon).
 
 	answer ifTrue: [ self fixMethod ]! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 17:31:38'!
+buildRuleDescriptionMorph
+
+	^ (TextModelMorph 
+		textProvider: model 
+		textGetter: #selectedRuleDescription) disableEditing; emptyTextDisplayMessage: 'Nada'.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:27:04'!
 buildRuleListMorph
@@ -551,18 +578,22 @@ buildRuleListMorph
 		indexGetter: #indexRuleSelected
 		indexSetter: #indexRuleSelected:! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/1/2019 00:34:04'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 16:52:35'!
 buildRuleListPane
-	| buttonPane  ruleListView ruleListPane |
+	| buttonPane  ruleListView ruleListPane ruleDescriptionView separator |
 	ruleListPane _ LayoutMorph newColumn.
-	
+	separator  _ LayoutAdjustingMorph new .
 	ruleListView _ self buildRuleListMorph.
-		
+	
+	ruleDescriptionView _ self buildRuleDescriptionMorph.
+	
 	buttonPane _ self buildButtonRulePane.
 		
 	ruleListPane addMorph: buttonPane fixedHeight: self defaultButtonPaneHeight.
 	ruleListPane addMorph: ruleListView proportionalHeight: 1.
-	
+	ruleListPane addMorph: separator fixedHeight: 1.
+	ruleListPane addMorph: ruleDescriptionView  proportionalHeight: 1.
+		
 	^ ruleListPane.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:15:46'!
@@ -573,12 +604,12 @@ createButtonIgnoreRule
 					action: #ignoreRule
 					label: 'Ignorar'! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:16:35'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 18:08:23'!
 createButtonMoreRuleInformation
 
 	^ (PluggableButtonMorph 
-					model: [ self describeSelectedRule]
-					action: #value
+					model: self
+					action: #describeSelectedRule
 					label: 'Ver') .! !
 
 !COOPWindow methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:27:25'!
@@ -586,15 +617,16 @@ ruleList
 
 	^ model ruleList.! !
 
-!COOPWindow methodsFor: 'action' stamp: 'MEG 11/16/2019 20:22:42'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/29/2019 17:48:19'!
 describeSelectedRule
 
 	| selectedRule |
-	selectedRule _ model selectedRuleIfNone: [ nil ] .
-
-	selectedRule ifNotNil: [ selectedRule couldBeFixed ifTrue: [ ^ self buildQuickFixMenu ] ] .
-
-	PopUpMenu inform: model describeRule .! !
+	selectedRule _ model selectedRuleIfNone: [ ^ nil ] .
+	
+	model highlightSelectedRule .
+	
+	selectedRule couldBeFixed 
+		ifTrue: [ self buildQuickFixMenu ] ifFalse: [ self informSelectedRule ].! !
 
 !COOPWindow methodsFor: 'action' stamp: 'GET 11/18/2019 02:35:35'!
 fixMethod
@@ -620,6 +652,11 @@ ignoreRule
 informCOOP
 
 	model ifNotNil: [ model runCOOP ]! !
+
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/29/2019 17:35:37'!
+informSelectedRule
+
+		PopUpMenu inform: model selectedRuleDescription! !
 
 !COOPWindow methodsFor: 'updating' stamp: 'MEG 10/27/2019 19:54:09'!
 update: parameter
@@ -1225,6 +1262,22 @@ testDoNotApplyWhenPassingAnythingAsAnArgument
 
 	self deny: (rule check:  aMethodNode).! !
 
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/27/2019 18:46:29'!
+testDoNotApplyWhenPassingNilInEqualsSelector
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passNilInEqualsSelector .
+
+	self deny: (rule check:  aMethodNode).! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/27/2019 18:46:24'!
+testDoNotApplyWhenPassingNilInIdentitySelector
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passNilInIdentitySelector .
+
+	self deny: (rule check:  aMethodNode).! !
+
 !COOPRuleNilAsArgumentTest methodsFor: 'rule-apply' stamp: 'GET 11/21/2019 18:40:14'!
 testApplyWhenPassingNilAsAnArgumentInAnyParameter
 
@@ -1277,6 +1330,16 @@ passNilAsArgumentInOneParameter
 
 
 	Set with: nil.! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/27/2019 18:45:51'!
+passNilInEqualsSelector
+
+	 self = nil.! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/27/2019 18:45:43'!
+passNilInIdentitySelector
+
+	 self == nil.! !
 
 !COOPRuleNilAssigmentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/20/2019 21:20:54'!
 testRuleDoNotApplyWhenAssigmentIsNotNil
@@ -2095,10 +2158,10 @@ applyCondition: aMessageNode
 
 	^ aMessageNode arguments anySatisfy: [:argumentNode | argumentNode isNilPseudoVariable] ! !
 
-!COOPRuleNilAsArgument methodsFor: 'testing' stamp: 'GET 11/21/2019 18:23:02'!
+!COOPRuleNilAsArgument methodsFor: 'testing' stamp: 'GET 11/27/2019 18:47:47'!
 canHandle: aMethodNode
 
-	^ aMethodNode isMessageNode .! !
+	^ aMethodNode isMessageNode and: [ ((aMethodNode isMessageNamed: #= ) or: [(aMethodNode isMessageNamed: #== ) ]) not  ] .! !
 
 !COOPRuleNilAsArgument methodsFor: 'printing' stamp: 'GET 11/21/2019 18:43:43'!
 description
@@ -2274,13 +2337,6 @@ findAssertionNode: methodNode
 	
 	! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/23/2019 09:07:19'!
-caseAGlobalIsNotCountedAsClass
-
-	Smalltalk size.
-	
-	Smalltalk copyright! !
-
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:15'!
 caseAssigmentNilInTemporalVariable
 
@@ -2293,13 +2349,13 @@ caseAssigmentNilToInstanceVariable
 
 	aNilInstanceVariable _ nil.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:34'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/29/2019 17:19:31'!
 caseEqualityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection size = 0. ! !
+	collection isEmpty. ! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:41'!
 caseIdentityCollectionSize
@@ -2333,6 +2389,11 @@ casePassingNilAsArgument
 
 	1 - nil.
 ! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/27/2019 18:25:38'!
+casePrueba
+
+	self actionForEvent: [ self ] ! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 22:50:18'!
 caseReturningNil
@@ -2382,7 +2443,7 @@ caseWhenThreeColaborationsAreChained
 
 	Collection new size isZero. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:21:42'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/29/2019 17:58:33'!
 moreThanOneCase
 
 	| collection |
@@ -2407,6 +2468,13 @@ oneRuleWithMoreCases
 	Set new size = 0 .
 	
 	0 = Set new size .! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 11/23/2019 09:07:19'!
+caseAGlobalIsNotCountedAsClass
+
+	Smalltalk size.
+	
+	Smalltalk copyright! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
 caseColaborationChainDoesNotApplyInCascadeColaborations
@@ -2631,15 +2699,15 @@ titleForTestWithoutAssert
 
 	^ 'Test sin Assert'.! !
 
-!RuleList methodsFor: 'initialize' stamp: 'GET 9/28/2019 13:43:38'!
+!RuleList methodsFor: 'initialize' stamp: 'GET 11/24/2019 22:45:12'!
 initialize
 	rules _ OrderedCollection new.
-	selectedRuleIndex _ 0.! !
+	self indexRuleSelected: 0.! !
 
-!RuleList methodsFor: 'initialize' stamp: 'GET 10/3/2019 20:32:28'!
+!RuleList methodsFor: 'initialize' stamp: 'GET 11/24/2019 22:45:15'!
 with: aRules
 	rules _ aRules asOrderedCollection .
-	selectedRuleIndex _ 0.! !
+	self indexRuleSelected: 0.! !
 
 !RuleList methodsFor: 'testing' stamp: 'GET 10/3/2019 19:36:08'!
 includes: aRule 
@@ -2667,13 +2735,13 @@ indexRuleSelected
 rulesTitles
 	^ rules collect:[:rule | rule title]! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 10/3/2019 19:44:50'!
+!RuleList methodsFor: 'action' stamp: 'GET 11/29/2019 17:17:40'!
 add: aRule
 	(rules anySatisfy: [:rule| rule sameClassAs: aRule ] ) ifTrue: [^ self].
 	
 	rules add: aRule .
-	selectedRuleIndex _ 1.
-		self changed: #rules.
+	self indexRuleSelected: 1.
+	self changed: #rules.
 ! !
 
 !RuleList methodsFor: 'action' stamp: 'MEG 10/9/2019 22:06:19'!
@@ -2692,9 +2760,9 @@ ignoreRule
 	^ 'Regla ignorada: ', (aRule title) .
 	! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 9/27/2019 18:30:07'!
+!RuleList methodsFor: 'action' stamp: 'GET 11/29/2019 17:09:38'!
 indexRuleSelected: anInteger
-	selectedRuleIndex _ anInteger ! !
+	selectedRuleIndex _ anInteger.! !
 
 !RuleList methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
 selectedRuleIfNone: aBlock
