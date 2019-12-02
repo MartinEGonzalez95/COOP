@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3958] on 29 November 2019 at 6:09:26 pm'!
+'From Cuis 5.0 [latest update: #3958] on 1 December 2019 at 11:20:40 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 45!
+!provides: 'Cuis-University-COOP' 1 46!
 SystemOrganization addCategory: #'Cuis-University-COOP'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
@@ -429,42 +429,37 @@ selectedCurrentMethodNodeIfNone: aBlock
 	
 	^ (self selectedCompiledMethodIfNone: aBlock) methodNode! !
 
-!COOPBrowser methodsFor: 'initialize' stamp: 'GET 11/29/2019 17:58:08'!
+!COOPBrowser methodsFor: 'initialize' stamp: 'MEG 12/1/2019 22:19:55'!
 initialize
 	super initialize .
 	methodsWithRules _ Dictionary new.
 	
-	self when: #annotationChanged send: #runCOOP to: self.
-	self when: #acceptedContents send: #runCOOP to: self.! !
+	self when: #annotationChanged send: #runCOOP to: self.! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/1/2019 23:49:47'!
 rules
 	^ self ruleList rulesTitles .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:14:29'!
-addRule: aRule for:aMethodNode
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 12/1/2019 23:16:11'!
+addRule: aRule for: aMethodNode
 
 	| aRuleList |
-	aRuleList _ self ruleListOf: (self keyForRule: aMethodNode ).	.
+	aRuleList _ self ruleListOf: (self keyForRule: aMethodNode ) .	.
 
-	aRuleList add:aRule.
-	
-	self refetchRules .! !
+	aRuleList add: aRule .! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 20:27:27'!
 affectedNodesFor: rule with: methodNode 
 	
 	^ rule selectAffectedNodes: methodNode! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:15:40'!
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 12/1/2019 23:16:26'!
 cleanBeforeRunning: aMethodNode
 
 	| aRuleList |
-	aRuleList _ self ruleListOf: ( self keyForRule: aMethodNode ).	.
+	aRuleList _ self ruleListOf: ( self keyForRule: aMethodNode ) .
 
-	aRuleList clean.
-	
-	self refetchRules .! !
+	aRuleList clean .! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:47:11'!
 highlightSelectedRule
@@ -531,7 +526,7 @@ buildButtonRulePane
 
 	^ ruleButtonPane.! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 10/14/2019 15:14:05'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 12/1/2019 21:05:38'!
 buildCOOPRulePane
 		
 	| codePaneLayout ruleListPane |
@@ -539,8 +534,8 @@ buildCOOPRulePane
 	
 	ruleListPane _ self buildRuleListPane.
 	
-	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.7.
-	codePaneLayout addAdjusterAndMorph: ruleListPane proportionalWidth: 0.3.
+	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.65.
+	codePaneLayout addAdjusterAndMorph: ruleListPane proportionalWidth: 0.35.
 
 	^ codePaneLayout .! !
 
@@ -553,12 +548,11 @@ buildMorphicCodePane
 		 
 	^ Preferences coopIsWatching ifTrue:[ self buildCOOPRulePane ] ifFalse: [ codePane] .! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 17:31:13'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 12/1/2019 21:10:02'!
 buildQuickFixMenu
 
 	| answer |
-	answer _ PopUpMenu confirm: model selectedRuleDescription 
-				trueChoice: 'Si' falseChoice: 'No' icons: #(acceptIcon cancelIcon).
+	answer _ PopUpMenu confirm: ('Es posible arreglarlo, Deseas realizar el cambio?') trueChoice: 'Si' falseChoice: 'No' icons: #(acceptIcon cancelIcon).
 
 	answer ifTrue: [ self fixMethod ]! !
 
@@ -617,11 +611,16 @@ ruleList
 
 	^ model ruleList.! !
 
-!COOPWindow methodsFor: 'action' stamp: 'GET 11/29/2019 17:48:19'!
+!COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 22:40:58'!
+cleanRulePane
+	
+	model changed: #rules.! !
+
+!COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 21:24:20'!
 describeSelectedRule
 
 	| selectedRule |
-	selectedRule _ model selectedRuleIfNone: [ ^ nil ] .
+	selectedRule _ model selectedRuleIfNone: [ ^ self informNoRuleSelected ] .
 	
 	model highlightSelectedRule .
 	
@@ -648,22 +647,23 @@ ignoreRule
 
 	PopUpMenu  inform: model ignoreRule.! !
 
-!COOPWindow methodsFor: 'action' stamp: 'MEG 10/14/2019 00:36:28'!
-informCOOP
+!COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 21:24:42'!
+informNoRuleSelected
 
-	model ifNotNil: [ model runCOOP ]! !
+	PopUpMenu inform: 'No hay regla seleccionada'! !
 
 !COOPWindow methodsFor: 'action' stamp: 'GET 11/29/2019 17:35:37'!
 informSelectedRule
 
 		PopUpMenu inform: model selectedRuleDescription! !
 
-!COOPWindow methodsFor: 'updating' stamp: 'MEG 10/27/2019 19:54:09'!
+!COOPWindow methodsFor: 'updating' stamp: 'MEG 12/1/2019 22:39:44'!
 update: parameter
 	
 	super update: parameter.
 	
-	parameter = #highlightCode ifTrue: [ self highlightCode ]! !
+	parameter = #highlightCode ifTrue: [ self highlightCode ] .
+	parameter = #acceptedContents ifTrue: [ self cleanRulePane ] .! !
 
 !COOPWindow methodsFor: 'initialize' stamp: 'MEG 11/16/2019 19:43:26'!
 initialize
@@ -681,11 +681,6 @@ openCOOPWindow
 	browser _ COOPBrowser new.
 	window _ self open: browser label: browser defaultBrowserTitle.	
 	^ window! !
-
-!COOPWindow class methodsFor: 'action' stamp: 'MEG 10/14/2019 00:36:20'!
-informCOOP
-
-	self allInstancesDo: [ :coopWindow | coopWindow informCOOP ]! !
 
 !COOPFixerTest methodsFor: 'setUp/tearDown' stamp: 'MEG 11/16/2019 16:24:05'!
 setUp
@@ -2349,13 +2344,13 @@ caseAssigmentNilToInstanceVariable
 
 	aNilInstanceVariable _ nil.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/29/2019 17:19:31'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 12/1/2019 21:26:13'!
 caseEqualityCollectionSize
 
 	| collection |
 	collection _ OrderedCollection new.
 
-	collection isEmpty. ! !
+	collection size = 0. ! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:41'!
 caseIdentityCollectionSize
@@ -2389,11 +2384,6 @@ casePassingNilAsArgument
 
 	1 - nil.
 ! !
-
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/27/2019 18:25:38'!
-casePrueba
-
-	self actionForEvent: [ self ] ! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 22:50:18'!
 caseReturningNil
@@ -2451,11 +2441,13 @@ moreThanOneCase
 
 	(collection size = 0)  ifTrue: [ true ] ifFalse: [ false ].! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:23:25'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 12/1/2019 23:10:26'!
 oneRuleWithMoreCases
 
 	| collection |
 	collection _ OrderedCollection new.
+	
+	1 > 0 ifTrue: [ true ] .
 
 	collection size = 0.
 	
@@ -2614,90 +2606,83 @@ toggleCOOPPreference
 preferenceLabel
 	^ Preferences coopIsWatching ifTrue: 'COOP OFF' ifFalse: 'COOP ON'.! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 21:53:38'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:35'!
 descriptionForAssigmentNil
 
-	^ 'Se esta asignando nil a un colaborador interno/temporal'.! !
+	^ '    Se esta asignando nil a un colaborador interno/temporal.'.! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/9/2019 23:08:05'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:30'!
 descriptionForChainedColaboration
-	^ 'Cuando ocurren muchas colaboraciones encadenadas se recomienda:
-	- guardarlos en colaboradores temporales
-	- refactorizarlos en mensajes'! !
+	^ '    Cuando ocurren muchas colaboraciones encadenadas se recomienda:
+	- Guardarlos en colaboradores temporales.
+	- Refactorizarlos en mensajes.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 11/17/2019 02:05:42'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:12:01'!
 descriptionForCollectionSize
 
-	^ 'Se podria utilizar el mensaje #isEmpty
-	para cuando se chequea que la longitud
-	de una coleccion es igual a cero.
-	Es posible arreglarlo, �Deseas realizar el cambio?'! !
+	^ '    Se podria utilizar el mensaje #isEmpty para cuando se chequea que la longitud de una coleccion es igual a cero.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:55:27'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:12:20'!
 descriptionForNonsenseBoolean
 	
-	^ 
-	'No es necesario utilizar clausulas booleanas 
-	ya que la misma comparacion cumple con esta condicion.
-	Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
+	^ '    No es necesario utilizar clausulas booleanas ya que la misma comparacion cumple con esta condicion.
+    Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/21/2019 18:43:12'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:17'!
 descriptionForPassingNIlAsArgument
 
-	^ 'No es una buena practica enviar Nil como argumento'! !
+	^ '    No es una buena practica enviar Nil como argumento.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:53:24'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:16:56'!
 descriptionForReturningNil
-	^'No es una buena practica devolver Nil.
-	Se podria pensar en utilizar un NullObject,
-	devolver self u otorgar un bloque para que
-	quien llame al mensaje lo maneje'! !
+	^'    No es una buena practica devolver Nil. Se podria pensar en utilizar un NullObject, devolver self u otorgar un bloque para que quien llame al mensaje se haga cargo.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:33'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:05'!
 descriptionForSendInstanceMethodToClass
 
-	^ 'Se esta enviando un mensaje de instancia a una clase'! !
+	^ '    Se esta enviando un mensaje de instancia a una clase.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:23'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:11'!
 descriptionForTestWithoutAssert
 	
-	^ 'El test deberia de tener el assert'! !
+	^ '    El test deberia de tener el assert.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 21:44:12'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:12:59'!
 titleForAssigmentIsNil
-	^ 'Asignacion de Nil'! !
+	^ 'Se asigna Nil'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/13/2019 16:04:33'!
 titleForChainedColaborations
 	^ 'Uso colaboraciones encadenadas'.! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 9/29/2019 12:06:08'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:13:46'!
 titleForCollectionSize
-	^'Uso de #isEmpty' ! !
+	^'Ausencia de #isEmpty' ! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:58:22'!
 titleForNonsenseBoolean
 	
 	^ 'No hay que tener miedo al booleano' ! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/21/2019 18:42:53'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:14:11'!
 titleForPassingNIlAsArgument
 
-	^ 'Pasando nil como Argumento'! !
+	^ 'Usando Nil como argumento'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:50:07'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:14:25'!
 titleForReturningNil
-	^'Se esta devolviendo nil'! !
+
+	^ 'Retornando Nil'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:52'!
 titleForSendInstanceMethodToClass
 
 	^ 'Envio de mensaje de instancia a clase'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/26/2019 23:00:11'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:18:01'!
 titleForTestWithoutAssert
 
-	^ 'Test sin Assert'.! !
+	^ 'Test sin asercion'.! !
 
 !RuleList methodsFor: 'initialize' stamp: 'GET 11/24/2019 22:45:12'!
 initialize
