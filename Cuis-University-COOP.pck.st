@@ -1,6 +1,6 @@
 'From Cuis 5.0 [latest update: #4384] on 12 October 2020 at 5:45:07 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 47!
+!provides: 'Cuis-University-COOP' 1 48!
 SystemOrganization addCategory: 'Cuis-University-COOP'!
 SystemOrganization addCategory: 'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: 'Cuis-University-COOP-Morph'!
@@ -378,7 +378,7 @@ indexRuleSelected: index
 	| aRule |
 	aRule  _ self ruleList indexRuleSelected:index.
 	self onSelectedRuleChange.
-	
+
 	^ aRule! !
 
 !COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:37:54'!
@@ -465,8 +465,8 @@ cleanBeforeRunning: aMethodNode
 highlightSelectedRule
 
 	self selectedRuleIfNone: [ ^ self ].
-	
-	self changed: #highlightCode.	
+
+	self changed: #highlightCode.
 	self changed: #shoutStyled.
 ! !
 
@@ -494,7 +494,7 @@ runCOOP
 	methodNode _ self selectedCurrentMethodNodeIfNone: [ ^ self].
 
 	COOP new performInteractiveChecksFor: methodNode.
-	
+
 	self refetchRules! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:30:08'!
@@ -559,8 +559,8 @@ buildQuickFixMenu
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 17:31:38'!
 buildRuleDescriptionMorph
 
-	^ (TextModelMorph 
-		textProvider: model 
+	^ (TextModelMorph
+		textProvider: model
 		textGetter: #selectedRuleDescription) disableEditing; emptyTextDisplayMessage: 'Nada'.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:27:04'!
@@ -578,16 +578,16 @@ buildRuleListPane
 	ruleListPane _ LayoutMorph newColumn.
 	separator  _ LayoutAdjustingMorph new .
 	ruleListView _ self buildRuleListMorph.
-	
+
 	ruleDescriptionView _ self buildRuleDescriptionMorph.
-	
+
 	buttonPane _ self buildButtonRulePane.
 		
 	ruleListPane addMorph: buttonPane fixedHeight: self defaultButtonPaneHeight.
 	ruleListPane addMorph: ruleListView proportionalHeight: 1.
 	ruleListPane addMorph: separator fixedHeight: 1.
 	ruleListPane addMorph: ruleDescriptionView  proportionalHeight: 1.
-		
+
 	^ ruleListPane.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:15:46'!
@@ -613,7 +613,7 @@ ruleList
 
 !COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 22:40:58'!
 cleanRulePane
-	
+
 	model changed: #rules.! !
 
 !COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 21:24:20'!
@@ -621,10 +621,10 @@ describeSelectedRule
 
 	| selectedRule |
 	selectedRule _ model selectedRuleIfNone: [ ^ self informNoRuleSelected ] .
-	
+
 	model highlightSelectedRule .
-	
-	selectedRule couldBeFixed 
+
+	selectedRule couldBeFixed
 		ifTrue: [ self buildQuickFixMenu ] ifFalse: [ self informSelectedRule ].! !
 
 !COOPWindow methodsFor: 'action' stamp: 'GET 11/18/2019 02:35:35'!
@@ -2360,15 +2360,15 @@ caseIdentityCollectionSize
 
 	collection size == 0 ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:30'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 10/12/2020 16:57:08'!
 caseIfFalseClauseWithNonsenseBoolean
 
-	( 5  > 8 ifFalse: [ false ] ).! !
+	5  > 8 ifFalse: [ false ]! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 10/27/2019 23:03:35'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 10/12/2020 16:57:02'!
 caseIfTrueClauseWithNonsenseBoolean
 
-  5  > 3 ifTrue: [ true ] ! !
+	5  > 3 ifTrue: [ true ]! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/11/2019 19:55:02'!
 caseInstanceMethodSendedToClass
@@ -2446,7 +2446,7 @@ oneRuleWithMoreCases
 
 	| collection |
 	collection _ OrderedCollection new.
-	
+
 	1 > 0 ifTrue: [ true ] .
 
 	collection size = 0.
@@ -2461,19 +2461,11 @@ oneRuleWithMoreCases
 	
 	0 = Set new size .! !
 
-!DemoCase methodsFor: 'apply' stamp: 'MEG 10/12/2020 17:25:30'!
-prueba
-
-	| golondrinas |
-	golondrinas _ OrderedCollection new.
-
-	golondrinas isEmpty! !
-
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 11/23/2019 09:07:19'!
 caseAGlobalIsNotCountedAsClass
 
 	Smalltalk size.
-	
+
 	Smalltalk copyright! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
