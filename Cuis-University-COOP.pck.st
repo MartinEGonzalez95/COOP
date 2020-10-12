@@ -1,368 +1,368 @@
-'From Cuis 5.0 [latest update: #3958] on 24 November 2019 at 9:44:37 pm'!
+'From Cuis 5.0 [latest update: #4384] on 12 October 2020 at 5:45:07 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 44!
-SystemOrganization addCategory: #'Cuis-University-COOP'!
-SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
-SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
+!provides: 'Cuis-University-COOP' 1 47!
+SystemOrganization addCategory: 'Cuis-University-COOP'!
+SystemOrganization addCategory: 'Cuis-University-COOP-Tests'!
+SystemOrganization addCategory: 'Cuis-University-COOP-Morph'!
 
 
-!classDefinition: #COOPBrowser category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPBrowser category: 'Cuis-University-COOP-Morph'!
 Browser subclass: #COOPBrowser
 	instanceVariableNames: 'methodsWithRules browser'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPBrowser class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPBrowser class' category: 'Cuis-University-COOP-Morph'!
 COOPBrowser class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPShoutTextBackgroundColor category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPShoutTextBackgroundColor category: 'Cuis-University-COOP-Morph'!
 ShoutTextBackgroundColor subclass: #COOPShoutTextBackgroundColor
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPShoutTextBackgroundColor class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPShoutTextBackgroundColor class' category: 'Cuis-University-COOP-Morph'!
 COOPShoutTextBackgroundColor class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPWindow category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPWindow category: 'Cuis-University-COOP-Morph'!
 BrowserWindow subclass: #COOPWindow
 	instanceVariableNames: 'highlighter fixer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPWindow class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPWindow class' category: 'Cuis-University-COOP-Morph'!
 COOPWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPFixerTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPFixerTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPFixerTest
 	instanceVariableNames: 'coopMethodFactory fixer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPFixerTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPFixerTest class' category: 'Cuis-University-COOP-Tests'!
 COOPFixerTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPHighlighterTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPHighlighterTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPHighlighterTest
 	instanceVariableNames: 'coopMethodFactory highlighter'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPHighlighterTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPHighlighterTest class' category: 'Cuis-University-COOP-Tests'!
 COOPHighlighterTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPMethodFactoryTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPMethodFactoryTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPMethodFactoryTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPMethodFactoryTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPMethodFactoryTest class' category: 'Cuis-University-COOP-Tests'!
 COOPMethodFactoryTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPRuleTest
 	instanceVariableNames: 'coopMethodFactory'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleColaborationChainTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleColaborationChainTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleColaborationChainTest
 	instanceVariableNames: 'methodFactory rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleColaborationChainTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleColaborationChainTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleColaborationChainTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleCollectionSizeTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleCollectionSizeTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleCollectionSizeTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleCollectionSizeTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleCollectionSizeTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleInstanceMethodToClassTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleInstanceMethodToClassTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleInstanceMethodToClassTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleInstanceMethodToClassTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleInstanceMethodToClassTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleInstanceMethodToClassTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNilAsArgumentTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleNilAsArgumentTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNilAsArgumentTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleNilAsArgumentTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNilAsArgumentTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleNilAsArgumentTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleNilAssigmentTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleNilAssigmentTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNilAssigmentTest
 	instanceVariableNames: 'rule anInstanceVariable'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleNilAssigmentTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNilAssigmentTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleNilAssigmentTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleNonsenseBooleanTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleNonsenseBooleanTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNonsenseBooleanTest
 	instanceVariableNames: 'methodFactory rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleNonsenseBooleanTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNonsenseBooleanTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleNonsenseBooleanTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleReturnNilTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleReturnNilTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleReturnNilTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleReturnNilTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleReturnNilTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleReturnNilTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleTestAssertionTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleTestAssertionTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleTestAssertionTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleTestAssertionTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleTestAssertionTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleTestAssertionTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPTest
 	instanceVariableNames: 'coop aRule2 aRule notifier coopMethodFactory'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPTest class' category: 'Cuis-University-COOP-Tests'!
 COOPTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleListTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #RuleListTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #RuleListTest
 	instanceVariableNames: 'ruleList aRule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'RuleListTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'RuleListTest class' category: 'Cuis-University-COOP-Tests'!
 RuleListTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPMethodFactory category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPMethodFactory category: 'Cuis-University-COOP-Tests'!
 LiveTypingTestFactory subclass: #COOPMethodFactory
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPMethodFactory class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPMethodFactory class' category: 'Cuis-University-COOP-Tests'!
 COOPMethodFactory class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOP category: #'Cuis-University-COOP'!
+!classDefinition: #COOP category: 'Cuis-University-COOP'!
 Object subclass: #COOP
 	instanceVariableNames: 'rules performer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOP class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOP class' category: 'Cuis-University-COOP'!
 COOP class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPFixer category: #'Cuis-University-COOP'!
+!classDefinition: #COOPFixer category: 'Cuis-University-COOP'!
 Object subclass: #COOPFixer
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPFixer class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPFixer class' category: 'Cuis-University-COOP'!
 COOPFixer class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPPerformer category: #'Cuis-University-COOP'!
+!classDefinition: #COOPPerformer category: 'Cuis-University-COOP'!
 Object subclass: #COOPPerformer
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPPerformer class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPPerformer class' category: 'Cuis-University-COOP'!
 COOPPerformer class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRule category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRule category: 'Cuis-University-COOP'!
 Object subclass: #COOPRule
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRule class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRule class' category: 'Cuis-University-COOP'!
 COOPRule class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleColaborationChain category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleColaborationChain category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleColaborationChain
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleColaborationChain class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleColaborationChain class' category: 'Cuis-University-COOP'!
 COOPRuleColaborationChain class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleCollectionSize category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleCollectionSize category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleCollectionSize
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleCollectionSize class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleCollectionSize class' category: 'Cuis-University-COOP'!
 COOPRuleCollectionSize class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleInstanceMethodToClass category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleInstanceMethodToClass category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleInstanceMethodToClass
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleInstanceMethodToClass class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleInstanceMethodToClass class' category: 'Cuis-University-COOP'!
 COOPRuleInstanceMethodToClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNilAsArgument category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleNilAsArgument category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleNilAsArgument
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleNilAsArgument class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNilAsArgument class' category: 'Cuis-University-COOP'!
 COOPRuleNilAsArgument class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNilAssigment category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleNilAssigment category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleNilAssigment
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleNilAssigment class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNilAssigment class' category: 'Cuis-University-COOP'!
 COOPRuleNilAssigment class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNonsenseBoolean category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleNonsenseBoolean category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleNonsenseBoolean
 	instanceVariableNames: 'booleanControllingMessages'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleNonsenseBoolean class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNonsenseBoolean class' category: 'Cuis-University-COOP'!
 COOPRuleNonsenseBoolean class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleReturnNil category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleReturnNil category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleReturnNil
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleReturnNil class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleReturnNil class' category: 'Cuis-University-COOP'!
 COOPRuleReturnNil class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleTestAssertion category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleTestAssertion category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleTestAssertion
 	instanceVariableNames: 'assertionsSelectors'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleTestAssertion class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleTestAssertion class' category: 'Cuis-University-COOP'!
 COOPRuleTestAssertion class
 	instanceVariableNames: ''!
 
-!classDefinition: #DemoCase category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #DemoCase category: 'Cuis-University-COOP-Tests'!
 Object subclass: #DemoCase
 	instanceVariableNames: 'aNilInstanceVariable'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'DemoCase class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'DemoCase class' category: 'Cuis-University-COOP-Tests'!
 DemoCase class
 	instanceVariableNames: ''!
 
-!classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #NotifierForTesting category: 'Cuis-University-COOP-Tests'!
 Object subclass: #NotifierForTesting
 	instanceVariableNames: 'object hasNotified selector lastParameterSended'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'NotifierForTesting class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'NotifierForTesting class' category: 'Cuis-University-COOP-Tests'!
 NotifierForTesting class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPHighlighter category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPHighlighter category: 'Cuis-University-COOP-Morph'!
 Object subclass: #COOPHighlighter
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPHighlighter class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPHighlighter class' category: 'Cuis-University-COOP-Morph'!
 COOPHighlighter class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPPreferences category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPPreferences category: 'Cuis-University-COOP-Morph'!
 Object subclass: #COOPPreferences
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPPreferences class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPPreferences class' category: 'Cuis-University-COOP-Morph'!
 COOPPreferences class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleDescriptor category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #RuleDescriptor category: 'Cuis-University-COOP-Morph'!
 Object subclass: #RuleDescriptor
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'RuleDescriptor class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'RuleDescriptor class' category: 'Cuis-University-COOP-Morph'!
 RuleDescriptor class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleList category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #RuleList category: 'Cuis-University-COOP-Morph'!
 Object subclass: #RuleList
 	instanceVariableNames: 'rules selectedRuleIndex'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'RuleList class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'RuleList class' category: 'Cuis-University-COOP-Morph'!
 RuleList class
 	instanceVariableNames: ''!
 
@@ -372,15 +372,25 @@ indexRuleSelected
 	
 	^ self ruleList indexRuleSelected ! !
 
-!COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/1/2019 23:51:27'!
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 11/29/2019 17:53:01'!
 indexRuleSelected: index
 	
-	^ self ruleList indexRuleSelected:index! !
+	| aRule |
+	aRule  _ self ruleList indexRuleSelected:index.
+	self onSelectedRuleChange.
+	
+	^ aRule! !
 
 !COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:37:54'!
 keyForRule: aMethodNode
 
 	^ aMethodNode classAndSelector .! !
+
+!COOPBrowser methodsFor: 'accessing' stamp: 'GET 11/29/2019 17:53:01'!
+onSelectedRuleChange
+
+	self changed: #selectedRuleDescription.
+	self highlightSelectedRule! !
 
 !COOPBrowser methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:40:08'!
 ruleList
@@ -419,50 +429,46 @@ selectedCurrentMethodNodeIfNone: aBlock
 	
 	^ (self selectedCompiledMethodIfNone: aBlock) methodNode! !
 
-!COOPBrowser methodsFor: 'initialize' stamp: 'GET 11/3/2019 22:55:24'!
+!COOPBrowser methodsFor: 'initialize' stamp: 'MEG 12/1/2019 22:19:55'!
 initialize
 	super initialize .
 	methodsWithRules _ Dictionary new.
 	
-	self when: #annotationChanged send: #runCOOP to: self.
-	self when: #annotationChanged send: #refetchRules to: self.
-! !
+	self when: #annotationChanged send: #runCOOP to: self.! !
 
 !COOPBrowser methodsFor: 'initialize' stamp: 'GET 10/1/2019 23:49:47'!
 rules
 	^ self ruleList rulesTitles .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:14:29'!
-addRule: aRule for:aMethodNode
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 12/1/2019 23:16:11'!
+addRule: aRule for: aMethodNode
 
 	| aRuleList |
-	aRuleList _ self ruleListOf: (self keyForRule: aMethodNode ).	.
+	aRuleList _ self ruleListOf: (self keyForRule: aMethodNode ) .	.
 
-	aRuleList add:aRule.
-	
-	self refetchRules .! !
+	aRuleList add: aRule .! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 20:27:27'!
 affectedNodesFor: rule with: methodNode 
 	
 	^ rule selectAffectedNodes: methodNode! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:15:40'!
+!COOPBrowser methodsFor: 'action' stamp: 'MEG 12/1/2019 23:16:26'!
 cleanBeforeRunning: aMethodNode
 
 	| aRuleList |
-	aRuleList _ self ruleListOf: ( self keyForRule: aMethodNode ).	.
+	aRuleList _ self ruleListOf: ( self keyForRule: aMethodNode ) .
 
-	aRuleList clean.
+	aRuleList clean .! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:47:11'!
+highlightSelectedRule
+
+	self selectedRuleIfNone: [ ^ self ].
 	
-	self refetchRules .! !
-
-!COOPBrowser methodsFor: 'action' stamp: 'MEG 10/27/2019 19:54:34'!
-describeRule
-
-	self changed: #highlightCode.
-
-	^ self ruleList describeRule .! !
+	self changed: #highlightCode.	
+	self changed: #shoutStyled.
+! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:15:25'!
 ignoreRule
@@ -473,19 +479,28 @@ ignoreRule
 	
 	^ ignoredRule .! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/2/2019 19:01:20'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:53:09'!
 refetchRules
 	
-	self changed: #rules.! !
+	self changed: #rules.
+	self onSelectedRuleChange.
+! !
 
-!COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 22:56:37'!
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:57:22'!
 runCOOP
 
 	| methodNode |
 
 	methodNode _ self selectedCurrentMethodNodeIfNone: [ ^ self].
 
-	COOP new performInteractiveChecksFor: methodNode.! !
+	COOP new performInteractiveChecksFor: methodNode.
+	
+	self refetchRules! !
+
+!COOPBrowser methodsFor: 'action' stamp: 'GET 11/29/2019 17:30:08'!
+selectedRuleDescription
+
+	^ self ruleList describeRule! !
 
 !COOPBrowser methodsFor: 'action' stamp: 'GET 11/3/2019 23:22:42'!
 selectedRuleIfNone: aBlock
@@ -497,21 +512,21 @@ belongsToCOOP
 
 	^ true! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:17:12'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 18:08:08'!
 buildButtonRulePane
 
-	| buttonIgnoreRule buttonMoreRuleInformation ruleViewPane |
-	ruleViewPane _ LayoutMorph newRow.
+	| buttonIgnoreRule buttonRuleQuickFix ruleButtonPane |
+	ruleButtonPane _ LayoutMorph newRow.
 
-	buttonMoreRuleInformation _ self createButtonMoreRuleInformation.
+	buttonRuleQuickFix _ self createButtonMoreRuleInformation.
 	buttonIgnoreRule _ self createButtonIgnoreRule.
 	
-	ruleViewPane addMorph: buttonMoreRuleInformation proportionalWidth: 0.5.
-	ruleViewPane addMorph: buttonIgnoreRule proportionalWidth: 0.5.
+	ruleButtonPane addMorph: buttonRuleQuickFix proportionalWidth: 0.5.
+	ruleButtonPane addMorph: buttonIgnoreRule proportionalWidth: 0.5.
 
-	^ ruleViewPane.! !
+	^ ruleButtonPane.! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 10/14/2019 15:14:05'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 12/1/2019 21:05:38'!
 buildCOOPRulePane
 		
 	| codePaneLayout ruleListPane |
@@ -519,8 +534,8 @@ buildCOOPRulePane
 	
 	ruleListPane _ self buildRuleListPane.
 	
-	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.7.
-	codePaneLayout addAdjusterAndMorph: ruleListPane proportionalWidth: 0.3.
+	codePaneLayout addAdjusterAndMorph: codePane proportionalWidth: 0.65.
+	codePaneLayout addAdjusterAndMorph: ruleListPane proportionalWidth: 0.35.
 
 	^ codePaneLayout .! !
 
@@ -533,14 +548,20 @@ buildMorphicCodePane
 		 
 	^ Preferences coopIsWatching ifTrue:[ self buildCOOPRulePane ] ifFalse: [ codePane] .! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 11/16/2019 20:22:42'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'MEG 12/1/2019 21:10:02'!
 buildQuickFixMenu
 
 	| answer |
-	answer _ PopUpMenu confirm: model describeRule
-				trueChoice: 'Si' falseChoice: 'No' icons: #(acceptIcon cancelIcon).
+	answer _ PopUpMenu confirm: ('Es posible arreglarlo, Deseas realizar el cambio?') trueChoice: 'Si' falseChoice: 'No' icons: #(acceptIcon cancelIcon).
 
 	answer ifTrue: [ self fixMethod ]! !
+
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 17:31:38'!
+buildRuleDescriptionMorph
+
+	^ (TextModelMorph 
+		textProvider: model 
+		textGetter: #selectedRuleDescription) disableEditing; emptyTextDisplayMessage: 'Nada'.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/3/2019 20:27:04'!
 buildRuleListMorph
@@ -551,18 +572,22 @@ buildRuleListMorph
 		indexGetter: #indexRuleSelected
 		indexSetter: #indexRuleSelected:! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 10/1/2019 00:34:04'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 16:52:35'!
 buildRuleListPane
-	| buttonPane  ruleListView ruleListPane |
+	| buttonPane  ruleListView ruleListPane ruleDescriptionView separator |
 	ruleListPane _ LayoutMorph newColumn.
-	
+	separator  _ LayoutAdjustingMorph new .
 	ruleListView _ self buildRuleListMorph.
-		
+	
+	ruleDescriptionView _ self buildRuleDescriptionMorph.
+	
 	buttonPane _ self buildButtonRulePane.
 		
 	ruleListPane addMorph: buttonPane fixedHeight: self defaultButtonPaneHeight.
 	ruleListPane addMorph: ruleListView proportionalHeight: 1.
-	
+	ruleListPane addMorph: separator fixedHeight: 1.
+	ruleListPane addMorph: ruleDescriptionView  proportionalHeight: 1.
+		
 	^ ruleListPane.! !
 
 !COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:15:46'!
@@ -573,12 +598,12 @@ createButtonIgnoreRule
 					action: #ignoreRule
 					label: 'Ignorar'! !
 
-!COOPWindow methodsFor: 'GUI building' stamp: 'GET 9/28/2019 00:16:35'!
+!COOPWindow methodsFor: 'GUI building' stamp: 'GET 11/29/2019 18:08:23'!
 createButtonMoreRuleInformation
 
 	^ (PluggableButtonMorph 
-					model: [ self describeSelectedRule]
-					action: #value
+					model: self
+					action: #describeSelectedRule
 					label: 'Ver') .! !
 
 !COOPWindow methodsFor: 'accessing' stamp: 'GET 10/3/2019 20:27:25'!
@@ -586,15 +611,21 @@ ruleList
 
 	^ model ruleList.! !
 
-!COOPWindow methodsFor: 'action' stamp: 'MEG 11/16/2019 20:22:42'!
+!COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 22:40:58'!
+cleanRulePane
+	
+	model changed: #rules.! !
+
+!COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 21:24:20'!
 describeSelectedRule
 
 	| selectedRule |
-	selectedRule _ model selectedRuleIfNone: [ nil ] .
-
-	selectedRule ifNotNil: [ selectedRule couldBeFixed ifTrue: [ ^ self buildQuickFixMenu ] ] .
-
-	PopUpMenu inform: model describeRule .! !
+	selectedRule _ model selectedRuleIfNone: [ ^ self informNoRuleSelected ] .
+	
+	model highlightSelectedRule .
+	
+	selectedRule couldBeFixed 
+		ifTrue: [ self buildQuickFixMenu ] ifFalse: [ self informSelectedRule ].! !
 
 !COOPWindow methodsFor: 'action' stamp: 'GET 11/18/2019 02:35:35'!
 fixMethod
@@ -616,17 +647,23 @@ ignoreRule
 
 	PopUpMenu  inform: model ignoreRule.! !
 
-!COOPWindow methodsFor: 'action' stamp: 'MEG 10/14/2019 00:36:28'!
-informCOOP
+!COOPWindow methodsFor: 'action' stamp: 'MEG 12/1/2019 21:24:42'!
+informNoRuleSelected
 
-	model ifNotNil: [ model runCOOP ]! !
+	PopUpMenu inform: 'No hay regla seleccionada'! !
 
-!COOPWindow methodsFor: 'updating' stamp: 'MEG 10/27/2019 19:54:09'!
+!COOPWindow methodsFor: 'action' stamp: 'GET 11/29/2019 17:35:37'!
+informSelectedRule
+
+		PopUpMenu inform: model selectedRuleDescription! !
+
+!COOPWindow methodsFor: 'updating' stamp: 'MEG 12/1/2019 22:39:44'!
 update: parameter
 	
 	super update: parameter.
 	
-	parameter = #highlightCode ifTrue: [ self highlightCode ]! !
+	parameter = #highlightCode ifTrue: [ self highlightCode ] .
+	parameter = #acceptedContents ifTrue: [ self cleanRulePane ] .! !
 
 !COOPWindow methodsFor: 'initialize' stamp: 'MEG 11/16/2019 19:43:26'!
 initialize
@@ -644,11 +681,6 @@ openCOOPWindow
 	browser _ COOPBrowser new.
 	window _ self open: browser label: browser defaultBrowserTitle.	
 	^ window! !
-
-!COOPWindow class methodsFor: 'action' stamp: 'MEG 10/14/2019 00:36:20'!
-informCOOP
-
-	self allInstancesDo: [ :coopWindow | coopWindow informCOOP ]! !
 
 !COOPFixerTest methodsFor: 'setUp/tearDown' stamp: 'MEG 11/16/2019 16:24:05'!
 setUp
@@ -1225,6 +1257,22 @@ testDoNotApplyWhenPassingAnythingAsAnArgument
 
 	self deny: (rule check:  aMethodNode).! !
 
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/27/2019 18:46:29'!
+testDoNotApplyWhenPassingNilInEqualsSelector
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passNilInEqualsSelector .
+
+	self deny: (rule check:  aMethodNode).! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/27/2019 18:46:24'!
+testDoNotApplyWhenPassingNilInIdentitySelector
+
+	| aMethodNode |
+	aMethodNode  _ self searchMethodNode: #passNilInIdentitySelector .
+
+	self deny: (rule check:  aMethodNode).! !
+
 !COOPRuleNilAsArgumentTest methodsFor: 'rule-apply' stamp: 'GET 11/21/2019 18:40:14'!
 testApplyWhenPassingNilAsAnArgumentInAnyParameter
 
@@ -1277,6 +1325,16 @@ passNilAsArgumentInOneParameter
 
 
 	Set with: nil.! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/27/2019 18:45:51'!
+passNilInEqualsSelector
+
+	 self = nil.! !
+
+!COOPRuleNilAsArgumentTest methodsFor: 'method-for-testing' stamp: 'GET 11/27/2019 18:45:43'!
+passNilInIdentitySelector
+
+	 self == nil.! !
 
 !COOPRuleNilAssigmentTest methodsFor: 'rule-not-apply' stamp: 'GET 11/20/2019 21:20:54'!
 testRuleDoNotApplyWhenAssigmentIsNotNil
@@ -2095,10 +2153,10 @@ applyCondition: aMessageNode
 
 	^ aMessageNode arguments anySatisfy: [:argumentNode | argumentNode isNilPseudoVariable] ! !
 
-!COOPRuleNilAsArgument methodsFor: 'testing' stamp: 'GET 11/21/2019 18:23:02'!
+!COOPRuleNilAsArgument methodsFor: 'testing' stamp: 'GET 11/27/2019 18:47:47'!
 canHandle: aMethodNode
 
-	^ aMethodNode isMessageNode .! !
+	^ aMethodNode isMessageNode and: [ ((aMethodNode isMessageNamed: #= ) or: [(aMethodNode isMessageNamed: #== ) ]) not  ] .! !
 
 !COOPRuleNilAsArgument methodsFor: 'printing' stamp: 'GET 11/21/2019 18:43:43'!
 description
@@ -2274,13 +2332,6 @@ findAssertionNode: methodNode
 	
 	! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/23/2019 09:07:19'!
-caseAGlobalIsNotCountedAsClass
-
-	Smalltalk size.
-	
-	Smalltalk copyright! !
-
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:15'!
 caseAssigmentNilInTemporalVariable
 
@@ -2293,7 +2344,7 @@ caseAssigmentNilToInstanceVariable
 
 	aNilInstanceVariable _ nil.! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:14:34'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 12/1/2019 21:26:13'!
 caseEqualityCollectionSize
 
 	| collection |
@@ -2382,7 +2433,7 @@ caseWhenThreeColaborationsAreChained
 
 	Collection new size isZero. ! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:21:42'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 11/29/2019 17:58:33'!
 moreThanOneCase
 
 	| collection |
@@ -2390,11 +2441,13 @@ moreThanOneCase
 
 	(collection size = 0)  ifTrue: [ true ] ifFalse: [ false ].! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:23:25'!
+!DemoCase methodsFor: 'apply' stamp: 'MEG 12/1/2019 23:10:26'!
 oneRuleWithMoreCases
 
 	| collection |
 	collection _ OrderedCollection new.
+	
+	1 > 0 ifTrue: [ true ] .
 
 	collection size = 0.
 	
@@ -2407,6 +2460,21 @@ oneRuleWithMoreCases
 	Set new size = 0 .
 	
 	0 = Set new size .! !
+
+!DemoCase methodsFor: 'apply' stamp: 'MEG 10/12/2020 17:25:30'!
+prueba
+
+	| golondrinas |
+	golondrinas _ OrderedCollection new.
+
+	golondrinas isEmpty! !
+
+!DemoCase methodsFor: 'not-apply' stamp: 'GET 11/23/2019 09:07:19'!
+caseAGlobalIsNotCountedAsClass
+
+	Smalltalk size.
+	
+	Smalltalk copyright! !
 
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 10/27/2019 23:03:57'!
 caseColaborationChainDoesNotApplyInCascadeColaborations
@@ -2546,100 +2614,93 @@ toggleCOOPPreference
 preferenceLabel
 	^ Preferences coopIsWatching ifTrue: 'COOP OFF' ifFalse: 'COOP ON'.! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 21:53:38'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:35'!
 descriptionForAssigmentNil
 
-	^ 'Se esta asignando nil a un colaborador interno/temporal'.! !
+	^ '    Se esta asignando nil a un colaborador interno/temporal.'.! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/9/2019 23:08:05'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:30'!
 descriptionForChainedColaboration
-	^ 'Cuando ocurren muchas colaboraciones encadenadas se recomienda:
-	- guardarlos en colaboradores temporales
-	- refactorizarlos en mensajes'! !
+	^ '    Cuando ocurren muchas colaboraciones encadenadas se recomienda:
+	- Guardarlos en colaboradores temporales.
+	- Refactorizarlos en mensajes.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 11/17/2019 02:05:42'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:12:01'!
 descriptionForCollectionSize
 
-	^ 'Se podria utilizar el mensaje #isEmpty
-	para cuando se chequea que la longitud
-	de una coleccion es igual a cero.
-	Es posible arreglarlo, �Deseas realizar el cambio?'! !
+	^ '    Se podria utilizar el mensaje #isEmpty para cuando se chequea que la longitud de una coleccion es igual a cero.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:55:27'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:12:20'!
 descriptionForNonsenseBoolean
 	
-	^ 
-	'No es necesario utilizar clausulas booleanas 
-	ya que la misma comparacion cumple con esta condicion.
-	Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
+	^ '    No es necesario utilizar clausulas booleanas ya que la misma comparacion cumple con esta condicion.
+    Seguramente se pueda eliminar el mensaje hacia el resultado de la comparacion.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/21/2019 18:43:12'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:17'!
 descriptionForPassingNIlAsArgument
 
-	^ 'No es una buena practica enviar Nil como argumento'! !
+	^ '    No es una buena practica enviar Nil como argumento.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:53:24'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:16:56'!
 descriptionForReturningNil
-	^'No es una buena practica devolver Nil.
-	Se podria pensar en utilizar un NullObject,
-	devolver self u otorgar un bloque para que
-	quien llame al mensaje lo maneje'! !
+	^'    No es una buena practica devolver Nil. Se podria pensar en utilizar un NullObject, devolver self u otorgar un bloque para que quien llame al mensaje se haga cargo.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:33'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:05'!
 descriptionForSendInstanceMethodToClass
 
-	^ 'Se esta enviando un mensaje de instancia a una clase'! !
+	^ '    Se esta enviando un mensaje de instancia a una clase.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:23'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:17:11'!
 descriptionForTestWithoutAssert
 	
-	^ 'El test deberia de tener el assert'! !
+	^ '    El test deberia de tener el assert.'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 21:44:12'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:12:59'!
 titleForAssigmentIsNil
-	^ 'Asignacion de Nil'! !
+	^ 'Se asigna Nil'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/13/2019 16:04:33'!
 titleForChainedColaborations
 	^ 'Uso colaboraciones encadenadas'.! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 9/29/2019 12:06:08'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:13:46'!
 titleForCollectionSize
-	^'Uso de #isEmpty' ! !
+	^'Ausencia de #isEmpty' ! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'MEG 10/26/2019 16:58:22'!
 titleForNonsenseBoolean
 	
 	^ 'No hay que tener miedo al booleano' ! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/21/2019 18:42:53'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:14:11'!
 titleForPassingNIlAsArgument
 
-	^ 'Pasando nil como Argumento'! !
+	^ 'Usando Nil como argumento'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/20/2019 22:50:07'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:14:25'!
 titleForReturningNil
-	^'Se esta devolviendo nil'! !
+
+	^ 'Retornando Nil'! !
 
 !RuleDescriptor methodsFor: 'printing' stamp: 'GET 11/13/2019 00:51:52'!
 titleForSendInstanceMethodToClass
 
 	^ 'Envio de mensaje de instancia a clase'! !
 
-!RuleDescriptor methodsFor: 'printing' stamp: 'GET 10/26/2019 23:00:11'!
+!RuleDescriptor methodsFor: 'printing' stamp: 'MEG 12/1/2019 21:18:01'!
 titleForTestWithoutAssert
 
-	^ 'Test sin Assert'.! !
+	^ 'Test sin asercion'.! !
 
-!RuleList methodsFor: 'initialize' stamp: 'GET 9/28/2019 13:43:38'!
+!RuleList methodsFor: 'initialize' stamp: 'GET 11/24/2019 22:45:12'!
 initialize
 	rules _ OrderedCollection new.
-	selectedRuleIndex _ 0.! !
+	self indexRuleSelected: 0.! !
 
-!RuleList methodsFor: 'initialize' stamp: 'GET 10/3/2019 20:32:28'!
+!RuleList methodsFor: 'initialize' stamp: 'GET 11/24/2019 22:45:15'!
 with: aRules
 	rules _ aRules asOrderedCollection .
-	selectedRuleIndex _ 0.! !
+	self indexRuleSelected: 0.! !
 
 !RuleList methodsFor: 'testing' stamp: 'GET 10/3/2019 19:36:08'!
 includes: aRule 
@@ -2667,13 +2728,13 @@ indexRuleSelected
 rulesTitles
 	^ rules collect:[:rule | rule title]! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 10/3/2019 19:44:50'!
+!RuleList methodsFor: 'action' stamp: 'GET 11/29/2019 17:17:40'!
 add: aRule
 	(rules anySatisfy: [:rule| rule sameClassAs: aRule ] ) ifTrue: [^ self].
 	
 	rules add: aRule .
-	selectedRuleIndex _ 1.
-		self changed: #rules.
+	self indexRuleSelected: 1.
+	self changed: #rules.
 ! !
 
 !RuleList methodsFor: 'action' stamp: 'MEG 10/9/2019 22:06:19'!
@@ -2692,9 +2753,9 @@ ignoreRule
 	^ 'Regla ignorada: ', (aRule title) .
 	! !
 
-!RuleList methodsFor: 'action' stamp: 'GET 9/27/2019 18:30:07'!
+!RuleList methodsFor: 'action' stamp: 'GET 11/29/2019 17:09:38'!
 indexRuleSelected: anInteger
-	selectedRuleIndex _ anInteger ! !
+	selectedRuleIndex _ anInteger.! !
 
 !RuleList methodsFor: 'action' stamp: 'GET 10/30/2019 19:28:56'!
 selectedRuleIfNone: aBlock
@@ -2739,10 +2800,10 @@ worldMenuOptions
 	} asDictionary. 
 	}`! !
 
-!TheWorldMenu methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/28/2019 00:25:07'!
+!TheWorldMenu methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/12/2020 17:38:20'!
 preferencesMenu
 	"Build the preferences menu for the world."
-	"original package construction"
+
 	^ (self menu: 'Preferences...')
 		addItemsFromDictionaries: {
 			{
@@ -2767,15 +2828,14 @@ preferencesMenu
 				#balloonText 	-> 		'use larger or smaller text and widgets'
 			} asDictionary.
 			{
-				#label			->			'Set font...'.
-				#object 			-> 		FontChanger.
-				#selector 		-> 		#promptUserAndInstallIfNecessaryWithFamilies:.
-				#arguments 		-> 		{FontChanger familyNames}.
+				#label			->			'Set System Font...'.
+				#object 			-> 		FontFamily.
+				#selector 		-> 		#promptUserAndSetDefault.
 				#icon 			-> 		#preferencesDesktopFontIcon.
-				#balloonText 	-> 		'change the current font family.'
+				#balloonText 	-> 		'change the current system font family.'
 			} asDictionary.
 			{
-				#label			->			'Load extra fonts'.
+				#label			->			'Load all TrueType Fonts'.
 				#object 			-> 		FontFamily.
 				#selector 		-> 		#readAdditionalTrueTypeFonts.
 				#icon 			-> 		#preferencesDesktopFontIcon.
