@@ -1,368 +1,368 @@
-'From Cuis 5.0 [latest update: #3958] on 1 December 2019 at 11:20:40 pm'!
+'From Cuis 5.0 [latest update: #4384] on 12 October 2020 at 5:45:07 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 46!
-SystemOrganization addCategory: #'Cuis-University-COOP'!
-SystemOrganization addCategory: #'Cuis-University-COOP-Tests'!
-SystemOrganization addCategory: #'Cuis-University-COOP-Morph'!
+!provides: 'Cuis-University-COOP' 1 47!
+SystemOrganization addCategory: 'Cuis-University-COOP'!
+SystemOrganization addCategory: 'Cuis-University-COOP-Tests'!
+SystemOrganization addCategory: 'Cuis-University-COOP-Morph'!
 
 
-!classDefinition: #COOPBrowser category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPBrowser category: 'Cuis-University-COOP-Morph'!
 Browser subclass: #COOPBrowser
 	instanceVariableNames: 'methodsWithRules browser'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPBrowser class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPBrowser class' category: 'Cuis-University-COOP-Morph'!
 COOPBrowser class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPShoutTextBackgroundColor category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPShoutTextBackgroundColor category: 'Cuis-University-COOP-Morph'!
 ShoutTextBackgroundColor subclass: #COOPShoutTextBackgroundColor
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPShoutTextBackgroundColor class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPShoutTextBackgroundColor class' category: 'Cuis-University-COOP-Morph'!
 COOPShoutTextBackgroundColor class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPWindow category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPWindow category: 'Cuis-University-COOP-Morph'!
 BrowserWindow subclass: #COOPWindow
 	instanceVariableNames: 'highlighter fixer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPWindow class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPWindow class' category: 'Cuis-University-COOP-Morph'!
 COOPWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPFixerTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPFixerTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPFixerTest
 	instanceVariableNames: 'coopMethodFactory fixer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPFixerTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPFixerTest class' category: 'Cuis-University-COOP-Tests'!
 COOPFixerTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPHighlighterTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPHighlighterTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPHighlighterTest
 	instanceVariableNames: 'coopMethodFactory highlighter'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPHighlighterTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPHighlighterTest class' category: 'Cuis-University-COOP-Tests'!
 COOPHighlighterTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPMethodFactoryTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPMethodFactoryTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPMethodFactoryTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPMethodFactoryTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPMethodFactoryTest class' category: 'Cuis-University-COOP-Tests'!
 COOPMethodFactoryTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPRuleTest
 	instanceVariableNames: 'coopMethodFactory'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleColaborationChainTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleColaborationChainTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleColaborationChainTest
 	instanceVariableNames: 'methodFactory rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleColaborationChainTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleColaborationChainTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleColaborationChainTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleCollectionSizeTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleCollectionSizeTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleCollectionSizeTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleCollectionSizeTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleCollectionSizeTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleCollectionSizeTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleInstanceMethodToClassTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleInstanceMethodToClassTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleInstanceMethodToClassTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleInstanceMethodToClassTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleInstanceMethodToClassTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleInstanceMethodToClassTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNilAsArgumentTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleNilAsArgumentTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNilAsArgumentTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleNilAsArgumentTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNilAsArgumentTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleNilAsArgumentTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleNilAssigmentTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleNilAssigmentTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNilAssigmentTest
 	instanceVariableNames: 'rule anInstanceVariable'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleNilAssigmentTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNilAssigmentTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleNilAssigmentTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleNonsenseBooleanTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleNonsenseBooleanTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleNonsenseBooleanTest
 	instanceVariableNames: 'methodFactory rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleNonsenseBooleanTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleNonsenseBooleanTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleNonsenseBooleanTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleReturnNilTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleReturnNilTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleReturnNilTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleReturnNilTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleReturnNilTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleReturnNilTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPRuleTestAssertionTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPRuleTestAssertionTest category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest subclass: #COOPRuleTestAssertionTest
 	instanceVariableNames: 'rule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPRuleTestAssertionTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPRuleTestAssertionTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleTestAssertionTest class
 	instanceVariableNames: 'coopHelper'!
 
-!classDefinition: #COOPTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #COOPTest
 	instanceVariableNames: 'coop aRule2 aRule notifier coopMethodFactory'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPTest class' category: 'Cuis-University-COOP-Tests'!
 COOPTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleListTest category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #RuleListTest category: 'Cuis-University-COOP-Tests'!
 TestCase subclass: #RuleListTest
 	instanceVariableNames: 'ruleList aRule'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'RuleListTest class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'RuleListTest class' category: 'Cuis-University-COOP-Tests'!
 RuleListTest class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPMethodFactory category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #COOPMethodFactory category: 'Cuis-University-COOP-Tests'!
 LiveTypingTestFactory subclass: #COOPMethodFactory
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'COOPMethodFactory class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPMethodFactory class' category: 'Cuis-University-COOP-Tests'!
 COOPMethodFactory class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOP category: #'Cuis-University-COOP'!
+!classDefinition: #COOP category: 'Cuis-University-COOP'!
 Object subclass: #COOP
 	instanceVariableNames: 'rules performer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOP class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOP class' category: 'Cuis-University-COOP'!
 COOP class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPFixer category: #'Cuis-University-COOP'!
+!classDefinition: #COOPFixer category: 'Cuis-University-COOP'!
 Object subclass: #COOPFixer
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPFixer class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPFixer class' category: 'Cuis-University-COOP'!
 COOPFixer class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPPerformer category: #'Cuis-University-COOP'!
+!classDefinition: #COOPPerformer category: 'Cuis-University-COOP'!
 Object subclass: #COOPPerformer
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPPerformer class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPPerformer class' category: 'Cuis-University-COOP'!
 COOPPerformer class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRule category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRule category: 'Cuis-University-COOP'!
 Object subclass: #COOPRule
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRule class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRule class' category: 'Cuis-University-COOP'!
 COOPRule class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleColaborationChain category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleColaborationChain category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleColaborationChain
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleColaborationChain class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleColaborationChain class' category: 'Cuis-University-COOP'!
 COOPRuleColaborationChain class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleCollectionSize category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleCollectionSize category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleCollectionSize
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleCollectionSize class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleCollectionSize class' category: 'Cuis-University-COOP'!
 COOPRuleCollectionSize class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleInstanceMethodToClass category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleInstanceMethodToClass category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleInstanceMethodToClass
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleInstanceMethodToClass class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleInstanceMethodToClass class' category: 'Cuis-University-COOP'!
 COOPRuleInstanceMethodToClass class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNilAsArgument category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleNilAsArgument category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleNilAsArgument
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleNilAsArgument class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNilAsArgument class' category: 'Cuis-University-COOP'!
 COOPRuleNilAsArgument class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNilAssigment category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleNilAssigment category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleNilAssigment
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleNilAssigment class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNilAssigment class' category: 'Cuis-University-COOP'!
 COOPRuleNilAssigment class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleNonsenseBoolean category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleNonsenseBoolean category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleNonsenseBoolean
 	instanceVariableNames: 'booleanControllingMessages'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleNonsenseBoolean class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleNonsenseBoolean class' category: 'Cuis-University-COOP'!
 COOPRuleNonsenseBoolean class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleReturnNil category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleReturnNil category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleReturnNil
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleReturnNil class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleReturnNil class' category: 'Cuis-University-COOP'!
 COOPRuleReturnNil class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPRuleTestAssertion category: #'Cuis-University-COOP'!
+!classDefinition: #COOPRuleTestAssertion category: 'Cuis-University-COOP'!
 COOPRule subclass: #COOPRuleTestAssertion
 	instanceVariableNames: 'assertionsSelectors'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP'!
-!classDefinition: 'COOPRuleTestAssertion class' category: #'Cuis-University-COOP'!
+!classDefinition: 'COOPRuleTestAssertion class' category: 'Cuis-University-COOP'!
 COOPRuleTestAssertion class
 	instanceVariableNames: ''!
 
-!classDefinition: #DemoCase category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #DemoCase category: 'Cuis-University-COOP-Tests'!
 Object subclass: #DemoCase
 	instanceVariableNames: 'aNilInstanceVariable'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'DemoCase class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'DemoCase class' category: 'Cuis-University-COOP-Tests'!
 DemoCase class
 	instanceVariableNames: ''!
 
-!classDefinition: #NotifierForTesting category: #'Cuis-University-COOP-Tests'!
+!classDefinition: #NotifierForTesting category: 'Cuis-University-COOP-Tests'!
 Object subclass: #NotifierForTesting
 	instanceVariableNames: 'object hasNotified selector lastParameterSended'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Tests'!
-!classDefinition: 'NotifierForTesting class' category: #'Cuis-University-COOP-Tests'!
+!classDefinition: 'NotifierForTesting class' category: 'Cuis-University-COOP-Tests'!
 NotifierForTesting class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPHighlighter category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPHighlighter category: 'Cuis-University-COOP-Morph'!
 Object subclass: #COOPHighlighter
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPHighlighter class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPHighlighter class' category: 'Cuis-University-COOP-Morph'!
 COOPHighlighter class
 	instanceVariableNames: ''!
 
-!classDefinition: #COOPPreferences category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #COOPPreferences category: 'Cuis-University-COOP-Morph'!
 Object subclass: #COOPPreferences
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'COOPPreferences class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'COOPPreferences class' category: 'Cuis-University-COOP-Morph'!
 COOPPreferences class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleDescriptor category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #RuleDescriptor category: 'Cuis-University-COOP-Morph'!
 Object subclass: #RuleDescriptor
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'RuleDescriptor class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'RuleDescriptor class' category: 'Cuis-University-COOP-Morph'!
 RuleDescriptor class
 	instanceVariableNames: ''!
 
-!classDefinition: #RuleList category: #'Cuis-University-COOP-Morph'!
+!classDefinition: #RuleList category: 'Cuis-University-COOP-Morph'!
 Object subclass: #RuleList
 	instanceVariableNames: 'rules selectedRuleIndex'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Cuis-University-COOP-Morph'!
-!classDefinition: 'RuleList class' category: #'Cuis-University-COOP-Morph'!
+!classDefinition: 'RuleList class' category: 'Cuis-University-COOP-Morph'!
 RuleList class
 	instanceVariableNames: ''!
 
@@ -2461,6 +2461,14 @@ oneRuleWithMoreCases
 	
 	0 = Set new size .! !
 
+!DemoCase methodsFor: 'apply' stamp: 'MEG 10/12/2020 17:25:30'!
+prueba
+
+	| golondrinas |
+	golondrinas _ OrderedCollection new.
+
+	golondrinas isEmpty! !
+
 !DemoCase methodsFor: 'not-apply' stamp: 'GET 11/23/2019 09:07:19'!
 caseAGlobalIsNotCountedAsClass
 
@@ -2792,10 +2800,10 @@ worldMenuOptions
 	} asDictionary. 
 	}`! !
 
-!TheWorldMenu methodsFor: '*Cuis-University-COOP' stamp: 'GET 9/28/2019 00:25:07'!
+!TheWorldMenu methodsFor: '*Cuis-University-COOP' stamp: 'MEG 10/12/2020 17:38:20'!
 preferencesMenu
 	"Build the preferences menu for the world."
-	"original package construction"
+
 	^ (self menu: 'Preferences...')
 		addItemsFromDictionaries: {
 			{
@@ -2820,15 +2828,14 @@ preferencesMenu
 				#balloonText 	-> 		'use larger or smaller text and widgets'
 			} asDictionary.
 			{
-				#label			->			'Set font...'.
-				#object 			-> 		FontChanger.
-				#selector 		-> 		#promptUserAndInstallIfNecessaryWithFamilies:.
-				#arguments 		-> 		{FontChanger familyNames}.
+				#label			->			'Set System Font...'.
+				#object 			-> 		FontFamily.
+				#selector 		-> 		#promptUserAndSetDefault.
 				#icon 			-> 		#preferencesDesktopFontIcon.
-				#balloonText 	-> 		'change the current font family.'
+				#balloonText 	-> 		'change the current system font family.'
 			} asDictionary.
 			{
-				#label			->			'Load extra fonts'.
+				#label			->			'Load all TrueType Fonts'.
 				#object 			-> 		FontFamily.
 				#selector 		-> 		#readAdditionalTrueTypeFonts.
 				#icon 			-> 		#preferencesDesktopFontIcon.
