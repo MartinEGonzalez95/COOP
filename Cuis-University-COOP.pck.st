@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4384] on 12 October 2020 at 5:45:07 pm'!
+'From Cuis 5.0 [latest update: #4532] on 13 May 2021 at 7:58:10 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 48!
+!provides: 'Cuis-University-COOP' 1 50!
 SystemOrganization addCategory: 'Cuis-University-COOP'!
 SystemOrganization addCategory: 'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: 'Cuis-University-COOP-Morph'!
@@ -1594,6 +1594,14 @@ testRuleDoNotApplyWhenHasAnAssertionAndIsNotATestSelector
 
 	self deny: (rule check: methodNode ).! !
 
+!COOPRuleTestAssertionTest methodsFor: 'rule-not-apply' stamp: 'GET 5/13/2021 18:03:22'!
+testRuleDoNotApplyWhenTestHasAReferenceOfAssertObject
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #testMethodWithAssertReference .
+
+	self deny: (rule check: methodNode ).! !
+
 !COOPRuleTestAssertionTest methodsFor: 'rule-not-apply' stamp: 'GET 10/27/2019 14:18:38'!
 testRuleDoNotApplyWhenTestHasAnAssertion
 
@@ -1627,6 +1635,16 @@ setUp
 methodWithAssert
 
 	self assert:true.! !
+
+!COOPRuleTestAssertionTest methodsFor: 'method-for-testing' stamp: 'GET 5/13/2021 18:02:59'!
+testMethodWithAssert
+
+	self assert:true.! !
+
+!COOPRuleTestAssertionTest methodsFor: 'method-for-testing' stamp: 'GET 5/13/2021 18:03:07'!
+testMethodWithAssertReference
+
+	Assert isTrue:true.! !
 
 !COOPRuleTestAssertionTest methodsFor: 'method-for-testing' stamp: 'GET 10/19/2019 18:06:49'!
 testWithoutAssertion
@@ -2274,10 +2292,11 @@ title
 	
 	^ RuleDescriptor new titleForTestWithoutAssert ! !
 
-!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/27/2019 13:50:15'!
+!COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 5/13/2021 19:49:55'!
 applyCondition: aNode 
-		
- 	^ self selectorIsAnAssertion: aNode selectorSymbol .
+	| nodeReceiver |
+	nodeReceiver _ aNode  receiver. 
+	^ (self selectorIsAnAssertion: aNode selectorSymbol) and: [ (nodeReceiver isNamed: Assert  name ) | nodeReceiver referencesSelf ].
 ! !
 
 !COOPRuleTestAssertion methodsFor: 'testing' stamp: 'GET 10/26/2019 22:43:59'!
@@ -2309,12 +2328,13 @@ selectorIsAnAssertion: selector
 	
  	^ assertionsSelectors anySatisfy: [:aSelector | selector includesSubString: aSelector].! !
 
-!COOPRuleTestAssertion methodsFor: 'initialize' stamp: 'GET 10/26/2019 21:58:42'!
+!COOPRuleTestAssertion methodsFor: 'initialize' stamp: 'GET 5/13/2021 19:54:15'!
 initialize
 	 
 	assertionsSelectors _ Set new .
 	assertionsSelectors addAll: {
 		#assert: . #deny: . #should: . #shouldFail: . #shouldnt: . #shouldntFail: . 
+		#that: . #isTrue:. #isFalse:. #shouldNot:
 	}.
 	! !
 
