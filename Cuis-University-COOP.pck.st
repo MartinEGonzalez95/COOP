@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4532] on 13 May 2021 at 7:58:10 pm'!
+'From Cuis 5.0 [latest update: #4532] on 10 June 2021 at 10:53:40 pm'!
 'Description '!
-!provides: 'Cuis-University-COOP' 1 50!
+!provides: 'Cuis-University-COOP' 1 51!
 SystemOrganization addCategory: 'Cuis-University-COOP'!
 SystemOrganization addCategory: 'Cuis-University-COOP-Tests'!
 SystemOrganization addCategory: 'Cuis-University-COOP-Morph'!
@@ -74,6 +74,16 @@ TestCase subclass: #COOPRuleTest
 	category: 'Cuis-University-COOP-Tests'!
 !classDefinition: 'COOPRuleTest class' category: 'Cuis-University-COOP-Tests'!
 COOPRuleTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPCollectionsRuleSelectWithSizeTest category: 'Cuis-University-COOP-Tests'!
+COOPRuleTest subclass: #COOPCollectionsRuleSelectWithSizeTest
+	instanceVariableNames: 'methodFactory rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP-Tests'!
+!classDefinition: 'COOPCollectionsRuleSelectWithSizeTest class' category: 'Cuis-University-COOP-Tests'!
+COOPCollectionsRuleSelectWithSizeTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPRuleColaborationChainTest category: 'Cuis-University-COOP-Tests'!
@@ -224,6 +234,16 @@ Object subclass: #COOPRule
 	category: 'Cuis-University-COOP'!
 !classDefinition: 'COOPRule class' category: 'Cuis-University-COOP'!
 COOPRule class
+	instanceVariableNames: ''!
+
+!classDefinition: #COOPCollectionsRuleSelectWithSize category: 'Cuis-University-COOP'!
+COOPRule subclass: #COOPCollectionsRuleSelectWithSize
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Cuis-University-COOP'!
+!classDefinition: 'COOPCollectionsRuleSelectWithSize class' category: 'Cuis-University-COOP'!
+COOPCollectionsRuleSelectWithSize class
 	instanceVariableNames: ''!
 
 !classDefinition: #COOPRuleColaborationChain category: 'Cuis-University-COOP'!
@@ -879,6 +899,39 @@ setUp
 searchMethodNode: selectorName
 
 	^ coopMethodFactory findMethodNodeNamed: selectorName in: self class! !
+
+!COOPCollectionsRuleSelectWithSizeTest methodsFor: 'as yet unclassified' stamp: 'GET 6/10/2021 22:02:23'!
+testApplyWhenTheMethodHasASelectAndThenSizeCollectionColaborations
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #methodWithSelectAndThenSizeCollectionColaborations .
+
+	self assert: (rule check: methodNode ).! !
+
+!COOPCollectionsRuleSelectWithSizeTest methodsFor: 'as yet unclassified' stamp: 'GET 6/10/2021 22:10:00'!
+testDoNotApplyWhenTheMethodDoesNotHaveASelectAndThenSizeCollectionColaborations
+
+	| methodNode |
+	methodNode  _ self searchMethodNode: #methodWithoutSelectAndThenSizeCollectionColaborations .
+
+	self deny: (rule check: methodNode ).! !
+
+!COOPCollectionsRuleSelectWithSizeTest methodsFor: 'setUp/tearDown' stamp: 'GET 6/10/2021 22:03:04'!
+methodWithSelectAndThenSizeCollectionColaborations
+
+	| col |
+	(col select:[:n | n > 1]) size! !
+
+!COOPCollectionsRuleSelectWithSizeTest methodsFor: 'setUp/tearDown' stamp: 'GET 6/10/2021 22:05:27'!
+methodWithoutSelectAndThenSizeCollectionColaborations
+
+	| col |
+	(col select:[:n | n > 1])! !
+
+!COOPCollectionsRuleSelectWithSizeTest methodsFor: 'setUp/tearDown' stamp: 'GET 6/10/2021 22:01:10'!
+setUp
+	super setUp.
+	rule _ COOPCollectionsRuleSelectWithSize new.! !
 
 !COOPRuleColaborationChainTest methodsFor: 'rule-not-apply' stamp: 'GET 10/13/2019 15:51:56'!
 testAmountOfChainedColaborationsIsZeroForNoMessageNodes
@@ -2040,24 +2093,27 @@ selectAffectedNodes: methodNode
 
 	^ affectedNodes ! !
 
-!COOPRule class methodsFor: 'information' stamp: 'GET 11/21/2019 18:41:41'!
+!COOPRule class methodsFor: 'information' stamp: 'GET 6/10/2021 22:14:10'!
 allRules
 
-	| rules |
-	rules _ Set new.
-	
-	rules addAll: {
-		COOPRuleCollectionSize new.
-		COOPRuleColaborationChain new.
-		COOPRuleNonsenseBoolean new.
-		COOPRuleTestAssertion new.
-		COOPRuleInstanceMethodToClass new.
-		COOPRuleNilAssigment new.
-		COOPRuleReturnNil new.
-		COOPRuleNilAsArgument new.
-	}.
+	^ self subclasses collect:[:coopClass | coopClass new]! !
 
-	^  rules! !
+!COOPCollectionsRuleSelectWithSize methodsFor: 'testing' stamp: 'GET 6/10/2021 22:50:26'!
+applyCondition: aMethodNode 
+	^ (aMethodNode isMessageNamed: #size)
+		and:[aMethodNode receiver isMessageNamed: #select:].! !
+
+!COOPCollectionsRuleSelectWithSize methodsFor: 'testing' stamp: 'GET 6/10/2021 22:50:48'!
+canHandle: aMethodNode 
+	^ aMethodNode isMessageNode .! !
+
+!COOPCollectionsRuleSelectWithSize methodsFor: 'accessing' stamp: 'GET 6/10/2021 22:17:03'!
+description
+	^ RuleDescriptor new descriptionForNotUsingCount! !
+
+!COOPCollectionsRuleSelectWithSize methodsFor: 'accessing' stamp: 'GET 6/10/2021 22:15:48'!
+title
+	^RuleDescriptor new titleForNotUsingCount .! !
 
 !COOPRuleColaborationChain methodsFor: 'testing' stamp: 'GET 10/14/2019 17:00:54'!
 applyCondition: aMessageNode 
@@ -2352,11 +2408,11 @@ findAssertionNode: methodNode
 	
 	! !
 
-!DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:15'!
+!DemoCase methodsFor: 'apply' stamp: 'GET 5/20/2021 18:24:04'!
 caseAssigmentNilInTemporalVariable
 
 	| aNil|
-
+	aNil _ 1.
 	aNil _ nil.! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/20/2019 21:48:35'!
@@ -2432,6 +2488,14 @@ caseRevertedIdentityCollectionSize
 	collection _ OrderedCollection new.
 
 	0 == collection size! !
+
+!DemoCase methodsFor: 'apply' stamp: 'GET 6/10/2021 22:18:28'!
+caseWhenASelectAndSizeAreUsingInsteadOfCount
+
+	| col |
+	col _ Collection new.
+
+	((col) select: [:coso | coso = 1]) size. ! !
 
 !DemoCase methodsFor: 'apply' stamp: 'GET 11/18/2019 02:15:28'!
 caseWhenAreMoreThanThreeColaborationsAreChained
@@ -2582,11 +2646,11 @@ change: sourceText of: aMethodNode using: aRule
 	affectedNodes do: [:affectedNode |
 		self apply: affectedNode in: sourceText with: aMethodNode ].! !
 
-!COOPHighlighter methodsFor: 'action' stamp: 'MEG 11/16/2019 13:54:43'!
+!COOPHighlighter methodsFor: 'action' stamp: 'GET 6/10/2021 22:46:30'!
 apply: affectedNode in: aText with: aMethodNode
 
 	| range |
-	range _ aMethodNode rangeForNode: affectedNode ifAbsent: [ ^ nil ].
+	range _ aMethodNode rangeForNode: affectedNode ifAbsent: [ ^ self ].
 	 
 	self highlight: aText with: range .! !
 
@@ -2703,6 +2767,14 @@ titleForSendInstanceMethodToClass
 titleForTestWithoutAssert
 
 	^ 'Test sin asercion'.! !
+
+!RuleDescriptor methodsFor: 'accessing' stamp: 'GET 6/10/2021 22:17:38'!
+descriptionForNotUsingCount
+	^ 'Podrías reemplazar el uso de #select: y #size con #count:'! !
+
+!RuleDescriptor methodsFor: 'accessing' stamp: 'GET 6/10/2021 22:16:24'!
+titleForNotUsingCount
+	^ 'Utilizar Collection#count:'! !
 
 !RuleList methodsFor: 'initialize' stamp: 'GET 11/24/2019 22:45:12'!
 initialize
